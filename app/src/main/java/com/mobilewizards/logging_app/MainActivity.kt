@@ -7,34 +7,36 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.yield
 
 class MainActivity : AppCompatActivity() {
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val startButton = findViewById<Button>(R.id.startButton)
+        val countStartButton = findViewById<Button>(R.id.countStartButton)
+        val countStopButton = findViewById<Button>(R.id.countStopButton)
 
-        startButton.setOnClickListener {
-            GlobalScope.launch { var count = 0
-                while (count<10) {
-                    count++
-                    Log.println(Log.INFO,"smt", count.toString())
-                    yield()
-                    try {
-                        Thread.sleep(1000)
-                    } catch (ex:Exception) {
-                        Log.println(Log.ERROR,"smt",ex.message.toString())
-                    }
-                }
-            }
+        // Check if thread is alive to rightfully enable/disable buttons
+        if (counterThread?.isAlive() == true) {
+            countStartButton.isEnabled = false
+            countStopButton.isEnabled = true
         }
+
+        countStartButton.setOnClickListener {
+            countStartButton.isEnabled = false
+            countStopButton.isEnabled = true
+            counterThread = CounterThread()
+            counterThread?.start()
+        }
+
+        countStopButton.setOnClickListener {
+            countStartButton.isEnabled = true
+            countStopButton.isEnabled = false
+            counterThread?.cancel()
+            counterThread = null
+        }
+
         val loggingButton = findViewById<Button>(R.id.startLogButton)
         val stopLogButton = findViewById<Button>(R.id.stopLogButton)
         val motionSensors = MotionSensorsHandler(this)
