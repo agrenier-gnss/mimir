@@ -29,10 +29,10 @@ private var rotationZ: Float = Float.MIN_VALUE
 
 private var stepCount: Float = Float.MIN_VALUE
 
-
-class MotionSensorsHandler: SensorEventListener {
+class MotionSensorsHandler: SensorEventListener{
 
     protected var context: Context
+    var listenerActive = false
 
     constructor(context: Context) : super() {
         this.context = context.applicationContext
@@ -40,6 +40,8 @@ class MotionSensorsHandler: SensorEventListener {
 
 
     fun setUpSensors() {
+
+        this.listenerActive = true
 
         sensorManager = context.getSystemService(SENSOR_SERVICE) as SensorManager
         sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)?.also {
@@ -184,8 +186,9 @@ class MotionSensorsHandler: SensorEventListener {
         }
     }
 
-    public fun stopLogging() {
+    fun stopLogging() {
         sensorManager.unregisterListener(this)
+        this.listenerActive = false
     }
     // TODO: Implement this when we know accuracy parameters
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {

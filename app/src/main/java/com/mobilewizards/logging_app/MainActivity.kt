@@ -41,12 +41,22 @@ class MainActivity : AppCompatActivity() {
         val stopLogButton = findViewById<Button>(R.id.stopLogButton)
         val motionSensors = MotionSensorsHandler(this)
 
+        // Check if thread is alive to rightfully enable/disable buttons
+        if (motionSensors.listenerActive == true) {
+            loggingButton.isEnabled = false
+            stopLogButton.isEnabled = true
+        }
+
         loggingButton.setOnClickListener{
+            loggingButton.isEnabled = false
+            stopLogButton.isEnabled = true
             Log.d("start logging", "Start logging")
             motionSensors.setUpSensors()
         }
 
         stopLogButton.setOnClickListener {
+            loggingButton.isEnabled = true
+            stopLogButton.isEnabled = false
             motionSensors.stopLogging()
         }
 
