@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         val countStopButton = findViewById<Button>(R.id.countStopButton)
 
         // Check if thread is alive to rightfully enable/disable buttons
-        if (counterThread?.isAlive() == true) {
+        if (counterThread?.isAlive == true) {
             countStartButton.isEnabled = false
             countStopButton.isEnabled = true
         }
@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         val motionSensors = MotionSensorsHandler(this)
 
         // Check if thread is alive to rightfully enable/disable buttons
-        if (motionSensors.listenerActive == true) {
+        if (motionSensors.listenerActive) {
             loggingButton.isEnabled = false
             stopLogButton.isEnabled = true
         }
