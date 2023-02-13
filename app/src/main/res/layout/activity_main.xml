@@ -64,4 +64,57 @@
         app:layout_constraintStart_toEndOf="@+id/countStartButton"
         app:layout_constraintTop_toBottomOf="@+id/tipTextView" />
 
+    <Button
+        android:id="@+id/startGNSSButton"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:text="GNSS"
+        tools:layout_editor_absoluteX="24dp"
+        tools:layout_editor_absoluteY="131dp" />
+
+    <Button
+        android:id="@+id/startIMUButton"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:text="IMU"
+        tools:layout_editor_absoluteX="24dp"
+        tools:layout_editor_absoluteY="193dp" />
+
+    <Button
+        android:id="@+id/startMagnetometerButton"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:text="Magnetometer"
+        tools:layout_editor_absoluteX="24dp"
+        tools:layout_editor_absoluteY="265dp" />
+
+    <Button
+        android:id="@+id/startBarometerButton"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:text="Barometer"
+        tools:layout_editor_absoluteX="24dp"
+        tools:layout_editor_absoluteY="341dp" />
+
+    <SeekBar
+        android:id="@+id/sliderMagnetometer"
+        android:layout_width="170dp"
+        android:layout_height="40dp"
+        tools:layout_editor_absoluteX="225dp"
+        tools:layout_editor_absoluteY="265dp" />
+
+    <SeekBar
+        android:id="@+id/sliderIMU"
+        android:layout_width="170dp"
+        android:layout_height="40dp"
+        tools:layout_editor_absoluteX="225dp"
+        tools:layout_editor_absoluteY="193dp" />
+
+    <SeekBar
+        android:id="@+id/sliderBarometer"
+        android:layout_width="170dp"
+        android:layout_height="40dp"
+        tools:layout_editor_absoluteX="225dp"
+        tools:layout_editor_absoluteY="341dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
