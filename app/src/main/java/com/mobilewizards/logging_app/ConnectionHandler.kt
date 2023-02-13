@@ -4,12 +4,16 @@ import android.annotation.SuppressLint
 import android.bluetooth.*
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
-import android.net.wifi.WifiManager
-import android.util.Log
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.wifi.WifiManager
+import android.net.wifi.rtt.RangingRequest
+import android.net.wifi.rtt.RangingResult
+import android.net.wifi.rtt.RangingResultCallback
+import android.net.wifi.rtt.WifiRttManager
+import android.util.Log
 
 class ConnectionHandler {
 
@@ -53,6 +57,45 @@ class ConnectionHandler {
         if (!success) {
             Log.d("Error", "Failed to fetch wifi connections")
         }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun logWifiDistance() {
+
+        val wifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
+
+
+        val broadCastReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                Log.d("Getting wifi results", "onReceive called")
+                for(scanResult in wifiManager.scanResults) {
+                    if(scanResult.is80211mcResponder) {
+                        val rB = RangingRequest.Builder()
+                        rB.addAccessPoint(scanResult)
+
+                        val rttManager = context.getSystemService(Context.WIFI_RTT_RANGING_SERVICE) as WifiRttManager
+
+                        val callback: RangingResultCallback = object : RangingResultCallback() {
+                            override fun onRangingResults(results: List<RangingResult>) {
+                                // Handle result, e.g. get distance to Access Point
+
+                            }
+
+                            override fun onRangingFailure(code: Int) {
+                                // Handle failure
+                            }
+                        }
+
+                        rttManager.startRanging(rB.build(),
+                            context.mainExecutor,
+                            callback);
+                    }
+                }
+            }
+        }
+
+        context.registerReceiver(broadCastReceiver, IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION))
+
     }
 
     @SuppressLint("MissingPermission")
