@@ -13,7 +13,9 @@ class SetupActivity : AppCompatActivity() {
 
         val confirmButton = findViewById<Button>(R.id.confirmButton)
         confirmButton.setOnClickListener{
-            val mainIntent = Intent(this@SetupActivity, MainActivity::class.java)
+            val mainIntent = Intent(this@SetupActivity, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+            }
             startActivity(mainIntent)
         }
     }
