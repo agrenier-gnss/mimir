@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.wearable.DataItem
 import com.google.android.gms.wearable.DataMap
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.Wearable
@@ -78,6 +79,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Add text", Toast.LENGTH_SHORT).show()
             else
                 sendTextToWatch(textToSend.toString())
+                Toast.makeText(this, "Text sent", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -87,17 +89,20 @@ class MainActivity : AppCompatActivity() {
         val dataMap = DataMap().apply {
             putString("data", text)
         }
+        val dataByteArray = dataMap.toByteArray()
 
-        var nodeId = ""
         Wearable.getNodeClient(this).connectedNodes.addOnSuccessListener { nodes ->
+
             for (node in nodes) {
-                nodeId = node.id
+                Log.d("data_tag", node.id)
+                mMessageClient.sendMessage("Log.d(\"recievedData\", \"got a message\")", "/data", dataByteArray)
+                Log.d("data_tag", "msg sent")
             }
         }
 
-        val dataByteArray = dataMap.toByteArray()
 
-        mMessageClient.sendMessage(nodeId, "/data", dataByteArray)
+
+
     }
     // Creates main_menu.xml
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

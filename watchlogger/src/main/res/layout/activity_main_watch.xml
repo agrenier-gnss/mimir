@@ -6,19 +6,23 @@
     android:layout_height="match_parent"
     android:padding="@dimen/box_inset_layout_padding"
     tools:context=".MainActivityWatch"
-    tools:deviceIds="wear">
+    tools:deviceIds="wear"
+    >
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/inner_frame_layout_padding"
-        app:layout_boxedEdges="all">
+        app:layout_boxedEdges="all"
+        >
 
         <TextView
             android:id="@+id/tv_watch"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-             />
+
+            android:translationX="10dp"
+            android:translationY="50dp" />
 
     </FrameLayout>
 </androidx.wear.widget.BoxInsetLayout>

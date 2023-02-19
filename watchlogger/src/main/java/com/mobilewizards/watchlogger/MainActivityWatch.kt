@@ -1,13 +1,14 @@
-package com.mobilewizards.watchlogger
+package com.mobilewizards.logging_app
 
 import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import com.google.android.gms.wearable.DataMap
 import com.google.android.gms.wearable.MessageClient
-import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.Wearable
-import com.mobilewizards.watchlogger.databinding.ActivityMainWatchBinding
+import com.mobilewizards.logging_app.databinding.ActivityMainWatchBinding
+
 
 class MainActivityWatch : Activity() {
 
@@ -23,11 +24,14 @@ class MainActivityWatch : Activity() {
         mMessageClient = Wearable.getMessageClient(this)
 
         var text: TextView = findViewById(R.id.tv_watch)
-
+        text.text = "Text:"
+        Log.d("node", "recievedData" + Wearable.getNodeClient(this).connectedNodes.toString())
         mMessageClient.addListener {
             MessageClient.OnMessageReceivedListener {
+                Log.d("recievedData", "got a message")
                 val dataMap = DataMap.fromByteArray(it.data)
-                val textFromPhone = dataMap.getString("data")
+                val textFromPhone = dataMap.getString("/data")
+                Log.d("recievedData", textFromPhone)
                 text.text = textFromPhone
             }
         }
