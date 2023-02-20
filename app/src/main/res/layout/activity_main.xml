@@ -24,10 +24,10 @@
         android:text="Press &quot;Start&quot; to initiate a separate thread that counts"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.355"
+        app:layout_constraintHorizontal_bias="0.285"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.893" />
+        app:layout_constraintVertical_bias="0.894" />
 
     <Button
         android:id="@+id/countStartButton"
@@ -68,53 +68,74 @@
         android:id="@+id/startGNSSButton"
         android:layout_width="170dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
         android:text="GNSS"
-        tools:layout_editor_absoluteX="24dp"
-        tools:layout_editor_absoluteY="131dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/startIMUButton"
         android:layout_width="170dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
         android:text="IMU"
-        tools:layout_editor_absoluteX="24dp"
-        tools:layout_editor_absoluteY="193dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/startGNSSButton" />
 
     <Button
         android:id="@+id/startMagnetometerButton"
         android:layout_width="170dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="4dp"
         android:text="Magnetometer"
-        tools:layout_editor_absoluteX="24dp"
-        tools:layout_editor_absoluteY="265dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/startIMUButton" />
 
     <Button
         android:id="@+id/startBarometerButton"
         android:layout_width="170dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="4dp"
         android:text="Barometer"
-        tools:layout_editor_absoluteX="24dp"
-        tools:layout_editor_absoluteY="341dp" />
-
-    <SeekBar
-        android:id="@+id/sliderMagnetometer"
-        android:layout_width="170dp"
-        android:layout_height="40dp"
-        tools:layout_editor_absoluteX="225dp"
-        tools:layout_editor_absoluteY="265dp" />
-
-    <SeekBar
-        android:id="@+id/sliderIMU"
-        android:layout_width="170dp"
-        android:layout_height="40dp"
-        tools:layout_editor_absoluteX="225dp"
-        tools:layout_editor_absoluteY="193dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/startMagnetometerButton" />
 
     <SeekBar
         android:id="@+id/sliderBarometer"
         android:layout_width="170dp"
         android:layout_height="40dp"
-        tools:layout_editor_absoluteX="225dp"
-        tools:layout_editor_absoluteY="341dp" />
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/startBarometerButton"
+        app:layout_constraintTop_toBottomOf="@+id/sliderMagnetometer" />
+
+    <SeekBar
+        android:id="@+id/sliderIMU"
+        android:layout_width="170dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="96dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintStart_toEndOf="@+id/startIMUButton"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <SeekBar
+        android:id="@+id/sliderMagnetometer"
+        android:layout_width="170dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/startMagnetometerButton"
+        app:layout_constraintTop_toBottomOf="@+id/sliderIMU" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
