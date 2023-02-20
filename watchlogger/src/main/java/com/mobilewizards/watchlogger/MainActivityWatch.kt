@@ -2,6 +2,7 @@ package com.mobilewizards.logging_app
 
 import android.app.Activity
 import android.os.Bundle
+import android.provider.ContactsContract.Data
 import android.util.Log
 import android.widget.TextView
 import com.google.android.gms.wearable.DataMap
@@ -25,15 +26,21 @@ class MainActivityWatch : Activity() {
 
         var text: TextView = findViewById(R.id.tv_watch)
         text.text = "Text:"
-        Log.d("node", "recievedData" + Wearable.getNodeClient(this).connectedNodes.toString())
+        Log.d("recievedData", "recievedData " + Wearable.getNodeClient(this).connectedNodes.toString())
+//        mMessageClient.addListener {
+//            MessageClient.OnMessageReceivedListener {
+//                Log.d("recievedData", "got a message")
+//                val dataMap = DataMap.fromByteArray(it.data)
+//                val textFromPhone = dataMap.getString("/data")
+//                Log.d("recievedData", textFromPhone)
+//                text.text = textFromPhone
+//            }
+//        }
+
         mMessageClient.addListener {
-            MessageClient.OnMessageReceivedListener {
-                Log.d("recievedData", "got a message")
-                val dataMap = DataMap.fromByteArray(it.data)
-                val textFromPhone = dataMap.getString("/data")
-                Log.d("recievedData", textFromPhone)
-                text.text = textFromPhone
-            }
+            val dataMap = DataMap.fromByteArray(it.data)
+            val textFromPhone = dataMap.getDataMap("/message")
+            text.text = textFromPhone.toString()
         }
     }
 }

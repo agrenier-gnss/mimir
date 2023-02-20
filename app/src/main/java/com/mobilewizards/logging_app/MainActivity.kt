@@ -1,7 +1,9 @@
 package com.mobilewizards.logging_app
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -18,8 +20,10 @@ import com.google.android.gms.wearable.Wearable
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mMessageClient: MessageClient
+    @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("tag", "onCreate called")
         setContentView(R.layout.activity_main)
 
         val countStartButton = findViewById<Button>(R.id.countStartButton)
@@ -47,7 +51,7 @@ class MainActivity : AppCompatActivity() {
 
         val loggingButton = findViewById<Button>(R.id.startLogButton)
         val stopLogButton = findViewById<Button>(R.id.stopLogButton)
-        val motionSensors = MotionSensorsHandler(this)
+        val motionSensors = MotionSensorsHandler(applicationContext)
 
         // Check if thread is alive to rightfully enable/disable buttons
         if (motionSensors.listenerActive) {
@@ -91,11 +95,12 @@ class MainActivity : AppCompatActivity() {
         }
         val dataByteArray = dataMap.toByteArray()
 
+
         Wearable.getNodeClient(this).connectedNodes.addOnSuccessListener { nodes ->
 
             for (node in nodes) {
                 Log.d("data_tag", node.id)
-                mMessageClient.sendMessage("Log.d(\"recievedData\", \"got a message\")", "/data", dataByteArray)
+                mMessageClient.sendMessage(node.id, "/message", dataByteArray)
                 Log.d("data_tag", "msg sent")
             }
         }
@@ -113,13 +118,10 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.changeParameters -> {
-                val setupIntent = Intent(this, SetupActivity::class.java)
+                val setupIntent = Intent(applicationContext, SetupActivity::class.java)
                 startActivity(setupIntent)
             }
         }
         return true
     }
-
-
-
 }
