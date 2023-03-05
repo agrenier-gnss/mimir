@@ -24,5 +24,13 @@
             android:translationX="10dp"
             android:translationY="50dp" />
 
+        <Button
+            android:id="@+id/btn_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:translationX="20dp"
+            android:translationY="100dp"
+            android:text="Send text" />
+
     </FrameLayout>
 </androidx.wear.widget.BoxInsetLayout>

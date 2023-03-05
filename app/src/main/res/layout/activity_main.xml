@@ -84,4 +84,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/tv_textFromWatch"
+        android:layout_width="309dp"
+        android:layout_height="37dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/stopLogButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etTextToWear" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

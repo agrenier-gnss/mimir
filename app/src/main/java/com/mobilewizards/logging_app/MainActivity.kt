@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("tag", "onCreate called")
+        Log.d("phoneLogger", "onCreate called")
         setContentView(R.layout.activity_main)
 
         val countStartButton = findViewById<Button>(R.id.countStartButton)
@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
 
         val etTextToWatch: EditText = findViewById(R.id.etTextToWear)
         val sendButton: Button = findViewById(R.id.btnSend)
-
+        val tvTexfFromWatch = findViewById<TextView>(R.id.tv_textFromWatch)
         mMessageClient = Wearable.getMessageClient(this)
         sendButton.setOnClickListener {
             var textToSend = etTextToWatch.text
@@ -84,6 +84,12 @@ class MainActivity : AppCompatActivity() {
             else
                 sendTextToWatch(textToSend.toString())
                 Toast.makeText(this, "Text sent", Toast.LENGTH_SHORT).show()
+        }
+
+        mMessageClient.addListener {
+            Log.d("phoneLogger", "it.data " + DataMap.fromByteArray(it.data).toString())
+            val dataMap = DataMap.fromByteArray(it.data)
+            tvTexfFromWatch.text = dataMap.getString("dataFromWatch")
         }
     }
 
@@ -95,19 +101,13 @@ class MainActivity : AppCompatActivity() {
         }
         val dataByteArray = dataMap.toByteArray()
 
-
         Wearable.getNodeClient(this).connectedNodes.addOnSuccessListener { nodes ->
-
             for (node in nodes) {
                 Log.d("data_tag", node.id)
                 mMessageClient.sendMessage(node.id, "/message", dataByteArray)
                 Log.d("data_tag", "msg sent")
             }
         }
-
-
-
-
     }
     // Creates main_menu.xml
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
