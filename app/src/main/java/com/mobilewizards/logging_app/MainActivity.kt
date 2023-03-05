@@ -1,12 +1,15 @@
 package com.mobilewizards.logging_app
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 
 class MainActivity : AppCompatActivity() {
 
@@ -14,8 +17,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        this.checkLocationPermissions()
+
         val countStartButton = findViewById<Button>(R.id.countStartButton)
         val countStopButton = findViewById<Button>(R.id.countStopButton)
+
 
         // Check if thread is alive to rightfully enable/disable buttons
         if (counterThread?.isAlive == true) {
@@ -39,18 +45,21 @@ class MainActivity : AppCompatActivity() {
         val loggingButton = findViewById<Button>(R.id.startLogButton)
         val stopLogButton = findViewById<Button>(R.id.stopLogButton)
         val motionSensors = MotionSensorsHandler(this)
+        val Gnss = GnssHandler(this)
 
         loggingButton.setOnClickListener{
             loggingButton.isEnabled = false
             stopLogButton.isEnabled = true
             Log.d("start logging", "Start logging")
             motionSensors.setUpSensors()
+            Gnss.setUpLogging()
         }
 
         stopLogButton.setOnClickListener {
             loggingButton.isEnabled = true
             stopLogButton.isEnabled = false
             motionSensors.stopLogging()
+            Gnss.stopLogging()
         }
 
     }
@@ -69,5 +78,24 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return true
+    }
+    fun checkLocationPermissions(){
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ){
+
+            ActivityCompat.requestPermissions(this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION),225 );
+
+        }
+
+
+
     }
 }
