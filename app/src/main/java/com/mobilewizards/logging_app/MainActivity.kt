@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         this.checkLocationPermissions()
+        this.checkConnectionPermissions()
 
         val countStartButton = findViewById<Button>(R.id.countStartButton)
         val countStopButton = findViewById<Button>(R.id.countStopButton)
@@ -56,6 +58,7 @@ class MainActivity : AppCompatActivity() {
         val stopLogButton = findViewById<Button>(R.id.stopLogButton)
         val motionSensors = MotionSensorsHandler(this)
         val Gnss = GnssHandler(this)
+        val BLE = BLEHandler(this)
 
         loggingButton.setOnClickListener{
             loggingButton.isEnabled = false
@@ -63,6 +66,7 @@ class MainActivity : AppCompatActivity() {
             Log.d("start logging", "Start logging")
             motionSensors.setUpSensors()
             Gnss.setUpLogging()
+            BLE.setUpLogging()
         }
 
         stopLogButton.setOnClickListener {
@@ -70,6 +74,7 @@ class MainActivity : AppCompatActivity() {
             stopLogButton.isEnabled = false
             motionSensors.stopLogging()
             Gnss.stopLogging()
+            BLE.stopLogging()
         }
 
 
@@ -139,8 +144,25 @@ class MainActivity : AppCompatActivity() {
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION),225 );
 
         }
+    }
 
+    fun checkConnectionPermissions() {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.BLUETOOTH_SCAN
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ){
 
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                ActivityCompat.requestPermissions(this,
+                    arrayOf(Manifest.permission.BLUETOOTH_SCAN),225 )
+            }
+            ActivityCompat.requestPermissions(this,
+                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 225)
 
+        }
     }
 }
