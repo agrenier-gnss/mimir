@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.mobilewizards.watchlogger'
+    namespace 'com.mobilewizards.logging_app'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.mobilewizards.watchlogger"
+        applicationId "com.mobilewizards.logging_app"
         minSdk 30
         targetSdk 33
         versionCode 1

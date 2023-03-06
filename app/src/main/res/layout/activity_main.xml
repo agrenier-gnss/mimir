@@ -138,4 +138,36 @@
         app:layout_constraintStart_toEndOf="@+id/startMagnetometerButton"
         app:layout_constraintTop_toBottomOf="@+id/sliderIMU" />
 
+    <Button
+        android:id="@+id/btnSend"
+        android:layout_width="113dp"
+        android:layout_height="93dp"
+        android:text="Send text to watch"
+        app:layout_constraintBottom_toTopOf="@+id/tv_textFromWatch"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sliderBarometer" />
+
+    <EditText
+        android:id="@+id/etTextToWear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="send text to watch"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/tv_textFromWatch"
+        app:layout_constraintEnd_toStartOf="@+id/btnSend"
+        app:layout_constraintHorizontal_bias="0.579"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/startBarometerButton" />
+
+    <TextView
+        android:id="@+id/tv_textFromWatch"
+        android:layout_width="309dp"
+        android:layout_height="37dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/stopLogButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/startBarometerButton" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
