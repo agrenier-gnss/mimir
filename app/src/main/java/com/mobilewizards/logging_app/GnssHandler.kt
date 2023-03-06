@@ -14,19 +14,25 @@ import android.util.Log
 import androidx.core.app.ActivityCompat
 
 
+
+private lateinit var locationManager: LocationManager
+private lateinit var gpsLocationListener: LocationListener
+private lateinit var networkLocationListener: LocationListener
+private lateinit var gnssMeasurementsEventListener: Callback
+
 class GnssHandler{
 
     protected var context: Context
-
-
 
 
     constructor(context: Context) : super() {
         this.context = context.applicationContext
     }
 
-    private fun setUpLogging(){
-        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+
+    public fun setUpLogging(){
+        locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         logLocation(locationManager)
         logGNSS(locationManager)
     }
@@ -36,12 +42,17 @@ class GnssHandler{
 
 
         //Locationlistener for Gps
-        val gpsLocationListener = object : LocationListener{
+        gpsLocationListener = object : LocationListener{
 
             override fun onLocationChanged(location: Location){
-                Log.d("Longitude from Gps", location.longitude.toString())
-                Log.d("Latitude from Gps", location.latitude.toString())
-                Log.d("Altitude from Gps", location.altitude.toString())
+
+                val longitudeGps = location.longitude
+                val latitudeGps = location.latitude
+                val altitudeGps = location.altitude
+
+                Log.d("Longitude from Gps", longitudeGps.toString())
+                Log.d("Latitude from Gps", latitudeGps.toString())
+                Log.d("Altitude from Gps", altitudeGps.toString())
             }
 
             override fun onFlushComplete(requestCode: Int) {}
@@ -50,38 +61,45 @@ class GnssHandler{
 
         }
 
-        val networkLocationListener = object : LocationListener{
+        networkLocationListener = object : LocationListener{
             override fun onLocationChanged(location: Location){
-                Log.d("Longitude from network", location.longitude.toString())
-                Log.d("Latitude from network", location.latitude.toString())
-                Log.d("Altitude from network", location.altitude.toString())
+
+                val longitudeNetwork = location.longitude
+                val latitudeNetwork = location.latitude
+                val altitudeNetwork = location.altitude
+
+                Log.d("Longitude from network", longitudeNetwork.toString())
+                Log.d("Latitude from network", latitudeNetwork.toString())
+                Log.d("Altitude from network", altitudeNetwork.toString())
             }
             override fun onFlushComplete(requestCode: Int) {}
             override fun onProviderDisabled(provider: String) {}
             override fun onProviderEnabled(provider: String) {}
         }
-        try{
-            if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+
+        try {
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
 
                 locationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER,
-                    5000, 0F, gpsLocationListener
+                    1000, 0F, gpsLocationListener
                 )
 
             }
-            if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+            if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
 
                 locationManager.requestLocationUpdates(
                     LocationManager.NETWORK_PROVIDER,
-                    5000, 0F, networkLocationListener
+                    1000, 0F, networkLocationListener
                 )
 
             }
+
         }
-        catch (e: SecurityException){
+        catch(e: SecurityException){
             Log.d("Error", "No permission for location fetching")
         }
-
 
 
     }
@@ -92,22 +110,32 @@ class GnssHandler{
 
     private fun logGNSS(locationManager: LocationManager) {
 
-        val gnssMeasurementsEventListener = object : Callback(){
+        gnssMeasurementsEventListener = object : Callback(){
 
             override fun onGnssMeasurementsReceived(event: GnssMeasurementsEvent) {
                 for (measurement in event.measurements) {
-                    Log.d("SvId", measurement.svid.toString())
-                    Log.d("Time offset in nanos", measurement.timeOffsetNanos.toString())
 
-                    Log.d("State", measurement.state.toString())
+                    val svid = measurement.svid
+                    val tosNanos = measurement.timeOffsetNanos
+                    val state = measurement.state
+                    val cn0DbHz = measurement.cn0DbHz
+                    val carrierF = measurement.carrierFrequencyHz
+                    val pseudorangeRMPS = measurement.pseudorangeRateMetersPerSecond
+                    val pseudoraneRUMPS = measurement.pseudorangeRateUncertaintyMetersPerSecond
 
-                    Log.d("cn0DbHz", measurement.cn0DbHz.toString())
+                    Log.d("SvId", svid.toString())
+                    Log.d("Time offset in nanos", tosNanos.toString())
 
-                    Log.d("carrierFrequencyHz" ,measurement.carrierFrequencyHz.toString())
+                    Log.d("State", state.toString())
 
-                    Log.d("pseudorangeRateMeterPerSecond", measurement.pseudorangeRateMetersPerSecond.toString())
+                    Log.d("cn0DbHz", cn0DbHz.toString())
 
-                    Log.d("pseudorangeRateUncertaintyMeterPerSecond",measurement.pseudorangeRateUncertaintyMetersPerSecond.toString())
+                    Log.d("carrierFrequencyHz" , carrierF.toString())
+
+                    Log.d("pseudorangeRateMeterPerSecond", pseudorangeRMPS.toString())
+
+                    Log.d("pseudorangeRateUncertaintyMeterPerSecond", pseudoraneRUMPS.toString())
+
                 }
             }
 
@@ -122,4 +150,13 @@ class GnssHandler{
         }
 
     }
+
+
+    fun stopLogging(){
+        locationManager.removeUpdates(gpsLocationListener)
+        locationManager.removeUpdates(networkLocationListener)
+        locationManager.unregisterGnssMeasurementsCallback(gnssMeasurementsEventListener)
+    }
+
+
 }
