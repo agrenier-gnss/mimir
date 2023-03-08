@@ -2,10 +2,12 @@ package com.mobilewizards.logging_app
 
 import android.annotation.SuppressLint
 import android.Manifest
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -13,6 +15,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.wearable.DataMap
 import com.google.android.gms.wearable.MessageClient
@@ -128,6 +131,7 @@ class MainActivity : AppCompatActivity() {
         }
         return true
     }
+
     fun checkPermissions(){
 
         if (ActivityCompat.checkSelfPermission(
@@ -141,12 +145,42 @@ class MainActivity : AppCompatActivity() {
                 Manifest.permission.BLUETOOTH_SCAN
             ) != PackageManager.PERMISSION_GRANTED
         ){
+            ActivityCompat.requestPermissions(this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.BLUETOOTH_SCAN),
+                225 )
+        }
+    }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                ActivityCompat.requestPermissions(this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.BLUETOOTH_SCAN),225 )
-            };
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode) {
 
+            //location permission
+            225 -> {
+                if ((grantResults.isNotEmpty() &&
+                            grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    // Permission is granted. Continue the action or workflow
+                    // in your app.
+                } else {
+                    // Explain to the user that the feature is unavailable
+                    AlertDialog.Builder(this)
+                        .setTitle("Location permission denied")
+                        .setMessage("Permission is denied.")
+                        .setPositiveButton("OK",null)
+                        .setNegativeButton("Cancel", null)
+                        .show()
+                }
+                return
+            }
+
+            else -> {
+                // Ignore all other requests.
+            }
         }
     }
 }
