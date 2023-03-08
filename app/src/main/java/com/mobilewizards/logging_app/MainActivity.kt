@@ -28,8 +28,7 @@ class MainActivity : AppCompatActivity() {
         Log.d("phoneLogger", "onCreate called")
         setContentView(R.layout.activity_main)
 
-        this.checkLocationPermissions()
-        this.checkConnectionPermissions()
+        this.checkPermissions()
 
         val countStartButton = findViewById<Button>(R.id.countStartButton)
         val countStopButton = findViewById<Button>(R.id.countStopButton)
@@ -129,7 +128,7 @@ class MainActivity : AppCompatActivity() {
         }
         return true
     }
-    fun checkLocationPermissions(){
+    fun checkPermissions(){
 
         if (ActivityCompat.checkSelfPermission(
                 this,
@@ -137,31 +136,16 @@ class MainActivity : AppCompatActivity() {
             ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ){
-
-            ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION),225 );
-
-        }
-    }
-
-    fun checkConnectionPermissions() {
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.BLUETOOTH_SCAN
             ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
                 this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
+                Manifest.permission.BLUETOOTH_SCAN
             ) != PackageManager.PERMISSION_GRANTED
         ){
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 ActivityCompat.requestPermissions(this,
-                    arrayOf(Manifest.permission.BLUETOOTH_SCAN),225 )
-            }
-            ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 225)
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.BLUETOOTH_SCAN),225 )
+            };
 
         }
     }
