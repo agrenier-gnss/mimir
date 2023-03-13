@@ -102,10 +102,16 @@ class GnssHandler{
                     val carrierF = measurement.carrierFrequencyHz
                     val pseudorangeRMPS = measurement.pseudorangeRateMetersPerSecond
                     val pseudoraneRUMPS = measurement.pseudorangeRateUncertaintyMetersPerSecond
-                    val measurementString = "SvId: $svid, Time offset in nanos: $tosNanos, State: $state, " +
-                            "cn0DbHz: $cn0DbHz, carrierFrequencyHz: $carrierF, " +
-                            "pseudorangeRateMeterPerSecond: $pseudorangeRMPS, " +
-                            "pseudorangeRateUncertaintyMeterPerSecond: $pseudoraneRUMPS"
+
+                    val measurementString =
+                        "$svid," +
+                        "$tosNanos," +
+                        "$state," +
+                        "$cn0DbHz," +
+                        "$carrierF," +
+                        "$pseudorangeRMPS," +
+                        "$pseudoraneRUMPS"
+
                     measurementsList.add(measurementString)
                     Log.d("GNSS Measurement", measurementString)
                 }
@@ -140,6 +146,7 @@ class GnssHandler{
         Log.d("uri", uri.toString())
         uri?.let { mediaUri ->
             context.contentResolver.openOutputStream(mediaUri)?.use { outputStream ->
+                outputStream.write("SvId,Time offset in nanos,State,cn0DbHz,carrierFrequencyHz,pseudorangeRateMeterPerSecond,pseudorangeRateUncertaintyMeterPerSecond\n".toByteArray())
                 gnssMeasurementsList.forEach { measurementString ->
                     outputStream.write("$measurementString\n".toByteArray())
                 }

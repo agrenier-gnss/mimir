@@ -83,17 +83,9 @@ class WatchGNSSHandler {
         }
     }
 
-    val CSVheader =
-            "SvId,Time offset in nanos," +
-            "State," +
-            "cn0DbHz,carrierFrequencyHz," +
-            "pseudorangeRateMeterPerSecond," +
-            "pseudorangeRateUncertaintyMeterPerSecond"
     private var gnssMeasurementsList = mutableListOf<String>()
 
     private fun logGNSS(locationManager: LocationManager) {
-        gnssMeasurementsList.add(CSVheader)
-
         gnssMeasurementsEventListener = object : GnssMeasurementsEvent.Callback() {
             override fun onGnssMeasurementsReceived(event: GnssMeasurementsEvent) {
                 val measurementsList = mutableListOf<String>()
@@ -107,7 +99,14 @@ class WatchGNSSHandler {
                     val pseudorangeRMPS = measurement.pseudorangeRateMetersPerSecond
                     val pseudoraneRUMPS = measurement.pseudorangeRateUncertaintyMetersPerSecond
                     val measurementString =
-                        "$svid,$tosNanos,$state,$cn0DbHz,$carrierF,$pseudorangeRMPS,$pseudoraneRUMPS"
+                        "$svid," +
+                        "$tosNanos," +
+                        "$state," +
+                        "$cn0DbHz," +
+                        "$carrierF," +
+                        "$pseudorangeRMPS," +
+                        "$pseudoraneRUMPS"
+
                     measurementsList.add(measurementString)
                     Log.d("GNSS Measurement", measurementString)
                 }
@@ -142,6 +141,7 @@ class WatchGNSSHandler {
         Log.d("uri", uri.toString())
         uri?.let { mediaUri ->
             context.contentResolver.openOutputStream(mediaUri)?.use { outputStream ->
+                outputStream.write("SvId,Time offset in nanos,State,cn0DbHz,carrierFrequencyHz,pseudorangeRateMeterPerSecond,pseudorangeRateUncertaintyMeterPerSecond\n".toByteArray())
                 gnssMeasurementsList.forEach { measurementString ->
                     outputStream.write("$measurementString\n".toByteArray())
                 }

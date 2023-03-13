@@ -8,10 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.wearable.DataMap
@@ -56,6 +53,9 @@ class MainActivity : AppCompatActivity() {
         val stopLogButton = findViewById<Button>(R.id.stopLogButton)
         val motionSensors = MotionSensorsHandler(this)
         val gnss = GnssHandler(this)
+        val IMUSlider = findViewById<SeekBar>(R.id.sliderIMU)
+        val MagnetometerSlider = findViewById<SeekBar>(R.id.sliderMagnetometer)
+        val BarometerSlider = findViewById<SeekBar>(R.id.sliderBarometer)
         val BLE = BLEHandler(this)
 
         loggingButton.setOnClickListener{
@@ -74,6 +74,48 @@ class MainActivity : AppCompatActivity() {
             gnss.stopLogging(this)
             BLE.stopLogging()
         }
+
+        IMUSlider.min = 10
+        IMUSlider.max = 100
+        IMUSlider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                Log.d("IMUSLIDERPROGRESS", IMUSlider.progress.toString())
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+        })
+
+        MagnetometerSlider.min = 1
+        MagnetometerSlider.max = 10
+        MagnetometerSlider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                Log.d("MAGNESLIDERPROGRESS", MagnetometerSlider.progress.toString())
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+        })
+
+        BarometerSlider.min = 1
+        BarometerSlider.max = 10
+        BarometerSlider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                Log.d("BAROSLIDERPROGRESS", BarometerSlider.progress.toString())
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+        })
 
 
         val etTextToWatch: EditText = findViewById(R.id.etTextToWear)
