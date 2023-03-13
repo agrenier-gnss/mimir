@@ -2,12 +2,9 @@ package com.mobilewizards.logging_app
 
 import android.annotation.SuppressLint
 import android.Manifest
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -36,7 +33,6 @@ class MainActivity : AppCompatActivity() {
         val countStartButton = findViewById<Button>(R.id.countStartButton)
         val countStopButton = findViewById<Button>(R.id.countStopButton)
 
-
         // Check if thread is alive to rightfully enable/disable buttons
         if (counterThread?.isAlive == true) {
             // Implementation of code that require concurrent threads to be running
@@ -59,7 +55,7 @@ class MainActivity : AppCompatActivity() {
         val loggingButton = findViewById<Button>(R.id.startLogButton)
         val stopLogButton = findViewById<Button>(R.id.stopLogButton)
         val motionSensors = MotionSensorsHandler(this)
-        val Gnss = GnssHandler(this)
+        val gnss = GnssHandler(this)
         val BLE = BLEHandler(this)
 
         loggingButton.setOnClickListener{
@@ -67,7 +63,7 @@ class MainActivity : AppCompatActivity() {
             stopLogButton.isEnabled = true
             Log.d("start logging", "Start logging")
             motionSensors.setUpSensors()
-            Gnss.setUpLogging()
+            gnss.setUpLogging()
             BLE.setUpLogging()
         }
 
@@ -75,7 +71,7 @@ class MainActivity : AppCompatActivity() {
             loggingButton.isEnabled = true
             stopLogButton.isEnabled = false
             motionSensors.stopLogging()
-            Gnss.stopLogging(this)
+            gnss.stopLogging(this)
             BLE.stopLogging()
         }
 
@@ -99,8 +95,6 @@ class MainActivity : AppCompatActivity() {
             tvTexfFromWatch.text = dataMap.getString("dataFromWatch")
         }
     }
-
-
 
     private fun sendTextToWatch(text: String) {
         val dataMap = DataMap().apply {
@@ -179,7 +173,6 @@ class MainActivity : AppCompatActivity() {
                 }
                 return
             }
-
             else -> {
                 // Ignore all other requests.
             }

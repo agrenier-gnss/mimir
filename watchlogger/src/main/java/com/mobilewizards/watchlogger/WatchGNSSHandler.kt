@@ -1,9 +1,8 @@
-package com.mobilewizards.logging_app
+package com.mobilewizards.watchlogger
 
 import android.content.ContentValues
 import android.content.Context
 import android.location.GnssMeasurementsEvent
-import android.location.GnssMeasurementsEvent.Callback
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -12,21 +11,18 @@ import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 
-
-private lateinit var locationManager: LocationManager
-private lateinit var gpsLocationListener: LocationListener
-private lateinit var networkLocationListener: LocationListener
-private lateinit var gnssMeasurementsEventListener: Callback
-
-class GnssHandler{
-
+class WatchGNSSHandler {
+    private lateinit var locationManager: LocationManager
+    private lateinit var gpsLocationListener: LocationListener
+    private lateinit var networkLocationListener: LocationListener
+    private lateinit var gnssMeasurementsEventListener: GnssMeasurementsEvent.Callback
     protected var context: Context
 
     constructor(context: Context) : super() {
         this.context = context.applicationContext
     }
 
-    public fun setUpLogging(){
+    fun setUpLogging(){
         locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         logLocation(locationManager)
         logGNSS(locationManager)
@@ -34,10 +30,9 @@ class GnssHandler{
 
     private fun logLocation(locationManager: LocationManager) {
         //Locationlistener for Gps
-        gpsLocationListener = object : LocationListener{
+        gpsLocationListener = object : LocationListener {
 
             override fun onLocationChanged(location: Location){
-
                 val longitudeGps = location.longitude
                 val latitudeGps = location.latitude
                 val altitudeGps = location.altitude
@@ -53,7 +48,7 @@ class GnssHandler{
 
         }
 
-        networkLocationListener = object : LocationListener{
+        networkLocationListener = object : LocationListener {
             override fun onLocationChanged(location: Location){
 
                 val longitudeNetwork = location.longitude
@@ -88,9 +83,18 @@ class GnssHandler{
         }
     }
 
+    val CSVheader =
+            "SvId,Time offset in nanos," +
+            "State," +
+            "cn0DbHz,carrierFrequencyHz," +
+            "pseudorangeRateMeterPerSecond," +
+            "pseudorangeRateUncertaintyMeterPerSecond"
     private var gnssMeasurementsList = mutableListOf<String>()
+
     private fun logGNSS(locationManager: LocationManager) {
-        gnssMeasurementsEventListener = object : Callback() {
+        gnssMeasurementsList.add(CSVheader)
+
+        gnssMeasurementsEventListener = object : GnssMeasurementsEvent.Callback() {
             override fun onGnssMeasurementsReceived(event: GnssMeasurementsEvent) {
                 val measurementsList = mutableListOf<String>()
 
@@ -102,10 +106,8 @@ class GnssHandler{
                     val carrierF = measurement.carrierFrequencyHz
                     val pseudorangeRMPS = measurement.pseudorangeRateMetersPerSecond
                     val pseudoraneRUMPS = measurement.pseudorangeRateUncertaintyMetersPerSecond
-                    val measurementString = "SvId: $svid, Time offset in nanos: $tosNanos, State: $state, " +
-                            "cn0DbHz: $cn0DbHz, carrierFrequencyHz: $carrierF, " +
-                            "pseudorangeRateMeterPerSecond: $pseudorangeRMPS, " +
-                            "pseudorangeRateUncertaintyMeterPerSecond: $pseudoraneRUMPS"
+                    val measurementString =
+                        "$svid,$tosNanos,$state,$cn0DbHz,$carrierF,$pseudorangeRMPS,$pseudoraneRUMPS"
                     measurementsList.add(measurementString)
                     Log.d("GNSS Measurement", measurementString)
                 }
