@@ -2,6 +2,8 @@ package com.mobilewizards.logging_app
 
 import android.Manifest
 import android.app.Activity
+import android.content.ContentResolver
+import android.content.ContentValues
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.GnssMeasurement
@@ -10,9 +12,17 @@ import android.location.GnssMeasurementsEvent.Callback
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.net.Uri
+import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
-
+import java.io.File
+import java.io.FileWriter
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 private lateinit var locationManager: LocationManager
@@ -24,12 +34,9 @@ class GnssHandler{
 
     protected var context: Context
 
-
     constructor(context: Context) : super() {
         this.context = context.applicationContext
     }
-
-
 
     public fun setUpLogging(){
         locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -105,14 +112,16 @@ class GnssHandler{
     }
 
 
-
-
+    private var gnssMeasurementsList = mutableListOf<String>()
 
     private fun logGNSS(locationManager: LocationManager) {
 
-        gnssMeasurementsEventListener = object : Callback(){
+        gnssMeasurementsEventListener = object : Callback() {
 
             override fun onGnssMeasurementsReceived(event: GnssMeasurementsEvent) {
+
+                val measurementsList = mutableListOf<String>()
+
                 for (measurement in event.measurements) {
 
                     val svid = measurement.svid
@@ -123,39 +132,54 @@ class GnssHandler{
                     val pseudorangeRMPS = measurement.pseudorangeRateMetersPerSecond
                     val pseudoraneRUMPS = measurement.pseudorangeRateUncertaintyMetersPerSecond
 
-                    Log.d("SvId", svid.toString())
-                    Log.d("Time offset in nanos", tosNanos.toString())
+                    val measurementString = "SvId: $svid, Time offset in nanos: $tosNanos, State: $state, " +
+                            "cn0DbHz: $cn0DbHz, carrierFrequencyHz: $carrierF, " +
+                            "pseudorangeRateMeterPerSecond: $pseudorangeRMPS, " +
+                            "pseudorangeRateUncertaintyMeterPerSecond: $pseudoraneRUMPS"
 
-                    Log.d("State", state.toString())
-
-                    Log.d("cn0DbHz", cn0DbHz.toString())
-
-                    Log.d("carrierFrequencyHz" , carrierF.toString())
-
-                    Log.d("pseudorangeRateMeterPerSecond", pseudorangeRMPS.toString())
-
-                    Log.d("pseudorangeRateUncertaintyMeterPerSecond", pseudoraneRUMPS.toString())
+                    measurementsList.add(measurementString)
+                    Log.d("GNSS Measurement", measurementString)
 
                 }
+
+                gnssMeasurementsList.addAll(measurementsList)
             }
 
-            override fun onStatusChanged(status: Int) {
-            }
+            override fun onStatusChanged(status: Int) {}
         }
-        try{
+
+        try {
             locationManager.registerGnssMeasurementsCallback(gnssMeasurementsEventListener)
-        }
-        catch (e: SecurityException){
+        } catch (e: SecurityException) {
             Log.d("Error", "No permission for location fetching")
         }
 
     }
 
-
-    fun stopLogging(){
+    fun stopLogging(context: Context) {
         locationManager.removeUpdates(gpsLocationListener)
         locationManager.removeUpdates(networkLocationListener)
         locationManager.unregisterGnssMeasurementsCallback(gnssMeasurementsEventListener)
+
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Downloads.DISPLAY_NAME, "gnss_measurements.txt")
+            put(MediaStore.Downloads.MIME_TYPE, "text/plain")
+            put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+        }
+
+        val uri = context.contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
+
+        uri?.let { mediaUri ->
+
+            context.contentResolver.openOutputStream(mediaUri)?.use { outputStream ->
+                gnssMeasurementsList.forEach { measurementString ->
+                    outputStream.write("$measurementString\n".toByteArray())
+                }
+                outputStream.flush()
+            }
+
+            Toast.makeText(context, "GNSS Measurements saved to Downloads folder", Toast.LENGTH_SHORT).show()
+        }
     }
 
 

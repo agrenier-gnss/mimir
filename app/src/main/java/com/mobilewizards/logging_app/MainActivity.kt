@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
             loggingButton.isEnabled = true
             stopLogButton.isEnabled = false
             motionSensors.stopLogging()
-            Gnss.stopLogging()
+            Gnss.stopLogging(this)
             BLE.stopLogging()
         }
 
@@ -132,24 +132,26 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    fun checkPermissions(){
+    fun checkPermissions() {
+        val permissions = arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.MANAGE_EXTERNAL_STORAGE,
+            Manifest.permission.BLUETOOTH_SCAN
+        )
 
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.BLUETOOTH_SCAN
-            ) != PackageManager.PERMISSION_GRANTED
-        ){
-            ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.BLUETOOTH_SCAN),
-                225 )
+        var allPermissionsGranted = true
+        for (permission in permissions) {
+            if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                allPermissionsGranted = false
+                break
+            }
+        }
+
+        if (!allPermissionsGranted) {
+            ActivityCompat.requestPermissions(this, permissions, 225)
         }
     }
 
