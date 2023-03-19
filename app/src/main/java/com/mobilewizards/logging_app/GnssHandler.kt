@@ -125,7 +125,7 @@ class GnssHandler{
         try {
             locationManager.registerGnssMeasurementsCallback(gnssMeasurementsEventListener)
         } catch (e: SecurityException) {
-            Log.d("Error", "No permission for location fetching")
+            Log.e("Error", "No permission for location fetching")
         }
 
     }
@@ -136,8 +136,8 @@ class GnssHandler{
         locationManager.unregisterGnssMeasurementsCallback(gnssMeasurementsEventListener)
 
         val contentValues = ContentValues().apply {
-            put(MediaStore.Downloads.DISPLAY_NAME, "gnss_measurements.txt")
-            put(MediaStore.Downloads.MIME_TYPE, "text/plain")
+            put(MediaStore.Downloads.DISPLAY_NAME, "gnss_measurements.csv")
+            put(MediaStore.Downloads.MIME_TYPE, "text/csv")
             put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
         }
 
