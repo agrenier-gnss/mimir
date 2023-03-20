@@ -1,12 +1,16 @@
 package com.mobilewizards.logging_app
 
+import android.content.ContentValues
 import android.content.Context
 import android.content.Context.SENSOR_SERVICE
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.getSystemService
 
@@ -114,6 +118,7 @@ class MotionSensorsHandler: SensorEventListener{
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
+
         if (event?.sensor?.type == acSensor?.type) {
             logAccelerometer(event)
         }
@@ -141,8 +146,8 @@ class MotionSensorsHandler: SensorEventListener{
 
     private fun logAccelerometer(event: SensorEvent?) {
         if (event?.sensor?.type == acSensor?.type) {
-            val sideTilt = event?.values?.get(0)
 
+            val sideTilt = event?.values?.get(0)
             if (sideTilt != side && sideTilt != null) {
                 side = sideTilt
                 Log.d("Tilting from side to side | Acceleration force along the X axis | Includes gravity", sideTilt.toString())
@@ -313,8 +318,14 @@ class MotionSensorsHandler: SensorEventListener{
     }
 
     fun stopLogging() {
-        sensorManager.unregisterListener(this)
-        this.listenerActive = false
+
+        try {
+            sensorManager.unregisterListener(this)
+            this.listenerActive = false
+
+        } catch(e: Exception){
+            Log.e("Error", "An error occurred while saving motion sensors results")
+        }
     }
     // TODO: Implement this when we know accuracy parameters
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
