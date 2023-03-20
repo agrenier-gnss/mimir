@@ -3,6 +3,8 @@ package com.mobilewizards.logging_app
 import android.Manifest
 import android.app.Activity
 import android.content.pm.PackageManager
+import android.hardware.Sensor
+import android.hardware.SensorManager
 import android.os.Bundle
 import android.provider.ContactsContract.Data
 import android.util.Log
@@ -14,6 +16,7 @@ import com.google.android.gms.wearable.DataMap
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.Wearable
 import com.mobilewizards.logging_app.databinding.ActivityMainWatchBinding
+import com.mobilewizards.watchlogger.HealthServicesHandler
 import com.mobilewizards.watchlogger.WatchGNSSHandler
 
 
@@ -22,7 +25,8 @@ class MainActivityWatch : Activity() {
     private lateinit var binding: ActivityMainWatchBinding
     private lateinit var mMessageClient: MessageClient
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+
+    override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
         binding = ActivityMainWatchBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -48,18 +52,25 @@ class MainActivityWatch : Activity() {
 
 
         val Gnss = WatchGNSSHandler(this)
+        val healthServices = HealthServicesHandler(this)
         var isLogging: Boolean = false
         // Send messages to phone
         val sendButton = findViewById<Button>(R.id.btn_send)
         sendButton.setOnClickListener {
             isLogging = !isLogging
+            healthServices.getHeartRate()
+            // Commented this out for because testing only heart rate
+//            if (isLogging) Gnss.setUpLogging() else Gnss.stopLogging(this)
 
-            if (isLogging) Gnss.setUpLogging() else Gnss.stopLogging(this)
-
-            var textToSend = "This is a test text sent from watch"
-            sendTextToWatch(textToSend.toString())
-            Toast.makeText(this, "Text sent", Toast.LENGTH_SHORT).show()
+//            var textToSend = "This is a test text sent from watch"
+//            sendTextToWatch(textToSend.toString())
+//            Toast.makeText(this, "Text sent", Toast.LENGTH_SHORT).show()
         }
+
+
+
+
+
     }
     private fun sendTextToWatch(text: String) {
         val dataMap = DataMap().apply {
@@ -83,6 +94,7 @@ class MainActivityWatch : Activity() {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.MANAGE_EXTERNAL_STORAGE,
+            Manifest.permission.BODY_SENSORS,
         )
 
         var allPermissionsGranted = true

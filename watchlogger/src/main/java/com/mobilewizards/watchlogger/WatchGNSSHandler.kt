@@ -2,6 +2,8 @@ package com.mobilewizards.watchlogger
 
 import android.content.ContentValues
 import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorManager
 import android.location.GnssMeasurementsEvent
 import android.location.Location
 import android.location.LocationListener
@@ -10,6 +12,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
+import androidx.health.services.client.proto.DataProto.HeartRateAlertParams
 
 class WatchGNSSHandler {
     private lateinit var locationManager: LocationManager
