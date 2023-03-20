@@ -52,7 +52,7 @@ class MainActivityWatch : Activity() {
 
 
         val Gnss = WatchGNSSHandler(this)
-        val healthServices = HealthServicesHandler(this)
+        val healthServices = HealthServicesHandler(this, text)
         var isLogging: Boolean = false
         // Send messages to phone
         val sendButton = findViewById<Button>(R.id.btn_send)
