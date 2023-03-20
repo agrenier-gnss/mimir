@@ -12,7 +12,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
-import androidx.health.services.client.proto.DataProto.HeartRateAlertParams
+//import androidx.health.services.client.proto.DataProto.HeartRateAlertParams
 
 class WatchGNSSHandler {
     private lateinit var locationManager: LocationManager
@@ -98,17 +98,44 @@ class WatchGNSSHandler {
                     val tosNanos = measurement.timeOffsetNanos
                     val state = measurement.state
                     val cn0DbHz = measurement.cn0DbHz
-                    val carrierF = measurement.carrierFrequencyHz
+                    val carrierFrequency = measurement.carrierFrequencyHz
                     val pseudorangeRMPS = measurement.pseudorangeRateMetersPerSecond
-                    val pseudoraneRUMPS = measurement.pseudorangeRateUncertaintyMetersPerSecond
+                    val pseudorangeRUMPS = measurement.pseudorangeRateUncertaintyMetersPerSecond
+                    val accumulatedDeltaRangeMeters = measurement.accumulatedDeltaRangeMeters
+                    val accumulatedDeltaRangeState = measurement.accumulatedDeltaRangeState
+                    val accumulatedDeltaRangeUncertaintyMeters = measurement.accumulatedDeltaRangeUncertaintyMeters
+                    val basebandCn0DbHz = measurement.basebandCn0DbHz
+                    val constellationType = measurement.constellationType
+                    val fullInterSignalBias = measurement.fullInterSignalBiasNanos
+                    val fullInterSignalBiasUncertainty = measurement.fullInterSignalBiasUncertaintyNanos
+                    val multipathIndicator = measurement.multipathIndicator
+                    val receivedSvTime = measurement.receivedSvTimeNanos
+                    val receivedSvTimeUncertainty = measurement.receivedSvTimeUncertaintyNanos
+                    val satelliteInterSignalBias = measurement.satelliteInterSignalBiasNanos
+                    val satelliteInterSiganlBiasUncertainty = measurement.satelliteInterSignalBiasUncertaintyNanos
+                    val SnrInDb = measurement.snrInDb
+
                     val measurementString =
                         "$svid," +
                         "$tosNanos," +
                         "$state," +
                         "$cn0DbHz," +
-                        "$carrierF," +
+                        "$carrierFrequency," +
                         "$pseudorangeRMPS," +
-                        "$pseudoraneRUMPS"
+                        "$pseudorangeRUMPS," +
+                        "$accumulatedDeltaRangeState," +
+                        "$accumulatedDeltaRangeMeters," +
+                        "$accumulatedDeltaRangeUncertaintyMeters," +
+                        "$basebandCn0DbHz," +
+                        "$constellationType," +
+                        "$fullInterSignalBias," +
+                        "$fullInterSignalBiasUncertainty," +
+                        "$multipathIndicator," +
+                        "$receivedSvTime," +
+                        "$receivedSvTimeUncertainty," +
+                        "$satelliteInterSignalBias," +
+                        "$satelliteInterSiganlBiasUncertainty," +
+                        "$SnrInDb"
 
                     measurementsList.add(measurementString)
                     Log.d("GNSS Measurement", measurementString)

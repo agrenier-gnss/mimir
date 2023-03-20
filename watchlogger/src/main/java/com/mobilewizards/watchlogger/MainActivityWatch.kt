@@ -25,6 +25,9 @@ class MainActivityWatch : Activity() {
     private lateinit var binding: ActivityMainWatchBinding
     private lateinit var mMessageClient: MessageClient
 
+    private var barometerFrequency: Int = 1
+    private var magnetometerFrequency: Int = 1
+    private var IMUFrequency: Int = 10
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
@@ -47,7 +50,21 @@ class MainActivityWatch : Activity() {
         mMessageClient.addListener {
             Log.d("watchLogger", "it.data " + DataMap.fromByteArray(it.data).toString())
             val dataMap = DataMap.fromByteArray(it.data)
-            text.text = dataMap.getString("data")
+            if(dataMap.containsKey("data")){
+                text.text = dataMap.getString("data")
+            }
+            else if(dataMap.containsKey("barometer")){
+                barometerFrequency = dataMap.getInt("barometer")
+                text.text = barometerFrequency.toString()
+            }
+            else if(dataMap.containsKey("magnetometer")){
+                magnetometerFrequency = dataMap.getInt("magnetometer")
+                text.text = magnetometerFrequency.toString()
+            }
+            else if(dataMap.containsKey("imu")){
+                IMUFrequency = dataMap.getInt("imu")
+                text.text = IMUFrequency.toString()
+            }
         }
 
 

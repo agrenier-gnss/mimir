@@ -80,6 +80,10 @@ class MainActivity : AppCompatActivity() {
         IMUSlider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 Log.d("IMUSLIDERPROGRESS", IMUSlider.progress.toString())
+                val IMUMap = DataMap().apply{
+                    putInt("imu",IMUSlider.progress)
+                }
+                sendParameterToWatch(IMUMap)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -94,6 +98,10 @@ class MainActivity : AppCompatActivity() {
         MagnetometerSlider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 Log.d("MAGNESLIDERPROGRESS", MagnetometerSlider.progress.toString())
+                val magnetometerMap = DataMap().apply{
+                    putInt("magnetometer",MagnetometerSlider.progress)
+                }
+                sendParameterToWatch(magnetometerMap)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -108,6 +116,10 @@ class MainActivity : AppCompatActivity() {
         BarometerSlider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 Log.d("BAROSLIDERPROGRESS", BarometerSlider.progress.toString())
+                val barometerMap = DataMap().apply{
+                    putInt("barometer",BarometerSlider.progress)
+                }
+                sendParameterToWatch(barometerMap)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -135,6 +147,18 @@ class MainActivity : AppCompatActivity() {
             Log.d("phoneLogger", "it.data " + DataMap.fromByteArray(it.data).toString())
             val dataMap = DataMap.fromByteArray(it.data)
             tvTexfFromWatch.text = dataMap.getString("dataFromWatch")
+        }
+    }
+
+    private fun sendParameterToWatch(data: DataMap){
+        val dataBytes = data.toByteArray()
+
+        Wearable.getNodeClient(this).connectedNodes.addOnSuccessListener { nodes ->
+            for (node in nodes) {
+                Log.d("data_tag", node.id)
+                mMessageClient.sendMessage(node.id, "/message", dataBytes)
+                Log.d("data_tag", "msg sent")
+            }
         }
     }
 
