@@ -2,33 +2,41 @@ package com.mobilewizards.logging_app
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorManager
+import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract.Data
+import android.provider.MediaStore
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import com.google.android.gms.wearable.DataMap
-import com.google.android.gms.wearable.MessageClient
-import com.google.android.gms.wearable.Wearable
+import com.google.android.gms.tasks.Tasks
+import com.google.android.gms.wearable.*
 import com.mobilewizards.logging_app.databinding.ActivityMainWatchBinding
 import com.mobilewizards.watchlogger.HealthServicesHandler
 import com.mobilewizards.watchlogger.WatchGNSSHandler
+import java.io.File
+import java.util.concurrent.ExecutionException
 
 
-class MainActivityWatch : Activity() {
+class sMainActivityWatch : Activity() {
 
     private lateinit var binding: ActivityMainWatchBinding
     private lateinit var mMessageClient: MessageClient
+    private lateinit var mChannelClient: ChannelClient
 
+    private val CSV_FILE_CHANNEL_PATH = MediaStore.Downloads.EXTERNAL_CONTENT_URI
     private var barometerFrequency: Int = 1
     private var magnetometerFrequency: Int = 1
     private var IMUFrequency: Int = 10
+    private val TAG = "watchLogger"
 
+    private val testFile = File("${CSV_FILE_CHANNEL_PATH}/test")
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
         binding = ActivityMainWatchBinding.inflate(layoutInflater)
@@ -66,6 +74,7 @@ class MainActivityWatch : Activity() {
                 text.text = IMUFrequency.toString()
             }
         }
+        // File sending
 
 
         val Gnss = WatchGNSSHandler(this)
@@ -82,16 +91,56 @@ class MainActivityWatch : Activity() {
 //            var textToSend = "This is a test text sent from watch"
 //            sendTextToWatch(textToSend.toString())
 //            Toast.makeText(this, "Text sent", Toast.LENGTH_SHORT).show()
+
+            // Send file to phone
+            sendCsvFileToPhone(testFile, getPhoneNodeId()[0], this)
+        }
+    }
+
+    private fun sendCsvFileToPhone(csvFile: File, nodeId: String, context: Context) {
+        val channelClient = Wearable.getChannelClient(context)
+
+        val callback = object : ChannelClient.ChannelCallback() {
+            override fun onChannelOpened(channel: ChannelClient.Channel) {
+                // Send the CSV file to the phone
+                channelClient.sendFile(channel, Uri.fromFile(csvFile)).addOnCompleteListener {
+                    // The CSV file has been sent, close the channel
+                    channelClient.close(channel)
+                }
+            }
+
+            override fun onChannelClosed(channel: ChannelClient.Channel, closeReason: Int, appSpecificErrorCode: Int) {
+                Log.d(TAG, "Channel closed: nodeId=$nodeId, reason=$closeReason, errorCode=$appSpecificErrorCode")
+            }
         }
 
+        channelClient.registerChannelCallback(callback)
 
-
-
-
+        channelClient.openChannel(nodeId,
+            CSV_FILE_CHANNEL_PATH.toString()
+        ).addOnCompleteListener { result ->
+            if (result.isSuccessful) {
+                Log.d(TAG, "Channel opened: nodeId=$nodeId, path=$CSV_FILE_CHANNEL_PATH")
+            } else {
+                Log.e(TAG, "Failed to open channel: nodeId=$nodeId, path=$CSV_FILE_CHANNEL_PATH")
+                channelClient.unregisterChannelCallback(callback)
+            }
+        }
     }
+
+    private fun getPhoneNodeId(): ArrayList<String> {
+        var nodeIds =ArrayList<String>()
+        Wearable.getNodeClient(this).connectedNodes.addOnSuccessListener { nodes ->
+            for (node in nodes) {
+                nodeIds.add(node.id.toString())
+            }
+        }
+        return nodeIds
+    }
+
     private fun sendTextToWatch(text: String) {
         val dataMap = DataMap().apply {
-            putString("dataFromWatch", text)
+           //§ putString("dataFromWatch", text)
         }
         val dataByteArray = dataMap.toByteArray()
 
