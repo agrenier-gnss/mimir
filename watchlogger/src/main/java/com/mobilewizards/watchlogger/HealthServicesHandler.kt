@@ -34,7 +34,7 @@ class HealthServicesHandler: SensorEventListener{
     override fun onSensorChanged(sensorEvent: SensorEvent?) {
 //        for (event in sensorEvent?.values!!) {
             Log.d("heart", sensorEvent?.values!![0].toString())
-            text.text = sensorEvent?.values!![0].toString()
+//            text.text = sensorEvent?.values!![0].toString()
 //        }
     }
 

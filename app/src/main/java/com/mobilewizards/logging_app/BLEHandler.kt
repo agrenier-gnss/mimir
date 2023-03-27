@@ -94,5 +94,4 @@ class BLEHandler(private val context: Context) {
             Log.e("Error", "No permission for BLE fetching")
         }
     }
-
 }
