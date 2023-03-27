@@ -8,6 +8,7 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Environment
+import android.os.SystemClock
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
@@ -28,11 +29,11 @@ class GnssHandler{
 
     public fun setUpLogging(){
         locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        logLocation(locationManager)
-        logGNSS(locationManager)
+        logLocation(locationManager, 1000)
+        logGNSS(locationManager, 1000)
     }
 
-    private fun logLocation(locationManager: LocationManager) {
+    private fun logLocation(locationManager: LocationManager, samplingFrequency: Long) {
         //Locationlistener for Gps
         gpsLocationListener = object : LocationListener{
 
@@ -73,13 +74,13 @@ class GnssHandler{
             if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 locationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER,
-                    1000, 0F, gpsLocationListener
+                    samplingFrequency, 0F, gpsLocationListener
                 )
             }
             if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                 locationManager.requestLocationUpdates(
                     LocationManager.NETWORK_PROVIDER,
-                    1000, 0F, networkLocationListener
+                    samplingFrequency, 0F, networkLocationListener
                 )
             }
         }
@@ -89,12 +90,17 @@ class GnssHandler{
     }
 
     private var gnssMeasurementsList = mutableListOf<String>()
-    private fun logGNSS(locationManager: LocationManager) {
+    private fun logGNSS(locationManager: LocationManager, samplingFrequency: Long) {
         gnssMeasurementsEventListener = object : Callback() {
+            var lastMeasurementTime = 0L
             override fun onGnssMeasurementsReceived(event: GnssMeasurementsEvent) {
-                val measurementsList = mutableListOf<String>()
 
-                for (measurement in event.measurements) {
+                val currentTime = SystemClock.elapsedRealtime()
+                if (currentTime - lastMeasurementTime >= samplingFrequency) {
+
+                    val measurementsList = mutableListOf<String>()
+
+                    for (measurement in event.measurements) {
                         val svid = measurement.svid
                         val tosNanos = measurement.timeOffsetNanos
                         val state = measurement.state
@@ -104,45 +110,49 @@ class GnssHandler{
                         val pseudorangeRUMPS = measurement.pseudorangeRateUncertaintyMetersPerSecond
                         val accumulatedDeltaRangeMeters = measurement.accumulatedDeltaRangeMeters
                         val accumulatedDeltaRangeState = measurement.accumulatedDeltaRangeState
-                        val accumulatedDeltaRangeUncertaintyMeters = measurement.accumulatedDeltaRangeUncertaintyMeters
+                        val accumulatedDeltaRangeUncertaintyMeters =
+                            measurement.accumulatedDeltaRangeUncertaintyMeters
                         val basebandCn0DbHz = measurement.basebandCn0DbHz
                         val constellationType = measurement.constellationType
                         val fullInterSignalBias = measurement.fullInterSignalBiasNanos
-                        val fullInterSignalBiasUncertainty = measurement.fullInterSignalBiasUncertaintyNanos
+                        val fullInterSignalBiasUncertainty =
+                            measurement.fullInterSignalBiasUncertaintyNanos
                         val multipathIndicator = measurement.multipathIndicator
                         val receivedSvTime = measurement.receivedSvTimeNanos
                         val receivedSvTimeUncertainty = measurement.receivedSvTimeUncertaintyNanos
                         val satelliteInterSignalBias = measurement.satelliteInterSignalBiasNanos
-                        val satelliteInterSiganlBiasUncertainty = measurement.satelliteInterSignalBiasUncertaintyNanos
+                        val satelliteInterSiganlBiasUncertainty =
+                            measurement.satelliteInterSignalBiasUncertaintyNanos
                         val SnrInDb = measurement.snrInDb
 
                         val measurementString =
                             "$svid," +
-                            "$tosNanos," +
-                            "$state," +
-                            "$cn0DbHz," +
-                            "$carrierFrequency," +
-                            "$pseudorangeRMPS," +
-                            "$pseudorangeRUMPS," +
-                            "$accumulatedDeltaRangeState," +
-                            "$accumulatedDeltaRangeMeters," +
-                            "$accumulatedDeltaRangeUncertaintyMeters," +
-                            "$basebandCn0DbHz," +
-                            "$constellationType," +
-                            "$fullInterSignalBias," +
-                            "$fullInterSignalBiasUncertainty," +
-                            "$multipathIndicator," +
-                            "$receivedSvTime," +
-                            "$receivedSvTimeUncertainty," +
-                            "$satelliteInterSignalBias," +
-                            "$satelliteInterSiganlBiasUncertainty," +
-                            "$SnrInDb"
+                                    "$tosNanos," +
+                                    "$state," +
+                                    "$cn0DbHz," +
+                                    "$carrierFrequency," +
+                                    "$pseudorangeRMPS," +
+                                    "$pseudorangeRUMPS," +
+                                    "$accumulatedDeltaRangeState," +
+                                    "$accumulatedDeltaRangeMeters," +
+                                    "$accumulatedDeltaRangeUncertaintyMeters," +
+                                    "$basebandCn0DbHz," +
+                                    "$constellationType," +
+                                    "$fullInterSignalBias," +
+                                    "$fullInterSignalBiasUncertainty," +
+                                    "$multipathIndicator," +
+                                    "$receivedSvTime," +
+                                    "$receivedSvTimeUncertainty," +
+                                    "$satelliteInterSignalBias," +
+                                    "$satelliteInterSiganlBiasUncertainty," +
+                                    "$SnrInDb"
 
                         measurementsList.add(measurementString)
                         Log.d("GNSS Measurement", measurementString)
                     }
-
-                gnssMeasurementsList.addAll(measurementsList)
+                    gnssMeasurementsList.addAll(measurementsList)
+                    lastMeasurementTime = currentTime
+                }
             }
 
             override fun onStatusChanged(status: Int) {}
