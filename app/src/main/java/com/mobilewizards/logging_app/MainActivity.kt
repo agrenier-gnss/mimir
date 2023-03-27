@@ -49,6 +49,16 @@ class MainActivity : AppCompatActivity() {
             counterThread = null
         }
 
+        val gnssButton = findViewById<Button>(R.id.startGNSSButton)
+        val imuButton = findViewById<Button>(R.id.startIMUButton)
+        val magnetometerButton = findViewById<Button>(R.id.startMagnetometerButton)
+        val barometerButton = findViewById<Button>(R.id.startBarometerButton)
+
+        var gnssToggle = true
+        var imuToggle = true
+        var magnetometerToggle = true
+        var barometerToggle = true
+
         val loggingButton = findViewById<Button>(R.id.startLogButton)
         val stopLogButton = findViewById<Button>(R.id.stopLogButton)
         val motionSensors = MotionSensorsHandler(this)
@@ -61,18 +71,73 @@ class MainActivity : AppCompatActivity() {
         loggingButton.setOnClickListener{
             loggingButton.isEnabled = false
             stopLogButton.isEnabled = true
+            gnssButton.isEnabled = false
+            imuButton.isEnabled = false
+            magnetometerButton.isEnabled = false
+            barometerButton.isEnabled = false
+            IMUSlider.isEnabled = false
+            MagnetometerSlider.isEnabled = false
+            BarometerSlider.isEnabled = false
             Log.d("start logging", "Start logging")
             motionSensors.setUpSensors()
-            gnss.setUpLogging()
+            if (gnssToggle) {gnss.setUpLogging()}
             BLE.setUpLogging()
         }
 
         stopLogButton.setOnClickListener {
             loggingButton.isEnabled = true
             stopLogButton.isEnabled = false
+            gnssButton.isEnabled = true
+            imuButton.isEnabled = true
+            magnetometerButton.isEnabled = true
+            barometerButton.isEnabled = true
+            IMUSlider.isEnabled = true
+            MagnetometerSlider.isEnabled = true
+            BarometerSlider.isEnabled = true
             motionSensors.stopLogging()
-            gnss.stopLogging(this)
+            if (gnssToggle) {gnss.stopLogging(this)}
             BLE.stopLogging()
+        }
+
+
+        gnssButton.setOnClickListener {
+            if (!gnssToggle) {
+                gnssToggle = true
+                gnssButton.text = "GNSS"
+            } else {
+                gnssToggle = false
+                gnssButton.text = "GNSS - Disabled"
+            }
+        }
+
+        imuButton.setOnClickListener {
+            if (!imuToggle) {
+                imuToggle = true
+                imuButton.text = "IMU"
+            } else {
+                imuToggle = false
+                imuButton.text = "IMU - Disabled"
+            }
+        }
+
+        magnetometerButton.setOnClickListener {
+            if (!magnetometerToggle) {
+                magnetometerToggle = true
+                magnetometerButton.text = "Magnetometer"
+            } else {
+                magnetometerToggle = false
+                magnetometerButton.text = "Magnetometer - Disabled"
+            }
+        }
+
+        barometerButton.setOnClickListener {
+            if (!barometerToggle) {
+                barometerToggle = true
+                barometerButton.text = "Barometer"
+            } else {
+                barometerToggle = false
+                barometerButton.text = "Barometer - Disabled"
+            }
         }
 
         IMUSlider.min = 10
