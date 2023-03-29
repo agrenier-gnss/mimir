@@ -2,9 +2,9 @@
 <resources>
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here -->
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryDark">@color/purple_500</item>
-        <item name="colorAccent">@color/purple_700</item>
+        <item name="colorPrimary">@color/dark_purple</item>
+        <item name="colorPrimaryDark">@color/light_purple</item>
+        <item name="colorAccent">@color/blue</item>
     </style>
     <style name="MyButtonShapeAppearance">
         <item name="cornerSize">16dp</item>
