@@ -3,15 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#000000">
 
     <TextView
         android:id="@+id/editTextTextPersonName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="126dp"
+        android:layout_height="62dp"
         android:layout_marginTop="100dp"
         android:ems="10"
         android:text="Mimir"
+        android:textSize="46sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -19,11 +21,12 @@
 
     <TextView
         android:id="@+id/editTextTextPersonName2"
-        android:layout_width="163dp"
-        android:layout_height="16dp"
-        android:layout_marginTop="32dp"
-        android:ems="10"
+        android:layout_width="173dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="16dp"
+        android:ems="5"
         android:text="Sensor logging"
+        android:textSize="26sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName"
