@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/startLogButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,29 +15,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.74" />
-
-    <TextView
-        android:id="@+id/tipTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Press &quot;Start&quot; to initiate a separate thread that counts"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.285"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.894" />
-
-    <Button
-        android:id="@+id/countStartButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:text="Start Count"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tipTextView" />
+        app:layout_constraintVertical_bias="0.74"
+        app:shapeAppearance="@style/MyButtonShapeAppearance" />/>
 
     <Button
         android:id="@+id/stopLogButton"
@@ -50,17 +29,6 @@
         app:layout_constraintStart_toEndOf="@+id/startLogButton"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.74" />
-
-    <Button
-        android:id="@+id/countStopButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:enabled="false"
-        android:text="Stop Count"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/countStartButton"
-        app:layout_constraintTop_toBottomOf="@+id/tipTextView" />
 
     <Button
         android:id="@+id/startGNSSButton"
