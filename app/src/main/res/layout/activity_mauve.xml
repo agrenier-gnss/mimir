@@ -11,11 +11,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
         android:ems="10"
-        android:inputType="textPersonName"
         android:text="Mimir"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearance="@style/MyTextAppearance" />/>
 
     <TextView
         android:id="@+id/editTextTextPersonName2"
@@ -23,11 +23,11 @@
         android:layout_height="16dp"
         android:layout_marginTop="32dp"
         android:ems="10"
-        android:inputType="textPersonName"
         android:text="Sensor logging"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName"
+        app:shapeAppearance="@style/MyTextAppearance" />/>
 
     <ToggleButton
         android:id="@+id/toggleButton"
