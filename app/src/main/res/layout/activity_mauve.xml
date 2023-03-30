@@ -14,7 +14,7 @@
         android:ems="10"
         android:text="Mimir"
         android:textSize="46sp"
-        android:textColor="#800080"
+        android:textColor="@color/dark_purple"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -28,7 +28,7 @@
         android:ems="5"
         android:text="Sensor logging"
         android:textSize="26sp"
-        android:textColor="#582452"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName"
@@ -45,16 +45,22 @@
         android:textOn="Stop survey"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2"
+        app:shapeAppearance="@style/MyButtonShapeAppearance" />/>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="301dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="36dp"
+        android:icon="@drawable/ic_mauve_download"
         android:text="Download latest report"
+        android:tint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toggleButton" />
+        app:layout_constraintTop_toBottomOf="@+id/toggleButton"
+        app:shapeAppearance="@style/MyButtonShapeAppearance"
+        app:strokeColor="@color/white" />/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
