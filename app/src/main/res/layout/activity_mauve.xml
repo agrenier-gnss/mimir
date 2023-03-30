@@ -48,19 +48,54 @@
         app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2"
         app:shapeAppearance="@style/MyButtonShapeAppearance" />/>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/button2"
+    <RelativeLayout
+        android:layout_width="371dp"
+        android:layout_height="123dp"
+        android:layout_marginTop="36dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toggleButton">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/my_shapeable_image_view"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="301dp"
+            android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="41dp"
+            android:src="@drawable/ic_mauve_download"
+            android:tint="@color/blue"
+            app:shapeAppearance="@style/MyButtonShapeAppearance"
+            app:strokeColor="@color/blue" />
+
+        <TextView
+            android:id="@+id/my_button_text"
+            android:layout_width="153dp"
+            android:layout_height="100dp"
+            android:layout_alignEnd="@+id/my_shapeable_image_view"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="-14dp"
+            android:text="Download latest report"
+            android:textColor="@color/blue" />
+
+    </RelativeLayout>
+
+    <?ignore
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/downloadDataButton"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="301dp"
         android:layout_height="50dp"
         android:layout_marginTop="36dp"
-        android:icon="@drawable/ic_mauve_download"
-        android:text="Download latest report"
-        android:tint="@color/white"
+        android:src="@drawable/ic_mauve_download"
+        android:tint="@color/blue"
+        android:text="My Button"
+        android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toggleButton"
         app:shapeAppearance="@style/MyButtonShapeAppearance"
-        app:strokeColor="@color/white" />/>
-
+        app:strokeColor="@color/blue" />/>
+    ?>
 </androidx.constraintlayout.widget.ConstraintLayout>
