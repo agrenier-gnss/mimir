@@ -35,7 +35,7 @@
         app:shapeAppearance="@style/MyTextAppearance" />/>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/toggleButton"
+        android:id="@+id/loggingButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:checked="false"
@@ -63,7 +63,7 @@
         android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toggleButton"
+        app:layout_constraintTop_toBottomOf="@+id/loggingButton"
         app:shapeAppearance="@style/MyButtonShapeAppearance"
         app:strokeColor="@color/mauve" />/>
 
