@@ -49,18 +49,19 @@
         app:shapeAppearance="@style/MyButtonShapeAppearance" />/>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/button2"
+        android:id="@+id/downloadDataButton"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:layout_width="301dp"
+        android:layout_width="250dp"
         android:layout_height="50dp"
         android:layout_marginTop="36dp"
-        android:icon="@drawable/ic_mauve_download"
+        android:drawableLeft="@drawable/ic_mauve_download"
         android:text="Download latest report"
-        android:tint="@color/white"
+        android:textColor="@color/blue"
+        android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toggleButton"
         app:shapeAppearance="@style/MyButtonShapeAppearance"
-        app:strokeColor="@color/white" />/>
+        app:strokeColor="@color/blue" />/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
