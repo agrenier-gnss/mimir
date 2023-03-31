@@ -28,15 +28,14 @@ class MainActivity : AppCompatActivity() {
         this.checkPermissions()
 
 
+
         // Check if thread is alive to rightfully enable/disable buttons
         if (counterThread?.isAlive == true) {
             // Implementation of code that require concurrent threads to be running
         }
 
-        val gnssButton = findViewById<Button>(R.id.startGNSSButton)
-        val imuButton = findViewById<Button>(R.id.startIMUButton)
-        val magnetometerButton = findViewById<Button>(R.id.startMagnetometerButton)
-        val barometerButton = findViewById<Button>(R.id.startBarometerButton)
+
+
 
         var gnssToggle = true
         var imuToggle = true

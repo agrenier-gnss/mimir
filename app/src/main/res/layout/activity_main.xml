@@ -1,140 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/startLogButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:text="start log"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.74"
-        app:shapeAppearance="@style/MyButtonShapeAppearance" />/>
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
 
-    <Button
-        android:id="@+id/stopLogButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:enabled="false"
-        android:text="stop log"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/startLogButton"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.74" />
+        >
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
 
-    <Button
-        android:id="@+id/startGNSSButton"
-        android:layout_width="170dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="32dp"
-        android:text="GNSS"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/startIMUButton"
-        android:layout_width="170dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:text="IMU"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startGNSSButton" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/startLogButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:text="start log"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.74"
+            app:shapeAppearance="@style/MyButtonShapeAppearance" />
 
-    <Button
-        android:id="@+id/startMagnetometerButton"
-        android:layout_width="170dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="4dp"
-        android:text="Magnetometer"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startIMUButton" />
+        <Button
+            android:id="@+id/stopLogButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:enabled="false"
+            android:text="stop log"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/startLogButton"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.74" />
 
-    <Button
-        android:id="@+id/startBarometerButton"
-        android:layout_width="170dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="4dp"
-        android:text="Barometer"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startMagnetometerButton" />
+        <SeekBar
+            android:id="@+id/sliderBarometer"
+            android:layout_width="170dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sliderMagnetometer" />
 
-    <SeekBar
-        android:id="@+id/sliderBarometer"
-        android:layout_width="170dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/startBarometerButton"
-        app:layout_constraintTop_toBottomOf="@+id/sliderMagnetometer" />
+        <SeekBar
+            android:id="@+id/sliderIMU"
+            android:layout_width="170dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="96dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <SeekBar
-        android:id="@+id/sliderIMU"
-        android:layout_width="170dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="96dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.4"
-        app:layout_constraintStart_toEndOf="@+id/startIMUButton"
-        app:layout_constraintTop_toTopOf="parent" />
+        <SeekBar
+            android:id="@+id/sliderMagnetometer"
+            android:layout_width="170dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sliderIMU" />
 
-    <SeekBar
-        android:id="@+id/sliderMagnetometer"
-        android:layout_width="170dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/startMagnetometerButton"
-        app:layout_constraintTop_toBottomOf="@+id/sliderIMU" />
+        <Button
+            android:id="@+id/btnSend"
+            android:layout_width="113dp"
+            android:layout_height="93dp"
+            android:layout_marginEnd="16dp"
+            android:text="Send text to watch"
+            app:layout_constraintBottom_toTopOf="@+id/tv_textFromWatch"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sliderBarometer" />
 
-    <Button
-        android:id="@+id/btnSend"
-        android:layout_width="113dp"
-        android:layout_height="93dp"
-        android:layout_marginEnd="16dp"
-        android:text="Send text to watch"
-        app:layout_constraintBottom_toTopOf="@+id/tv_textFromWatch"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sliderBarometer" />
+        <EditText
+            android:id="@+id/etTextToWear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="send text to watch"
+            android:inputType="textPersonName"
+            app:layout_constraintBottom_toTopOf="@+id/tv_textFromWatch"
+            app:layout_constraintEnd_toStartOf="@+id/btnSend"
+            app:layout_constraintHorizontal_bias="0.579"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <EditText
-        android:id="@+id/etTextToWear"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="send text to watch"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/tv_textFromWatch"
-        app:layout_constraintEnd_toStartOf="@+id/btnSend"
-        app:layout_constraintHorizontal_bias="0.579"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startBarometerButton" />
+        <TextView
+            android:id="@+id/tv_textFromWatch"
+            android:layout_width="309dp"
+            android:layout_height="37dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toTopOf="@+id/stopLogButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_textFromWatch"
-        android:layout_width="309dp"
-        android:layout_height="37dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/stopLogButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startBarometerButton" />
+        <TableRow
+            android:layout_width="7dp"
+            android:layout_height="11dp"
+            tools:layout_editor_absoluteX="43dp"
+            tools:layout_editor_absoluteY="55dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <TableRow
+                android:layout_width="260dp"
+                android:layout_height="150dp">
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="312dp"
+                android:layout_height="120dp"
+                android:layout_marginTop="44dp"
+                android:text="Mimir"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="31dp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout_editor_absoluteX="147dp"
+            tools:layout_editor_absoluteY="78dp" />
+        </TableLayout>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</ScrollView>
