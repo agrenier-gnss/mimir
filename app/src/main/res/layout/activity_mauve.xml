@@ -14,7 +14,7 @@
         android:ems="10"
         android:text="Mimir"
         android:textSize="46sp"
-        android:textColor="@color/dark_purple"
+        android:textColor="@color/blue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -24,7 +24,7 @@
         android:id="@+id/editTextTextPersonName2"
         android:layout_width="173dp"
         android:layout_height="44dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:ems="5"
         android:text="Sensor logging"
         android:textSize="26sp"
@@ -34,18 +34,21 @@
         app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName"
         app:shapeAppearance="@style/MyTextAppearance" />/>
 
-    <ToggleButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/toggleButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="140dp"
         android:checked="false"
         android:text="Start logging"
         android:textOff="Start survey"
         android:textOn="Stop survey"
+        android:backgroundTint="@color/blue"
+        android:textColor="@color/black"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2"
+        app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearance="@style/MyButtonShapeAppearance" />/>
 
     <com.google.android.material.button.MaterialButton
