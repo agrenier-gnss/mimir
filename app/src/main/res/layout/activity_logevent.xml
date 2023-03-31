@@ -24,10 +24,14 @@
             android:gravity="center"
             android:background="@drawable/rounded_footer">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/footer_button"
+                android:backgroundTint="@color/mauve"
+                app:shapeAppearance="@style/MyButtonShapeAppearance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textAllCaps="false"
                 android:text="Start survey" />
 
         </LinearLayout>
