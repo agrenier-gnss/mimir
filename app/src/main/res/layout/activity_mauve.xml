@@ -14,7 +14,7 @@
         android:ems="10"
         android:text="Mimir"
         android:textSize="46sp"
-        android:textColor="@color/blue"
+        android:textColor="@color/mauve"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -42,7 +42,7 @@
         android:text="Start logging"
         android:textOff="Start survey"
         android:textOn="Stop survey"
-        android:backgroundTint="@color/blue"
+        android:backgroundTint="@color/mauve"
         android:textColor="@color/black"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -59,12 +59,12 @@
         android:layout_marginTop="36dp"
         android:drawableLeft="@drawable/ic_mauve_download"
         android:text="Download latest report"
-        android:textColor="@color/blue"
+        android:textColor="@color/mauve"
         android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toggleButton"
         app:shapeAppearance="@style/MyButtonShapeAppearance"
-        app:strokeColor="@color/blue" />/>
+        app:strokeColor="@color/mauve" />/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

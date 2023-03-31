@@ -7,7 +7,7 @@
         <item name="colorAccent">@color/tropical_indigo</item>
     </style>
     <style name="MyButtonShapeAppearance">
-        <item name="cornerSize">16dp</item>
+        <item name="cornerSize">20dp</item>
         <item name="cornerFamily">rounded</item>
         <item name="paddingStart">16dp</item>
         <item name="paddingEnd">16dp</item>
