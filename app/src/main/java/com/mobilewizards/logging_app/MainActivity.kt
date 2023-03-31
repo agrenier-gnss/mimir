@@ -27,26 +27,10 @@ class MainActivity : AppCompatActivity() {
 
         this.checkPermissions()
 
-        val countStartButton = findViewById<Button>(R.id.countStartButton)
-        val countStopButton = findViewById<Button>(R.id.countStopButton)
 
         // Check if thread is alive to rightfully enable/disable buttons
         if (counterThread?.isAlive == true) {
             // Implementation of code that require concurrent threads to be running
-        }
-
-        countStartButton.setOnClickListener {
-            countStartButton.isEnabled = false
-            countStopButton.isEnabled = true
-            counterThread = CounterThread()
-            counterThread?.start()
-        }
-
-        countStopButton.setOnClickListener {
-            countStartButton.isEnabled = true
-            countStopButton.isEnabled = false
-            counterThread?.cancel()
-            counterThread = null
         }
 
         val gnssButton = findViewById<Button>(R.id.startGNSSButton)
