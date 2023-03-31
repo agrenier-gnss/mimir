@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#00000">
+    android:background="#000000">
 
     <TextView
         android:id="@+id/editTextTextPersonName"
@@ -56,8 +56,8 @@
         android:layout_marginTop="36dp"
         android:drawableLeft="@drawable/ic_mauve_download"
         android:text="Download latest report"
+        android:textColor="@color/blue"
         android:textAllCaps="false"
-        android:tint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toggleButton"
