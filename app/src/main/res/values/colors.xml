@@ -11,4 +11,7 @@
     <color name="ultra_violet">#FF52489C</color>
     <color name="mauve">#FFC2AFF0</color>
     <color name="tropical_indigo">#FF807EEE</color>
+    <color name="dark_gray">#171717</color>
+    <color name="lighter_black">#1E1E1E</color>
+    <color name="light_gray">#333333</color>
 </resources>
