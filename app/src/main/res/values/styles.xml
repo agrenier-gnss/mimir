@@ -11,5 +11,9 @@
         <item name="cornerFamily">rounded</item>
         <item name="paddingStart">16dp</item>
         <item name="paddingEnd">16dp</item>
+        <item name="android:fontFamily">@font/Montserrat-Regular</item>
+    </style>
+    <style name="MyTextAppearance">
+        <item name="android:fontFamily">@font/Montserrat-Regular</item>
     </style>
 </resources>
