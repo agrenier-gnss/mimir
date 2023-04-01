@@ -32,12 +32,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
             <TextView
+                android:id="@+id/titleText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Activity"
@@ -51,11 +51,14 @@
                 <!-- each separate rectangle is in its own linearlayout -->
 
                 <LinearLayout
+                    android:id="@+id/firstLinearLayout"
                     android:layout_width="170dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:background="@drawable/ic_rectangle"
-                    android:layout_marginLeft="10dp">
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_below="@id/titleText">
 
                     <TextView
                         android:id="@+id/title1"
@@ -87,11 +90,13 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/secondLinearLayout"
                     android:layout_width="170dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:background="@drawable/ic_rectangle"
                     android:layout_marginLeft="10dp"
+                    android:layout_below="@id/firstLinearLayout"
                     android:layout_marginTop="5dp">
 
                     <TextView
@@ -121,42 +126,90 @@
                         android:textSize="14dp"
                         android:textColor="@color/lighter_gray"/>
 
-                    <!-- Add your TextViews or other views here -->
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/thirdLinearLayout"
+                    android:layout_width="170dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/ic_rectangle"
+                    android:layout_marginLeft="5dp"
+                    android:layout_below="@id/titleText"
+                    android:layout_toRightOf="@id/firstLinearLayout">
+
+                    <TextView
+                        android:id="@+id/title3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:paddingTop="20dp"
+                        android:text="GNSS"
+                        android:textSize="14dp"
+                        android:textColor="@color/lighter_gray"/>
+                    <TextView
+                        android:id="@+id/data3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:text="2 satellites"
+                        android:textSize="32dp"
+                        android:textColor="@color/lighter_gray"/>
+                    <TextView
+                        android:id="@+id/description3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:paddingBottom="20dp"
+                        android:text="1 hz frequency"
+                        android:textSize="14dp"
+                        android:textColor="@color/lighter_gray"/>
 
                 </LinearLayout>
 
-            </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/fourthLinearLayout"
+                    android:layout_width="170dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/ic_rectangle"
+                    android:layout_marginLeft="5dp"
+                    android:layout_below="@id/thirdLinearLayout"
+                    android:layout_toRightOf="@id/firstLinearLayout"
+                    android:layout_marginTop="5dp">
+
+                    <TextView
+                        android:id="@+id/title4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:paddingTop="20dp"
+                        android:text="Accelometer"
+                        android:textSize="14dp"
+                        android:textColor="@color/lighter_gray"/>
+                    <TextView
+                        android:id="@+id/data4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:text="1 Event"
+                        android:textSize="32dp"
+                        android:textColor="@color/lighter_gray"/>
+                    <TextView
+                        android:id="@+id/description4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:paddingBottom="20dp"
+                        android:text="10 hz frequency"
+                        android:textSize="14dp"
+                        android:textColor="@color/lighter_gray"/>
+
+                </LinearLayout>
+
+            </RelativeLayout>
 
         </ScrollView>
-
-        <!--
-        <LinearLayout
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="553dp"
-            android:background="@drawable/ic_rectangle">
-
-            <TextView
-                android:id="@+id/editTextTextPersonName"
-                android:layout_width="126dp"
-                android:layout_height="62dp"
-                android:layout_marginTop="100dp"
-                android:layout_marginRight="250dp"
-                android:ems="10"
-                android:text="Activity"
-                android:textColor="@color/white"
-                android:textSize="36sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:shapeAppearance="@style/MyTextAppearance" />/>
-
-        </LinearLayout>
-
-        -->
 
     </RelativeLayout>
 
