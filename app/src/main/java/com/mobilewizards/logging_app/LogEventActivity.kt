@@ -12,6 +12,7 @@ class LogEventActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_logevent)
+        supportActionBar?.hide()
 
         findViewById<Button>(R.id.footer_button).setOnClickListener{
             Log.d("Footer button", "Hello! You clicked me")

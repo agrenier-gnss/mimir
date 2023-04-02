@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         Log.d("phoneLogger", "onCreate called")
         setContentView(R.layout.activity_main)
+        supportActionBar?.hide()
 
         this.checkPermissions()
 
