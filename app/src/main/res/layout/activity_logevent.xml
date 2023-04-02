@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/light_gray">
 
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -30,23 +31,23 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:id="@+id/activity_log_event_layout">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/titleText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Activity"
-                android:textSize="32dp"
-                android:textColor="@color/lighter_gray"
-                android:paddingLeft="16dp"
-                android:paddingTop="75dp"
-                android:paddingBottom="20dp"
-                />
+                <TextView
+                    android:id="@+id/titleText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="75dp"
+                    android:paddingBottom="20dp"
+                    android:text="Activity"
+                    android:textColor="@color/lighter_gray"
+                    android:textSize="32dp" />
 
                 <!-- each separate rectangle is in its own linearlayout -->
 
@@ -54,11 +55,11 @@
                     android:id="@+id/firstLinearLayout"
                     android:layout_width="170dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/ic_rectangle"
+                    android:layout_below="@id/titleText"
                     android:layout_alignParentLeft="true"
                     android:layout_marginLeft="10dp"
-                    android:layout_below="@id/titleText">
+                    android:background="@drawable/ic_rectangle"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/title1"
@@ -67,16 +68,18 @@
                         android:paddingLeft="20dp"
                         android:paddingTop="20dp"
                         android:text="Time"
-                        android:textSize="14dp"
-                        android:textColor="@color/lighter_gray"/>
+                        android:textColor="@color/lighter_gray"
+                        android:textSize="14dp" />
+
                     <TextView
                         android:id="@+id/data1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingLeft="20dp"
                         android:text="00:01:23"
-                        android:textSize="32dp"
-                        android:textColor="@color/lighter_gray"/>
+                        android:textColor="@color/lighter_gray"
+                        android:textSize="32dp" />
+
                     <TextView
                         android:id="@+id/description1"
                         android:layout_width="match_parent"
@@ -84,8 +87,8 @@
                         android:paddingLeft="20dp"
                         android:paddingBottom="20dp"
                         android:text="Survey duration"
-                        android:textSize="14dp"
-                        android:textColor="@color/lighter_gray"/>
+                        android:textColor="@color/lighter_gray"
+                        android:textSize="14dp" />
 
                 </LinearLayout>
 
@@ -93,11 +96,11 @@
                     android:id="@+id/secondLinearLayout"
                     android:layout_width="170dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/ic_rectangle"
-                    android:layout_marginLeft="10dp"
                     android:layout_below="@id/firstLinearLayout"
-                    android:layout_marginTop="5dp">
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/ic_rectangle"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/title2"
@@ -106,16 +109,18 @@
                         android:paddingLeft="20dp"
                         android:paddingTop="20dp"
                         android:text="Wifi"
-                        android:textSize="14dp"
-                        android:textColor="@color/lighter_gray"/>
+                        android:textColor="@color/lighter_gray"
+                        android:textSize="14dp" />
+
                     <TextView
                         android:id="@+id/data2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingLeft="20dp"
                         android:text="Error"
-                        android:textSize="32dp"
-                        android:textColor="@color/lighter_gray"/>
+                        android:textColor="@color/lighter_gray"
+                        android:textSize="32dp" />
+
                     <TextView
                         android:id="@+id/description2"
                         android:layout_width="match_parent"
@@ -123,8 +128,8 @@
                         android:paddingLeft="20dp"
                         android:paddingBottom="20dp"
                         android:text="No WIFI connection"
-                        android:textSize="14dp"
-                        android:textColor="@color/lighter_gray"/>
+                        android:textColor="@color/lighter_gray"
+                        android:textSize="14dp" />
 
                 </LinearLayout>
 
@@ -132,11 +137,11 @@
                     android:id="@+id/thirdLinearLayout"
                     android:layout_width="170dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/ic_rectangle"
-                    android:layout_marginLeft="5dp"
                     android:layout_below="@id/titleText"
-                    android:layout_toRightOf="@id/firstLinearLayout">
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@id/firstLinearLayout"
+                    android:background="@drawable/ic_rectangle"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/title3"
@@ -145,16 +150,18 @@
                         android:paddingLeft="20dp"
                         android:paddingTop="20dp"
                         android:text="GNSS"
-                        android:textSize="14dp"
-                        android:textColor="@color/lighter_gray"/>
+                        android:textColor="@color/lighter_gray"
+                        android:textSize="14dp" />
+
                     <TextView
                         android:id="@+id/data3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingLeft="20dp"
                         android:text="2 satellites"
-                        android:textSize="32dp"
-                        android:textColor="@color/lighter_gray"/>
+                        android:textColor="@color/lighter_gray"
+                        android:textSize="32dp" />
+
                     <TextView
                         android:id="@+id/description3"
                         android:layout_width="match_parent"
@@ -162,8 +169,8 @@
                         android:paddingLeft="20dp"
                         android:paddingBottom="20dp"
                         android:text="1 hz frequency"
-                        android:textSize="14dp"
-                        android:textColor="@color/lighter_gray"/>
+                        android:textColor="@color/lighter_gray"
+                        android:textSize="14dp" />
 
                 </LinearLayout>
 
@@ -171,12 +178,12 @@
                     android:id="@+id/fourthLinearLayout"
                     android:layout_width="170dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/ic_rectangle"
-                    android:layout_marginLeft="5dp"
                     android:layout_below="@id/thirdLinearLayout"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
                     android:layout_toRightOf="@id/firstLinearLayout"
-                    android:layout_marginTop="5dp">
+                    android:background="@drawable/ic_rectangle"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/title4"
@@ -185,16 +192,18 @@
                         android:paddingLeft="20dp"
                         android:paddingTop="20dp"
                         android:text="Accelometer"
-                        android:textSize="14dp"
-                        android:textColor="@color/lighter_gray"/>
+                        android:textColor="@color/lighter_gray"
+                        android:textSize="14dp" />
+
                     <TextView
                         android:id="@+id/data4"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingLeft="20dp"
                         android:text="1 Event"
-                        android:textSize="32dp"
-                        android:textColor="@color/lighter_gray"/>
+                        android:textColor="@color/lighter_gray"
+                        android:textSize="32dp" />
+
                     <TextView
                         android:id="@+id/description4"
                         android:layout_width="match_parent"
@@ -202,20 +211,14 @@
                         android:paddingLeft="20dp"
                         android:paddingBottom="20dp"
                         android:text="10 hz frequency"
-                        android:textSize="14dp"
-                        android:textColor="@color/lighter_gray"/>
+                        android:textColor="@color/lighter_gray"
+                        android:textSize="14dp" />
 
                 </LinearLayout>
 
             </RelativeLayout>
 
         </ScrollView>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
     </RelativeLayout>
 

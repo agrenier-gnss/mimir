@@ -8,6 +8,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.MotionEvent
+import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -54,11 +56,6 @@ class MainActivity : AppCompatActivity() {
         loggingButton.setOnClickListener{
             loggingButton.isEnabled = false
             stopLogButton.isEnabled = true
-            gnssButton.isEnabled = false
-            imuButton.isEnabled = false
-            magnetometerButton.isEnabled = false
-            barometerButton.isEnabled = false
-            IMUSlider.isEnabled = false
             MagnetometerSlider.isEnabled = false
             BarometerSlider.isEnabled = false
             Log.d("start logging", "Start logging")
@@ -70,57 +67,12 @@ class MainActivity : AppCompatActivity() {
         stopLogButton.setOnClickListener {
             loggingButton.isEnabled = true
             stopLogButton.isEnabled = false
-            gnssButton.isEnabled = true
-            imuButton.isEnabled = true
-            magnetometerButton.isEnabled = true
-            barometerButton.isEnabled = true
             IMUSlider.isEnabled = true
             MagnetometerSlider.isEnabled = true
             BarometerSlider.isEnabled = true
             motionSensors.stopLogging()
             if (gnssToggle) {gnss.stopLogging(this)}
             BLE.stopLogging()
-        }
-
-
-        gnssButton.setOnClickListener {
-            if (!gnssToggle) {
-                gnssToggle = true
-                gnssButton.text = "GNSS"
-            } else {
-                gnssToggle = false
-                gnssButton.text = "GNSS - Disabled"
-            }
-        }
-
-        imuButton.setOnClickListener {
-            if (!imuToggle) {
-                imuToggle = true
-                imuButton.text = "IMU"
-            } else {
-                imuToggle = false
-                imuButton.text = "IMU - Disabled"
-            }
-        }
-
-        magnetometerButton.setOnClickListener {
-            if (!magnetometerToggle) {
-                magnetometerToggle = true
-                magnetometerButton.text = "Magnetometer"
-            } else {
-                magnetometerToggle = false
-                magnetometerButton.text = "Magnetometer - Disabled"
-            }
-        }
-
-        barometerButton.setOnClickListener {
-            if (!barometerToggle) {
-                barometerToggle = true
-                barometerButton.text = "Barometer"
-            } else {
-                barometerToggle = false
-                barometerButton.text = "Barometer - Disabled"
-            }
         }
 
         IMUSlider.min = 10
@@ -196,6 +148,42 @@ class MainActivity : AppCompatActivity() {
             val dataMap = DataMap.fromByteArray(it.data)
             tvTexfFromWatch.text = dataMap.getString("dataFromWatch")
         }
+
+        var x1 = 0f
+        var y1 = 0f
+        var x2 = 0f
+        var y2 = 0f
+
+        findViewById<View>(R.id.activity_main_layout).setOnTouchListener { _, touchEvent ->
+            when (touchEvent.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    x1 = touchEvent.x
+                    y1 = touchEvent.y
+                    true
+                }
+                MotionEvent.ACTION_UP -> {
+                    x2 = touchEvent.x
+                    y2 = touchEvent.y
+                    val deltaX = x2 - x1
+                    val deltaY = y2 - y1
+                    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                        // swipe horizontal
+                        if (Math.abs(deltaX) > 100) {
+                            // left or right
+                            if (deltaX < 0) {
+                                // left swipe
+                                val intent = Intent(this, MauveActivity::class.java)
+                                startActivity(intent)
+                                true
+                            }
+                        }
+                    }
+                    false
+                }
+                else -> false
+            }
+        }
+
     }
 
     private fun sendParameterToWatch(data: DataMap){

@@ -5,7 +5,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        >
+        android:id="@+id/activity_main_layout">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -104,35 +105,6 @@
             app:layout_constraintBottom_toTopOf="@+id/stopLogButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-
-        <TableRow
-            android:layout_width="7dp"
-            android:layout_height="11dp"
-            tools:layout_editor_absoluteX="43dp"
-            tools:layout_editor_absoluteY="55dp">
-
-            <TableRow
-                android:layout_width="260dp"
-                android:layout_height="150dp">
-
-            <TextView
-                android:id="@+id/textView6"
-                android:layout_width="312dp"
-                android:layout_height="120dp"
-                android:layout_marginTop="44dp"
-                android:text="Mimir"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteX="31dp" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:layout_editor_absoluteX="147dp"
-            tools:layout_editor_absoluteY="78dp" />
-        </TableLayout>
-
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -3,13 +3,19 @@ package com.mobilewizards.logging_app
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import android.widget.Button
 
 class LogEventActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_logevent)
+
+        findViewById<Button>(R.id.footer_button).setOnClickListener{
+            Log.d("Footer button", "Hello! You clicked me")
+        }
 
         var x1 = 0f
         var y1 = 0f
@@ -31,15 +37,9 @@ class LogEventActivity : AppCompatActivity() {
                     if (Math.abs(deltaX) > Math.abs(deltaY)) {
                         // swipe horizontal
                         if (Math.abs(deltaX) > 100) {
-                            // left or right
-                            if (deltaX < 0) {
-                                // left swipe
-                                val intent = Intent(this, MauveActivity::class.java)
-                                startActivity(intent)
-                                true
-                            } else if (deltaX > 0) {
+                            if (deltaX > 0) {
                                 // right swipe
-                                val intent = Intent(this, MainActivity::class.java)
+                                val intent = Intent(this, MauveActivity::class.java)
                                 startActivity(intent)
                                 true
                             }
