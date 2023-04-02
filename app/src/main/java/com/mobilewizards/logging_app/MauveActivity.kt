@@ -1,5 +1,6 @@
 package com.mobilewizards.logging_app
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -18,12 +19,22 @@ class MauveActivity : AppCompatActivity() {
         setContentView(R.layout.activity_mauve)
         supportActionBar?.hide()
 
+        val motionSensors = MotionSensorsHandler(this)
+        var gnssToggle = true
+        val gnss = GnssHandler(this)
+        val BLE = BLEHandler(this)
+
         val loggingButton = findViewById<Button>(R.id.loggingButton)
         val dataButton = findViewById<Button>(R.id.downloadDataButton)
         val loggingText = findViewById<TextView>(R.id.loggingTextView)
 
         loggingButton.setOnClickListener {
             if (isToggledOn) {
+                //Stop logging
+                motionSensors.stopLogging()
+                if (gnssToggle) {gnss.stopLogging(this)}
+                BLE.stopLogging()
+
                 findViewById<Button>(R.id.loggingButton).text = "Start logging"
 
                 loggingText.text = ""
@@ -38,6 +49,11 @@ class MauveActivity : AppCompatActivity() {
                 }, 100)
 
             } else {
+                //Start logging
+                motionSensors.setUpSensors()
+                if (gnssToggle) {gnss.setUpLogging()}
+                BLE.setUpLogging()
+
                 findViewById<Button>(R.id.loggingButton).text = "Stop logging"
 
                 dataButton.visibility = View.GONE
