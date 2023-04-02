@@ -1,5 +1,6 @@
 package com.mobilewizards.logging_app
 
+import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
 import android.location.GnssMeasurementsEvent
@@ -11,7 +12,9 @@ import android.os.Environment
 import android.os.SystemClock
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.Toast
+import android.view.View
+import androidx.core.content.ContextCompat
+import com.google.android.material.snackbar.Snackbar
 
 
 private lateinit var locationManager: LocationManager
@@ -189,7 +192,10 @@ class GnssHandler{
                 outputStream.flush()
             }
 
-            Toast.makeText(context, "GNSS Measurements saved to Downloads folder", Toast.LENGTH_SHORT).show()
+            val view = (context as Activity).findViewById<View>(android.R.id.content)
+            val snackbar = Snackbar.make(view, "GNSS scan results saved to Downloads folder", Snackbar.LENGTH_LONG)
+            snackbar.view.setBackgroundColor(ContextCompat.getColor(context, R.color.tropical_indigo))
+            snackbar.show()
         }
     }
 }

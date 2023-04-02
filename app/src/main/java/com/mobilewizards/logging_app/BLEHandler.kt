@@ -1,16 +1,20 @@
 package com.mobilewizards.logging_app
 
+import android.app.Activity
 import android.bluetooth.*
 import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.content.ContentValues
 import android.content.Context
+import android.graphics.Color.green
 import android.os.Environment
 import android.os.Handler
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.Toast
+import android.view.View
+import androidx.core.content.ContextCompat
+import com.google.android.material.snackbar.Snackbar
 
 class BLEHandler(private val context: Context) {
 
@@ -87,7 +91,11 @@ class BLEHandler(private val context: Context) {
                     outputStream.flush()
                 }
 
-                Toast.makeText(context, "Bluetooth scan results saved to Downloads folder", Toast.LENGTH_SHORT).show()
+                val view = (context as Activity).findViewById<View>(android.R.id.content)
+                val snackbar = Snackbar.make(view, "Bluetooth scan results saved to Downloads folder", Snackbar.LENGTH_LONG)
+                snackbar.view.setBackgroundColor(ContextCompat.getColor(context, R.color.tropical_indigo))
+                snackbar.show()
+
             }
 
         } catch(e: SecurityException){
