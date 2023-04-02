@@ -180,9 +180,9 @@
                     android:layout_width="170dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/thirdLinearLayout"
+                    android:layout_toRightOf="@id/firstLinearLayout"
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="5dp"
-                    android:layout_toRightOf="@id/firstLinearLayout"
                     android:background="@drawable/ic_rectangle"
                     android:orientation="vertical">
 
@@ -212,6 +212,217 @@
                         android:paddingLeft="20dp"
                         android:paddingBottom="20dp"
                         android:text="10 hz frequency"
+                        android:textColor="@color/lighter_gray"
+                        android:textSize="14dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/fifthLinearLayout"
+                    android:layout_width="170dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/secondLinearLayout"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/ic_rectangle"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/title5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:paddingTop="20dp"
+                        android:text="Gyroscope"
+                        android:textColor="@color/lighter_gray"
+                        android:textSize="14dp" />
+
+                    <TextView
+                        android:id="@+id/data5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:text="5 events"
+                        android:textColor="@color/lighter_gray"
+                        android:textSize="32dp" />
+
+                    <TextView
+                        android:id="@+id/description5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:paddingBottom="20dp"
+                        android:text="50 hz frequency"
+                        android:textColor="@color/lighter_gray"
+                        android:textSize="14dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/sixthLinearLayout"
+                    android:layout_width="170dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/fourthLinearLayout"
+                    android:layout_toRightOf="@id/firstLinearLayout"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/ic_rectangle"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/title6"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:paddingTop="20dp"
+                        android:text="Time"
+                        android:textColor="@color/lighter_gray"
+                        android:textSize="14dp" />
+
+                    <TextView
+                        android:id="@+id/data6"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:text="00:01:23"
+                        android:textColor="@color/lighter_gray"
+                        android:textSize="32dp" />
+
+                    <TextView
+                        android:id="@+id/description6"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:paddingBottom="20dp"
+                        android:text="Survey duration"
+                        android:textColor="@color/lighter_gray"
+                        android:textSize="14dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/seventhLinearLayout"
+                    android:layout_width="170dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/fifthLinearLayout"
+                    android:layout_toRightOf="@id/firstLinearLayout"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/ic_rectangle"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/title7"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:paddingTop="20dp"
+                        android:text="Time"
+                        android:textColor="@color/lighter_gray"
+                        android:textSize="14dp" />
+
+                    <TextView
+                        android:id="@+id/data7"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:text="00:01:23"
+                        android:textColor="@color/lighter_gray"
+                        android:textSize="32dp" />
+
+                    <TextView
+                        android:id="@+id/description7"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:paddingBottom="20dp"
+                        android:text="Survey duration"
+                        android:textColor="@color/lighter_gray"
+                        android:textSize="14dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/eightLinearLayout"
+                    android:layout_width="170dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/sixthLinearLayout"
+                    android:layout_toRightOf="@+id/firstLinearLayout"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/ic_rectangle"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/title8"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:paddingTop="20dp"
+                        android:text="Time"
+                        android:textColor="@color/lighter_gray"
+                        android:textSize="14dp" />
+
+                    <TextView
+                        android:id="@+id/data8"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:text="00:01:23"
+                        android:textColor="@color/lighter_gray"
+                        android:textSize="32dp" />
+
+                    <TextView
+                        android:id="@+id/description8"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:paddingBottom="20dp"
+                        android:text="Survey duration"
+                        android:textColor="@color/lighter_gray"
+                        android:textSize="14dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ninthLinearLayout"
+                    android:layout_width="170dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/seventhLinearLayout"
+                    android:layout_toRightOf="@id/firstLinearLayout"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/ic_rectangle"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/title9"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:paddingTop="20dp"
+                        android:text="Time"
+                        android:textColor="@color/lighter_gray"
+                        android:textSize="14dp" />
+
+                    <TextView
+                        android:id="@+id/data9"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:text="00:01:23"
+                        android:textColor="@color/lighter_gray"
+                        android:textSize="32dp" />
+
+                    <TextView
+                        android:id="@+id/description9"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:paddingBottom="20dp"
+                        android:text="Survey duration"
                         android:textColor="@color/lighter_gray"
                         android:textSize="14dp" />
 
