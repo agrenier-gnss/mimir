@@ -41,7 +41,7 @@ class MainActivityWatch : Activity() {
     private val TAG = "watchLogger"
 
     private val testFile = "test_file.txt"
-    private val testDataToFile = listOf<Int>(5,7,2,8,8,6,1,489,789,4,156516,14,8)
+    private val testDataToFile = listOf<Int>(1,2,3,4,5,6)
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
         binding = ActivityMainWatchBinding.inflate(layoutInflater)
@@ -156,8 +156,10 @@ class MainActivityWatch : Activity() {
         channelClient.openChannel(nodeId,
             CSV_FILE_CHANNEL_PATH.toString()
         ).addOnCompleteListener { result ->
+            Log.d(TAG, result.toString())
             if (result.isSuccessful) {
                 Log.d(TAG, "Channel opened: nodeId=$nodeId, path=$CSV_FILE_CHANNEL_PATH")
+                callback.onChannelOpened(result.result)
             } else {
                 Log.e(TAG, "Failed to open channel: nodeId=$nodeId, path=$CSV_FILE_CHANNEL_PATH")
                 channelClient.unregisterChannelCallback(callback)

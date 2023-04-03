@@ -168,51 +168,48 @@ class MainActivity : AppCompatActivity() {
 //        }
 
         Wearable.getChannelClient(this).registerChannelCallback(object : ChannelClient.ChannelCallback() {
-            override fun onChannelOpened(channel: ChannelClient.Channel) {
+            override fun onChannelOpened(channel: ChannelClient.Channel ) {
                 super.onChannelOpened(channel)
-                    // En tiie halutaanko tällanen vai
-                    val outFile: File? = File(getFileStreamPath("entiiemitatahan").path)
-                    Log.d(TAG, "path " +channel.path)
-                    val fileUri = Uri.fromFile(outFile)
-                    Log.d(TAG, fileUri.toString())
-                                                                                // Tää uri on iso ? kun en tiedä mistä se kuuluis kaivaa
-                    Wearable.getChannelClient(applicationContext).receiveFile(channel, fileUri, false)
+                // En tiie halutaanko tällanen vai
+                val outFile: File? = File(getFileStreamPath("test").path)
+                Log.d(TAG, "path " + channel.path)
+                val fileUri = Uri.fromFile(outFile)
+                Log.d(TAG, fileUri.toString())
+                                                                    // Tää uri on iso ? kun en tiedä mistä se kuuluis kaivaa
+                Wearable.getChannelClient(applicationContext).receiveFile(channel, fileUri, false)
                     // ^ Tohon löytyy ristiriitasta tietoo et pitääkö kuunnella onChnnelOpened vai closed, mut kumpikaan
                     //   ei tunnu toimivan.
+                Wearable.getChannelClient(applicationContext).registerChannelCallback(object : ChannelClient.ChannelCallback() {
 
-                    Wearable.getChannelClient(applicationContext).registerChannelCallback(object : ChannelClient.ChannelCallback() {
+                    // Tässsä kooditoteuteuksessa tänne ei koskaan päästä, enkä teidä miksi
+                    override fun onChannelClosed(channel: ChannelClient.Channel, i: Int, i1: Int) {
+                        super.onChannelClosed(channel, i, i1)
+                        Log.d(TAG, "onChannelClosed")
+                            try {
+                                var text = ""
+                                var read: Int
+                                val data = ByteArray(1024)
+                                val fullFileUri = Uri.fromFile(File(fileUri.path ))
+                                val inputStream: InputStream = FileInputStream(fullFileUri.path)
 
-                        // Tässsä kooditoteuteuksessa tänne ei koskaan päästä, enkä teidä miksi
-                        override fun onChannelClosed(channel: ChannelClient.Channel, i: Int, i1: Int) {
-                            super.onChannelClosed(channel, i, i1)
-
-                            Log.d(TAG, "onInputClosed")
-
-                                try {
-                                    var text = ""
-                                    var read: Int
-                                    val data = ByteArray(1024)
-                                    val inputStream: InputStream = FileInputStream(fileUri.path)
-
-                                    Log.d(TAG, "tullaanko tänne koskaan")
-                                    while (inputStream.read(data, 0, data.size).also { read = it } != -1) {
-                                        text += String(data, StandardCharsets.UTF_8)
-                                        Log.d(TAG, data.toString())
-                                    }
-
-                                    runOnUiThread {
-                                        Toast.makeText(applicationContext, text, Toast.LENGTH_LONG).show()
-                                    }
-                                    inputStream.close()
-                                } catch (e: IOException) {
-                                    e.printStackTrace()
+                                Log.d(TAG, "inputstream ${inputStream}")
+                                while (inputStream.read(data, 0, data.size).also { read = it } != -1) {
+                                    Log.d(TAG, "data $data")
+                                    text += String(data, StandardCharsets.UTF_8)
                                 }
 
-                            Wearable.getChannelClient(applicationContext).close(channel)
-                        }
-                    })
-                }
+                                runOnUiThread {
+                                    Toast.makeText(applicationContext, text, Toast.LENGTH_LONG).show()
+                                }
+                                inputStream.close()
+                            } catch (e: IOException) {
+                                e.printStackTrace()
+                            }
 
+                        Wearable.getChannelClient(applicationContext).close(channel)
+                    }
+                })
+            }
         })
 /////////////////////////////////////////////////
     }
