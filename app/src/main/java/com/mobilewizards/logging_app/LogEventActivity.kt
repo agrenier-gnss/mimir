@@ -3,19 +3,31 @@ package com.mobilewizards.logging_app
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
 
 class LogEventActivity : AppCompatActivity() {
+
+    private var isToggledOn: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_logevent)
         supportActionBar?.hide()
 
-        findViewById<Button>(R.id.footer_button).setOnClickListener{
-            Log.d("Footer button", "Hello! You clicked me")
+        val footerButton = findViewById<Button>(R.id.footer_button)
+
+        footerButton.setOnClickListener{
+            if (isToggledOn) {
+                //Stop logging
+                footerButton.text = "Start survey"
+
+            } else {
+                //Start logging
+                footerButton.text = "Stop survey"
+            }
+            isToggledOn = !isToggledOn
         }
 
         var x1 = 0f
