@@ -2,12 +2,14 @@ package com.mobilewizards.logging_app
 
 import android.Manifest
 import android.app.Activity
+import android.content.ContentValues
 import android.content.Context
 import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.ContactsContract.Data
 import android.provider.MediaStore
 import android.util.Log
@@ -18,13 +20,15 @@ import androidx.core.app.ActivityCompat
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.*
 import com.mobilewizards.logging_app.databinding.ActivityMainWatchBinding
+import com.mobilewizards.watchlogger.BLEHandlerWatch
 import com.mobilewizards.watchlogger.HealthServicesHandler
 import com.mobilewizards.watchlogger.WatchGNSSHandler
 import java.io.File
+import java.io.FileOutputStream
 import java.util.concurrent.ExecutionException
 
 
-class sMainActivityWatch : Activity() {
+class MainActivityWatch : Activity() {
 
     private lateinit var binding: ActivityMainWatchBinding
     private lateinit var mMessageClient: MessageClient
@@ -36,23 +40,42 @@ class sMainActivityWatch : Activity() {
     private var IMUFrequency: Int = 10
     private val TAG = "watchLogger"
 
-    private val testFile = File("${CSV_FILE_CHANNEL_PATH}/test")
+    private val testFile = "test_file.txt"
+    private val testDataToFile = listOf<Int>(5,7,2,8,8,6,1,489,789,4,156516,14,8)
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
         binding = ActivityMainWatchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         this.checkPermissions()
-
         var text: TextView = findViewById(R.id.tv_watch)
         text.text = "Text:"
 
-        // Logcat all connected nodes. Phone should show here
-        Wearable.getNodeClient(this).connectedNodes.addOnSuccessListener { nodes ->
-            Log.d(
-                "watchLogger", nodes.toString()
-            )
+        val ble =  BLEHandlerWatch(this)
+        val gnss = WatchGNSSHandler(this)
+        val healthServices = HealthServicesHandler(this, text)
+        // writing into test file
+
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Downloads.DISPLAY_NAME, testFile)
+            put(MediaStore.Downloads.MIME_TYPE, "text/csv")
+            put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
         }
+
+        val uri = this.contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
+
+        Log.d("uri", uri.toString())
+        uri?.let { mediaUri ->
+            this.contentResolver.openOutputStream(mediaUri)?.use { outputStream ->
+                outputStream.write("SvId,Time offset in nanos,State,cn0DbHz,carrierFrequencyHz,pseudorangeRateMeterPerSecond,pseudorangeRateUncertaintyMeterPerSecond\n".toByteArray())
+                testDataToFile.forEach { measurementString ->
+                    outputStream.write("$measurementString\n".toByteArray())
+                }
+                outputStream.flush()
+            }
+        }
+
+
         // Get messages from phone
         mMessageClient = Wearable.getMessageClient(this)
         mMessageClient.addListener {
@@ -74,17 +97,16 @@ class sMainActivityWatch : Activity() {
                 text.text = IMUFrequency.toString()
             }
         }
+
         // File sending
-
-
-        val Gnss = WatchGNSSHandler(this)
-        val healthServices = HealthServicesHandler(this, text)
         var isLogging: Boolean = false
-        // Send messages to phone
         val sendButton = findViewById<Button>(R.id.btn_send)
         sendButton.setOnClickListener {
             isLogging = !isLogging
-            healthServices.getHeartRate()
+//            healthServices.getHeartRate()// For testing is here. (un)comment if needed or not
+//            gnss.setUpLogging() // For testing is here. (un)comment if needed or not
+//            ble.setUpLogging()// For testing is here. (un)comment if needed or not
+
             // Commented this out for because testing only heart rate
 //            if (isLogging) Gnss.setUpLogging() else Gnss.stopLogging(this)
 
@@ -93,7 +115,19 @@ class sMainActivityWatch : Activity() {
 //            Toast.makeText(this, "Text sent", Toast.LENGTH_SHORT).show()
 
             // Send file to phone
-            sendCsvFileToPhone(testFile, getPhoneNodeId()[0], this)
+//            Log.d(TAG, "in button press, nodeId size " + getPhoneNodeId().size.toString())
+            // TODO: Add no connected node handler
+            getPhoneNodeId { nodeIds ->
+            Log.d(TAG, "Received nodeIds: $nodeIds")
+                var connectedNode: String = nodeIds[0]
+
+                if (connectedNode.isEmpty()) {
+                    Log.d(TAG, "no nodes found")
+                } else {
+                    Log.d(TAG, "nodes found, sending")
+                    sendCsvFileToPhone(File("${CSV_FILE_CHANNEL_PATH}/${testFile}"), connectedNode, this)
+                }
+            }
         }
     }
 
@@ -102,15 +136,18 @@ class sMainActivityWatch : Activity() {
 
         val callback = object : ChannelClient.ChannelCallback() {
             override fun onChannelOpened(channel: ChannelClient.Channel) {
+                Log.d(TAG, "onChannelOpened")
                 // Send the CSV file to the phone
                 channelClient.sendFile(channel, Uri.fromFile(csvFile)).addOnCompleteListener {
                     // The CSV file has been sent, close the channel
+                    Log.d(TAG, "inSendFile")
                     channelClient.close(channel)
                 }
             }
 
             override fun onChannelClosed(channel: ChannelClient.Channel, closeReason: Int, appSpecificErrorCode: Int) {
                 Log.d(TAG, "Channel closed: nodeId=$nodeId, reason=$closeReason, errorCode=$appSpecificErrorCode")
+                Wearable.getChannelClient(applicationContext).close(channel)
             }
         }
 
@@ -128,14 +165,16 @@ class sMainActivityWatch : Activity() {
         }
     }
 
-    private fun getPhoneNodeId(): ArrayList<String> {
-        var nodeIds =ArrayList<String>()
+    private fun getPhoneNodeId(callback: (ArrayList<String>) -> Unit) {
+        var nodeIds = ArrayList<String>()
         Wearable.getNodeClient(this).connectedNodes.addOnSuccessListener { nodes ->
             for (node in nodes) {
+                Log.d(TAG, "connected node in getPhoneId " + node.id.toString())
                 nodeIds.add(node.id.toString())
             }
+            Log.d(TAG, "in getPhonenodeids size " + nodeIds.size.toString())
+            callback(nodeIds)
         }
-        return nodeIds
     }
 
     private fun sendTextToWatch(text: String) {

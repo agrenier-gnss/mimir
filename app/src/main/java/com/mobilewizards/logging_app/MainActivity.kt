@@ -2,9 +2,14 @@ package com.mobilewizards.logging_app
 
 import android.annotation.SuppressLint
 import android.Manifest
+import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -15,9 +20,17 @@ import com.google.android.gms.wearable.DataMap
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.Wearable
 import androidx.core.app.ActivityCompat
+import com.google.android.gms.wearable.ChannelClient
+import java.io.File
+import java.io.FileInputStream
+import java.io.IOException
+import java.io.InputStream
+import java.nio.charset.StandardCharsets
 
 class MainActivity : AppCompatActivity() {
 
+    private val CSV_FILE_CHANNEL_PATH = MediaStore.Downloads.EXTERNAL_CONTENT_URI
+    val TAG = "tagi"
     private lateinit var mMessageClient: MessageClient
     @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -134,6 +147,7 @@ class MainActivity : AppCompatActivity() {
         val sendButton: Button = findViewById(R.id.btnSend)
         val tvTexfFromWatch = findViewById<TextView>(R.id.tv_textFromWatch)
         mMessageClient = Wearable.getMessageClient(this)
+
         sendButton.setOnClickListener {
             var textToSend = etTextToWatch.text
             if (textToSend.isEmpty())
@@ -148,7 +162,128 @@ class MainActivity : AppCompatActivity() {
             val dataMap = DataMap.fromByteArray(it.data)
             tvTexfFromWatch.text = dataMap.getString("dataFromWatch")
         }
+
+//        getWatchNodeId { nodeId ->
+//            receiveCsvFileFromWatch(nodeId[0], this)
+//        }
+
+        Wearable.getChannelClient(this).registerChannelCallback(object : ChannelClient.ChannelCallback() {
+            override fun onChannelOpened(channel: ChannelClient.Channel) {
+                super.onChannelOpened(channel)
+                    // En tiie halutaanko tällanen vai
+                    val outFile: File? = File(getFileStreamPath("entiiemitatahan").path)
+                    Log.d(TAG, "path " +channel.path)
+                    val fileUri = Uri.fromFile(outFile)
+                    Log.d(TAG, fileUri.toString())
+                                                                                // Tää uri on iso ? kun en tiedä mistä se kuuluis kaivaa
+                    Wearable.getChannelClient(applicationContext).receiveFile(channel, fileUri, false)
+                    // ^ Tohon löytyy ristiriitasta tietoo et pitääkö kuunnella onChnnelOpened vai closed, mut kumpikaan
+                    //   ei tunnu toimivan.
+
+                    Wearable.getChannelClient(applicationContext).registerChannelCallback(object : ChannelClient.ChannelCallback() {
+
+                        // Tässsä kooditoteuteuksessa tänne ei koskaan päästä, enkä teidä miksi
+                        override fun onChannelClosed(channel: ChannelClient.Channel, i: Int, i1: Int) {
+                            super.onChannelClosed(channel, i, i1)
+
+                            Log.d(TAG, "onInputClosed")
+
+                                try {
+                                    var text = ""
+                                    var read: Int
+                                    val data = ByteArray(1024)
+                                    val inputStream: InputStream = FileInputStream(fileUri.path)
+
+                                    Log.d(TAG, "tullaanko tänne koskaan")
+                                    while (inputStream.read(data, 0, data.size).also { read = it } != -1) {
+                                        text += String(data, StandardCharsets.UTF_8)
+                                        Log.d(TAG, data.toString())
+                                    }
+
+                                    runOnUiThread {
+                                        Toast.makeText(applicationContext, text, Toast.LENGTH_LONG).show()
+                                    }
+                                    inputStream.close()
+                                } catch (e: IOException) {
+                                    e.printStackTrace()
+                                }
+
+                            Wearable.getChannelClient(applicationContext).close(channel)
+                        }
+                    })
+                }
+
+        })
+/////////////////////////////////////////////////
     }
+
+
+
+/////////////////////////////////////////////////////
+////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+////////////////////////////////////////////////////
+
+
+
+    private fun receiveCsvFileFromWatch(nodeId: String, context: Context) {
+
+        val channelClient = Wearable.getChannelClient(context)
+
+        val callback = object : ChannelClient.ChannelCallback() {
+            override fun onChannelOpened(channel: ChannelClient.Channel) {
+                channelClient.receiveFile(channel, Uri.fromFile(getCsvFile()), false).addOnCompleteListener {
+                    Log.d(TAG, "CSV file received from watch")
+                    channelClient.close(channel)
+                }
+            }
+
+            override fun onChannelClosed(channel: ChannelClient.Channel, closeReason: Int, appSpecificErrorCode: Int) {
+                Log.d(TAG, "Channel closed: nodeId=$nodeId, reason=$closeReason, errorCode=$appSpecificErrorCode")
+            }
+        }
+
+        channelClient.registerChannelCallback(callback)
+
+        channelClient.openChannel(nodeId, CSV_FILE_CHANNEL_PATH.toString()).addOnCompleteListener { result ->
+            if (result.isSuccessful) {
+                Log.d(TAG, "Channel opened: nodeId=$nodeId, path=$CSV_FILE_CHANNEL_PATH")
+            } else {
+                Log.e(TAG, "Failed to open channel: nodeId=$nodeId, path=$CSV_FILE_CHANNEL_PATH")
+                channelClient.unregisterChannelCallback(callback)
+            }
+        }
+    }
+
+    private fun getCsvFile(): File {
+        Log.d(TAG, "filed drir " +this.filesDir.toString())
+        return File(this.filesDir, "received_data.csv")
+    }
+
+    private fun getWatchNodeId(callback: (ArrayList<String>) -> Unit) {
+        var nodeIds = ArrayList<String>()
+        Wearable.getNodeClient(this).connectedNodes.addOnSuccessListener { nodes ->
+            for (node in nodes) {
+                Log.d(TAG, "connected node in getPhoneId " + node.id.toString())
+                nodeIds.add(node.id.toString())
+            }
+            Log.d(TAG, "in getPhonenodeids size " + nodeIds.size.toString())
+            callback(nodeIds)
+        }
+    }
+
+/////////////////////////////////////////////////////
+////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
 
     private fun sendParameterToWatch(data: DataMap){
         val dataBytes = data.toByteArray()
