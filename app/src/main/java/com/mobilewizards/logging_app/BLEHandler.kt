@@ -93,6 +93,9 @@ class BLEHandler(private val context: Context) {
 
                 val view = (context as Activity).findViewById<View>(android.R.id.content)
                 val snackbar = Snackbar.make(view, "Bluetooth scan results saved to Downloads folder", Snackbar.LENGTH_LONG)
+                snackbar.setAction("Close") {
+                    snackbar.dismiss()
+                }
                 snackbar.view.setBackgroundColor(ContextCompat.getColor(context, R.color.green))
                 snackbar.show()
 
