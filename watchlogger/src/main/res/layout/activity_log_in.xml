@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/box_inset_layout_padding"
+    tools:context=".LogInActivity"
+    tools:deviceIds="wear">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/mimirlogo" />
+
+        <TextView
+            android:id="@+id/appNameText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:fontFamily="@font/montserrat_bold"
+            android:textColor="@color/fontLogo"
+            android:layout_marginBottom="5dp"
+            android:text="Mimir" />
+
+        <Button
+            android:id="@+id/startBtn"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_bold"
+            android:textColor="@color/fontBlack"
+            android:background="@drawable/rounded_corners"
+            android:text="Get started" />
+    </LinearLayout>
+</androidx.wear.widget.BoxInsetLayout>

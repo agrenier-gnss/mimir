@@ -5,4 +5,7 @@
     values-round/strings.xml for round devices.
     -->
     <string name="hello_world">Hello Square World!</string>
+    <string name="title_activity_log_in">LogInActivity</string>
+    <string name="title_activity_selection">SelectionActivity</string>
+    <string name="title_activity_logging">LoggingActivity</string>
 </resources>

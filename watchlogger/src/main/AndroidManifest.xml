@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-feature android:name="android.hardware.type.watch" />
+
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.BODY_SENSORS" />
-    <uses-feature android:name="android.hardware.type.watch" />
 
     <application
         android:allowBackup="true"
@@ -30,7 +32,17 @@
             android:value="true" />
 
         <activity
-            android:name=".MainActivityWatch"
+            android:name=".LoggingActivity"
+            android:exported="true"
+            android:label="logging_app">
+        </activity>
+
+        <activity
+            android:name=".SelectionActivity"
+            android:exported="true"
+            android:label="@string/title_activity_selection"></activity>
+        <activity
+            android:name=".LogInActivity"
             android:exported="true"
             android:label="logging_app">
             <intent-filter>
@@ -39,6 +51,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".MainActivityWatch"
+            android:exported="true"
+            android:label="logging_app"></activity>
     </application>
 
 </manifest>
