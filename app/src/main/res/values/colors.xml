@@ -16,5 +16,6 @@
     <color name="dark_gray">#171717</color>
     <color name="lighter_black">#1E1E1E</color>
     <color name="light_gray">#333333</color>
-    <color name="lighter_gray">#FAFAFA</color>
+    <color name="lighter_gray">#FFABABAB</color>
+    <color name="gray_for_tables">#FF242424</color>
 </resources>
