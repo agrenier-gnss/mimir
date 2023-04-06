@@ -41,77 +41,39 @@ class MainActivity : AppCompatActivity() {
 
 
         var gnssToggle = true
-        var imuToggle = true
+        var gyroscopeToggle = true
+        var accelerometerToggle = true
         var magnetometerToggle = true
         var barometerToggle = true
 
-        val loggingButton = findViewById<Button>(R.id.startLogButton)
-        val stopLogButton = findViewById<Button>(R.id.stopLogButton)
-        val motionSensors = MotionSensorsHandler(this)
-        val gnss = GnssHandler(this)
-        val IMUSlider = findViewById<SeekBar>(R.id.sliderIMU)
-        val MagnetometerSlider = findViewById<SeekBar>(R.id.sliderMagnetometer)
+        val gnssStateTextView = findViewById<TextView>(R.id.gnssState)
+
+
+
+
+        val gyroscopeStateTextView = findViewById<TextView>(R.id.gyroState)
+        val gyroscopeSliderTextView = findViewById<TextView>(R.id.gyroValue)
+        val gyroscopeSlider = findViewById<SeekBar>(R.id.sliderGyroscope)
+        gyroscopeSlider.min = 10
+        gyroscopeSlider.max = 100
+        gyroscopeSlider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                Log.d("GYROSCOPELIDERPROGRESS", gyroscopeSlider.progress.toString())
+                val accelerometerMap = DataMap().apply{
+                    putInt("accelerometer",gyroscopeSlider.progress)
+                }
+                gyroscopeSliderTextView.setText(gyroscopeSlider.progress.toString()+"hz")
+                //sendParameterToWatch(accelerometerMap)
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+        gyroscopeSliderTextView.setText(gyroscopeSlider.progress.toString()+"hz")
+
+        val barometerStateTextView = findViewById<TextView>(R.id.baroState)
+        val barometerSliderTextView = findViewById<TextView>(R.id.baroValue)
         val BarometerSlider = findViewById<SeekBar>(R.id.sliderBarometer)
-        val BLE = BLEHandler(this)
-
-        loggingButton.setOnClickListener{
-            loggingButton.isEnabled = false
-            stopLogButton.isEnabled = true
-            MagnetometerSlider.isEnabled = false
-            BarometerSlider.isEnabled = false
-            Log.d("start logging", "Start logging")
-            motionSensors.setUpSensors()
-            if (gnssToggle) {gnss.setUpLogging()}
-            BLE.setUpLogging()
-        }
-
-        stopLogButton.setOnClickListener {
-            loggingButton.isEnabled = true
-            stopLogButton.isEnabled = false
-            IMUSlider.isEnabled = true
-            MagnetometerSlider.isEnabled = true
-            BarometerSlider.isEnabled = true
-            motionSensors.stopLogging()
-            if (gnssToggle) {gnss.stopLogging(this)}
-            BLE.stopLogging()
-        }
-
-        IMUSlider.min = 10
-        IMUSlider.max = 100
-        IMUSlider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                Log.d("IMUSLIDERPROGRESS", IMUSlider.progress.toString())
-                val IMUMap = DataMap().apply{
-                    putInt("imu",IMUSlider.progress)
-                }
-                sendParameterToWatch(IMUMap)
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-            }
-        })
-
-        MagnetometerSlider.min = 1
-        MagnetometerSlider.max = 10
-        MagnetometerSlider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                Log.d("MAGNESLIDERPROGRESS", MagnetometerSlider.progress.toString())
-                val magnetometerMap = DataMap().apply{
-                    putInt("magnetometer",MagnetometerSlider.progress)
-                }
-                sendParameterToWatch(magnetometerMap)
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-            }
-        })
-
         BarometerSlider.min = 1
         BarometerSlider.max = 10
         BarometerSlider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -120,17 +82,96 @@ class MainActivity : AppCompatActivity() {
                 val barometerMap = DataMap().apply{
                     putInt("barometer",BarometerSlider.progress)
                 }
-                sendParameterToWatch(barometerMap)
+                barometerSliderTextView.setText(BarometerSlider.progress.toString()+"hz")
+                //sendParameterToWatch(barometerMap)
             }
 
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
+        barometerSliderTextView.setText(BarometerSlider.progress.toString()+"hz")
 
 
+        val magnetometerStateTextView = findViewById<TextView>(R.id.magnetoState)
+        val magnetometerSliderTextView = findViewById<TextView>(R.id.magnetoValue)
+        val MagnetometerSlider = findViewById<SeekBar>(R.id.sliderMagnetometer)
+        MagnetometerSlider.min = 1
+        MagnetometerSlider.max = 10
+        MagnetometerSlider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                Log.d("MAGNESLIDERPROGRESS", MagnetometerSlider.progress.toString())
+                val magnetometerMap = DataMap().apply{
+                    putInt("magnetometer",MagnetometerSlider.progress)
+                }
+                magnetometerSliderTextView.setText(MagnetometerSlider.progress.toString()+"hz")
+                //sendParameterToWatch(magnetometerMap)
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+        magnetometerSliderTextView.setText(MagnetometerSlider.progress.toString()+"hz")
+
+
+        val accelerometerStateTextView = findViewById<TextView>(R.id.acceleroState)
+        val accelerometerSliderTextView = findViewById<TextView>(R.id.acceleroValue)
+        val accelerometerSlider = findViewById<SeekBar>(R.id.sliderAccelerometer)
+        accelerometerSlider.min = 10
+        accelerometerSlider.max = 100
+        accelerometerSlider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                Log.d("IMUSLIDERPROGRESS", accelerometerSlider.progress.toString())
+                val accelerometerMap = DataMap().apply{
+                    putInt("accelerometer",accelerometerSlider.progress)
+                }
+                accelerometerSliderTextView.setText(accelerometerSlider.progress.toString()+"hz")
+                //sendParameterToWatch(accelerometerMap)
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+        accelerometerSliderTextView.setText(accelerometerSlider.progress.toString()+"hz")
+
+        val loggingButton = findViewById<Button>(R.id.startLogButton)
+        val motionSensors = MotionSensorsHandler(this)
+        val gnss = GnssHandler(this)
+
+
+
+
+        val BLE = BLEHandler(this)
+
+
+
+
+
+
+
+        loggingButton.setOnClickListener{
+            loggingButton.isEnabled = false
+            //stopLogButton.isEnabled = true
+            MagnetometerSlider.isEnabled = false
+            BarometerSlider.isEnabled = false
+            Log.d("start logging", "Start logging")
+            motionSensors.setUpSensors()
+            if (gnssToggle) {gnss.setUpLogging()}
+            BLE.setUpLogging()
+        }
+
+        /*stopLogButton.setOnClickListener {
+            loggingButton.isEnabled = true
+            stopLogButton.isEnabled = false
+            accelerometerSlider.isEnabled = true
+            MagnetometerSlider.isEnabled = true
+            BarometerSlider.isEnabled = true
+            motionSensors.stopLogging()
+            if (gnssToggle) {gnss.stopLogging(this)}
+            BLE.stopLogging()
+        }*/
+
+
+/*
         val etTextToWatch: EditText = findViewById(R.id.etTextToWear)
         val sendButton: Button = findViewById(R.id.btnSend)
         val tvTexfFromWatch = findViewById<TextView>(R.id.tv_textFromWatch)
@@ -148,7 +189,7 @@ class MainActivity : AppCompatActivity() {
             Log.d("phoneLogger", "it.data " + DataMap.fromByteArray(it.data).toString())
             val dataMap = DataMap.fromByteArray(it.data)
             tvTexfFromWatch.text = dataMap.getString("dataFromWatch")
-        }
+        }*/
 
         var x1 = 0f
         var y1 = 0f
