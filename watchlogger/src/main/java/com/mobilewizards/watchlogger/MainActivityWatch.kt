@@ -118,8 +118,9 @@ class MainActivityWatch : Activity() {
 //            Log.d(TAG, "in button press, nodeId size " + getPhoneNodeId().size.toString())
             // TODO: Add no connected node handler
             getPhoneNodeId { nodeIds ->
-            Log.d(TAG, "Received nodeIds: $nodeIds")
-                var connectedNode: String = nodeIds[0]
+                Log.d(TAG, "Received nodeIds: $nodeIds")
+
+                var connectedNode: String = if (nodeIds.size > 0) nodeIds[0] else ""
 
                 if (connectedNode.isEmpty()) {
                     Log.d(TAG, "no nodes found")
