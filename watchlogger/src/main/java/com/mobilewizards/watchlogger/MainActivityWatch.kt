@@ -33,7 +33,7 @@ class MainActivityWatch : Activity() {
     private lateinit var binding: ActivityMainWatchBinding
     private lateinit var mMessageClient: MessageClient
     private lateinit var mChannelClient: ChannelClient
-
+    private lateinit var mSensorManager: SensorManager
     private val CSV_FILE_CHANNEL_PATH = MediaStore.Downloads.EXTERNAL_CONTENT_URI
     private var barometerFrequency: Int = 1
     private var magnetometerFrequency: Int = 1
@@ -70,6 +70,7 @@ class MainActivityWatch : Activity() {
                 outputStream.write("SvId,Time offset in nanos,State,cn0DbHz,carrierFrequencyHz,pseudorangeRateMeterPerSecond,pseudorangeRateUncertaintyMeterPerSecond\n".toByteArray())
                 testDataToFile.forEach { measurementString ->
                     outputStream.write("$measurementString\n".toByteArray())
+
                 }
                 outputStream.flush()
             }
@@ -103,6 +104,12 @@ class MainActivityWatch : Activity() {
         val sendButton = findViewById<Button>(R.id.btn_send)
         sendButton.setOnClickListener {
             isLogging = !isLogging
+            val mSensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+
+            val sensorList = mSensorManager.getSensorList(Sensor.TYPE_ALL)
+            for (currentSensor in sensorList) {
+                Log.d("List sensors", "Name: ${currentSensor.name} /Type_String: ${currentSensor.stringType} /Type_number: ${currentSensor.type}")
+            }
 //            healthServices.getHeartRate()// For testing is here. (un)comment if needed or not
 //            gnss.setUpLogging() // For testing is here. (un)comment if needed or not
 //            ble.setUpLogging()// For testing is here. (un)comment if needed or not
