@@ -17,14 +17,17 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.net.toUri
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.*
 import com.mobilewizards.logging_app.databinding.ActivityMainWatchBinding
 import com.mobilewizards.watchlogger.BLEHandlerWatch
 import com.mobilewizards.watchlogger.HealthServicesHandler
 import com.mobilewizards.watchlogger.WatchGNSSHandler
+import java.io.BufferedReader
 import java.io.File
 import java.io.FileOutputStream
+import java.io.FileReader
 import java.util.concurrent.ExecutionException
 
 
@@ -40,7 +43,7 @@ class MainActivityWatch : Activity() {
     private var IMUFrequency: Int = 10
     private val TAG = "watchLogger"
 
-    private val testFile = "test_file.txt"
+    private val testFile = "test_file"
     private val testDataToFile = listOf<Int>(1,2,3,4,5,6)
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
@@ -133,23 +136,45 @@ class MainActivityWatch : Activity() {
                     Log.d(TAG, "no nodes found")
                 } else {
                     Log.d(TAG, "nodes found, sending")
-                    sendCsvFileToPhone(File("${CSV_FILE_CHANNEL_PATH}/${testFile}"), connectedNode, this)
+                    sendCsvFileToPhone(File("/storage/emulated/0/Download/test_file.csv"), connectedNode, applicationContext)
                 }
             }
         }
     }
 
     private fun sendCsvFileToPhone(csvFile: File, nodeId: String, context: Context) {
+
+        // Check if the file is found and read
+        try {
+            val bufferedReader = BufferedReader(FileReader(csvFile))
+
+            var line: String? = bufferedReader.readLine()
+
+            while (line != null) {
+                Log.d(TAG, line)
+                line = bufferedReader.readLine()
+            }
+
+            bufferedReader.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
         val channelClient = Wearable.getChannelClient(context)
 
         val callback = object : ChannelClient.ChannelCallback() {
             override fun onChannelOpened(channel: ChannelClient.Channel) {
                 Log.d(TAG, "onChannelOpened")
                 // Send the CSV file to the phone
-                channelClient.sendFile(channel, Uri.fromFile(csvFile)).addOnCompleteListener {
+                channelClient.sendFile(channel, csvFile.toUri()).addOnCompleteListener {task ->
                     // The CSV file has been sent, close the channel
-                    Log.d(TAG, "inSendFile")
-                    channelClient.close(channel)
+                    if (task.isSuccessful) {
+                        Log.d(TAG, "inSendFile:" + csvFile.toUri().toString())
+                        channelClient.close(channel)
+                    } else {
+                        Log.e(TAG, "Error with file sending")
+                    }
+
                 }
             }
 
