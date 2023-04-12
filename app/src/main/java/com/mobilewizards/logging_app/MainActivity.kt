@@ -27,6 +27,9 @@ import com.google.android.gms.wearable.ChannelClient
 import java.io.*
 import java.nio.channels.Channels
 import java.nio.charset.StandardCharsets
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 class MainActivity : AppCompatActivity() {
 
@@ -171,7 +174,7 @@ class MainActivity : AppCompatActivity() {
         val channelClient = Wearable.getChannelClient(applicationContext)
         channelClient.registerChannelCallback(object : ChannelClient.ChannelCallback() {
             override fun onChannelOpened(channel: ChannelClient.Channel) {
-                    channelClient.receiveFile(channel, ("file:///storage/emulated/0/Download/test_file.csv").toUri(), false).addOnCompleteListener {task ->
+                    channelClient.receiveFile(channel, ("file:///storage/emulated/0/Download/${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss"))}.csv").toUri(), false).addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             if (task.result != null) {
                                 Log.d(TAG, task.result.toString())

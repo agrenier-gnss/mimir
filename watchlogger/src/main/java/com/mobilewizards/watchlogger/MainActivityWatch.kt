@@ -2,6 +2,7 @@ package com.mobilewizards.logging_app
 
 import android.Manifest
 import android.app.Activity
+import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
 import android.content.pm.PackageManager
@@ -28,6 +29,8 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.FileOutputStream
 import java.io.FileReader
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.concurrent.ExecutionException
 
 
@@ -43,7 +46,7 @@ class MainActivityWatch : Activity() {
     private var IMUFrequency: Int = 10
     private val TAG = "watchLogger"
 
-    private val testFile = "test_file"
+    private val testFile = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss"))
     private val testDataToFile = listOf<Int>(1,2,3,4,5,6)
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
@@ -78,6 +81,21 @@ class MainActivityWatch : Activity() {
                 outputStream.flush()
             }
         }
+
+        // Fetching file path for sendCsvToPhone function
+        var filePath = ""
+        fun getRealPathFromUri(contentResolver: ContentResolver, uri: Uri): String {
+            val projection = arrayOf(MediaStore.Images.Media.DATA)
+            val cursor = contentResolver.query(uri, projection, null, null, null)
+            val columnIndex = cursor?.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            cursor?.moveToFirst()
+            val path = columnIndex?.let { cursor?.getString(it) }
+            cursor?.close()
+            return path ?: ""
+        }
+        uri?.let { getRealPathFromUri(applicationContext.contentResolver, it) }
+            ?.let { Log.d("uri", it)
+                filePath = it}
 
 
         // Get messages from phone
@@ -136,7 +154,7 @@ class MainActivityWatch : Activity() {
                     Log.d(TAG, "no nodes found")
                 } else {
                     Log.d(TAG, "nodes found, sending")
-                    sendCsvFileToPhone(File("/storage/emulated/0/Download/test_file.csv"), connectedNode, applicationContext)
+                    sendCsvFileToPhone(File(filePath), connectedNode, applicationContext)
                 }
             }
         }
