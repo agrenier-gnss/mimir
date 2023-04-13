@@ -9,25 +9,40 @@ import android.widget.Button
 
 class LogEventActivity : AppCompatActivity() {
 
-    private var isToggledOn: Boolean = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_logevent)
         supportActionBar?.hide()
 
+        val activityHandler = ActivityHandler.getInstance()
+
+        var isInitialLoad = true
+
         val footerButton = findViewById<Button>(R.id.footer_button)
 
-        footerButton.setOnClickListener{
-            if (isToggledOn) {
-                //Stop logging
-                footerButton.text = "Start survey"
+        footerButton.setOnClickListener {
+            activityHandler.toggleButton()
+        }
+
+        activityHandler.getButtonState().observe(this) { isPressed ->
+
+            footerButton.isSelected = isPressed
+
+            if (isInitialLoad) {
+                isInitialLoad = false
+                return@observe
+            }
+
+            if(isPressed) {
+
+                footerButton.text = "Stop survey"
 
             } else {
-                //Start logging
-                footerButton.text = "Stop survey"
+
+                footerButton.text = "Start survey"
+
             }
-            isToggledOn = !isToggledOn
+
         }
 
         var x1 = 0f

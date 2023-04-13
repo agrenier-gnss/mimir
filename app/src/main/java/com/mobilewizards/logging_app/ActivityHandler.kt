@@ -1,24 +1,33 @@
 package com.mobilewizards.logging_app
 
-import android.content.Context
-import android.widget.Button
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
-class ActivityHandler(private val context: Context) {
+//this class handles logging data and log events all from one class
+class ActivityHandler private constructor() {
 
-    //this class handles logging data and log events all from one class
-
+    //keeps track of the button state and synchronises them between activities
     private val buttonState = MutableLiveData<Boolean>(false)
-
     fun getButtonState(): LiveData<Boolean> {
         return buttonState
     }
-
     fun toggleButton() {
         buttonState.value = !(buttonState.value ?: false)
     }
 
+    //this should be a singleton, but is not working
+    companion object {
+        private var INSTANCE: ActivityHandler? = null
+
+        fun getInstance(): ActivityHandler {
+            if (INSTANCE == null) {
+                INSTANCE = ActivityHandler()
+            }
+            return INSTANCE as ActivityHandler
+        }
+    }
+
+    //counter for keeping time on logging
     var counterThread : CounterThread? = null
 
     // Check if thread is alive to rightfully enable/disable buttons
@@ -36,7 +45,5 @@ class ActivityHandler(private val context: Context) {
             counterThread = null
         }
     }
-
-    //todo: neliöiden skaalaus näytön kokoon. nappien synkkaus. log event määrien kirjaus.
 
 }

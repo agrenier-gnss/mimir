@@ -1,6 +1,5 @@
 package com.mobilewizards.logging_app
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -12,52 +11,38 @@ import android.widget.TextView
 
 class MauveActivity : AppCompatActivity() {
 
-    private var isToggledOn: Boolean = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mauve)
         supportActionBar?.hide()
 
-        val motionSensors = MotionSensorsHandler(this)
-        var gnssToggle = true
-        val gnss = GnssHandler(this)
-        val BLE = BLEHandler(this)
+        val activityHandler = ActivityHandler.getInstance()
+
+        var isInitialLoad = true
 
         val loggingButton = findViewById<Button>(R.id.loggingButton)
         val dataButton = findViewById<Button>(R.id.downloadDataButton)
         val loggingText = findViewById<TextView>(R.id.loggingTextView)
 
+        //if logging button is toggled in other activities, it is also toggled in here.
+
         loggingButton.setOnClickListener {
-            if (isToggledOn) {
-                //Stop logging
-                motionSensors.stopLogging()
-                if (gnssToggle) {gnss.stopLogging(this)}
-                BLE.stopLogging()
+            activityHandler.toggleButton()
+        }
 
-                findViewById<Button>(R.id.loggingButton).text = "Start logging"
+        activityHandler.getButtonState().observe(this) { isPressed ->
+            loggingButton.isSelected = isPressed
 
-                loggingText.text = ""
+            // Check if app has just started and skip toggled off code
+            if (isInitialLoad) {
+                isInitialLoad = false
+                return@observe
+            }
 
-                loggingButton.animate()
-                    .translationYBy(-250f)
-                    .setDuration(200)
-                    .start()
-
-                Handler().postDelayed({
-                    dataButton.visibility = View.VISIBLE
-                }, 100)
-
-            } else {
-                //Start logging
-                motionSensors.setUpSensors()
-                if (gnssToggle) {gnss.setUpLogging()}
-                BLE.setUpLogging()
-
+            if(isPressed) {
+                // Start logging
                 findViewById<Button>(R.id.loggingButton).text = "Stop logging"
-
                 dataButton.visibility = View.GONE
-
                 loggingButton.animate()
                     .translationYBy(250f)
                     .setDuration(500)
@@ -67,12 +52,22 @@ class MauveActivity : AppCompatActivity() {
                     loggingText.text = "Placeholder text ..."
                 }, 300)
 
+            } else {
+                // Stop logging
+                findViewById<Button>(R.id.loggingButton).text = "Start logging"
+                loggingText.text = ""
+                loggingButton.animate()
+                    .translationYBy(-250f)
+                    .setDuration(200)
+                    .start()
+
+                Handler().postDelayed({
+                    dataButton.visibility = View.VISIBLE
+                }, 100)
             }
-            isToggledOn = !isToggledOn
         }
 
-        val downloadButton = findViewById<Button>(R.id.downloadDataButton)
-        downloadButton.setOnClickListener {
+        dataButton.setOnClickListener {
 
         }
 
