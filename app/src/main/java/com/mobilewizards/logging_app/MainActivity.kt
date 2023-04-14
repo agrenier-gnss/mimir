@@ -41,8 +41,7 @@ class MainActivity : AppCompatActivity() {
 
 
         var gnssToggle = true
-        var gyroscopeToggle = true
-        var accelerometerToggle = true
+        var IMUToggle = true
         var magnetometerToggle = true
         var barometerToggle = true
 
@@ -51,25 +50,25 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        val gyroscopeStateTextView = findViewById<TextView>(R.id.gyroState)
-        val gyroscopeSliderTextView = findViewById<TextView>(R.id.gyroValue)
-        val gyroscopeSlider = findViewById<SeekBar>(R.id.sliderGyroscope)
-        gyroscopeSlider.min = 10
-        gyroscopeSlider.max = 100
-        gyroscopeSlider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        val IMUStateTextView = findViewById<TextView>(R.id.IMUState)
+        val IMUSliderTextView = findViewById<TextView>(R.id.IMUValue)
+        val IMUSlider = findViewById<SeekBar>(R.id.sliderIMU)
+        IMUSlider.min = 10
+        IMUSlider.max = 100
+        IMUSlider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                Log.d("GYROSCOPELIDERPROGRESS", gyroscopeSlider.progress.toString())
+                Log.d("IMUPROGRESS", IMUSlider.progress.toString())
                 val accelerometerMap = DataMap().apply{
-                    putInt("accelerometer",gyroscopeSlider.progress)
+                    putInt("accelerometer",IMUSlider.progress)
                 }
-                gyroscopeSliderTextView.setText(gyroscopeSlider.progress.toString()+"hz")
+                IMUSliderTextView.setText(IMUSlider.progress.toString()+"hz")
                 //sendParameterToWatch(accelerometerMap)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
-        gyroscopeSliderTextView.setText(gyroscopeSlider.progress.toString()+"hz")
+        IMUSliderTextView.setText(IMUSlider.progress.toString()+"hz")
 
         val barometerStateTextView = findViewById<TextView>(R.id.baroState)
         val barometerSliderTextView = findViewById<TextView>(R.id.baroValue)
@@ -112,26 +111,6 @@ class MainActivity : AppCompatActivity() {
         })
         magnetometerSliderTextView.setText(MagnetometerSlider.progress.toString()+"hz")
 
-
-        val accelerometerStateTextView = findViewById<TextView>(R.id.acceleroState)
-        val accelerometerSliderTextView = findViewById<TextView>(R.id.acceleroValue)
-        val accelerometerSlider = findViewById<SeekBar>(R.id.sliderAccelerometer)
-        accelerometerSlider.min = 10
-        accelerometerSlider.max = 100
-        accelerometerSlider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                Log.d("IMUSLIDERPROGRESS", accelerometerSlider.progress.toString())
-                val accelerometerMap = DataMap().apply{
-                    putInt("accelerometer",accelerometerSlider.progress)
-                }
-                accelerometerSliderTextView.setText(accelerometerSlider.progress.toString()+"hz")
-                //sendParameterToWatch(accelerometerMap)
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-        })
-        accelerometerSliderTextView.setText(accelerometerSlider.progress.toString()+"hz")
 
         val loggingButton = findViewById<Button>(R.id.startLogButton)
         val motionSensors = MotionSensorsHandler(this)
