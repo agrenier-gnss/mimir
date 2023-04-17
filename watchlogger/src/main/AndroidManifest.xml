@@ -32,9 +32,15 @@
             android:value="true" />
 
         <activity
+            android:name=".SettingsActivity"
+            android:exported="true"
+            android:label="@string/title_activity_settings">
+        </activity>
+        <activity
             android:name=".LoggedEvent"
             android:exported="true"
             android:label="@string/title_activity_logged_event">
+
         </activity>
         <activity
             android:name=".PrevSurveysActivity"

@@ -17,11 +17,23 @@ class SelectionActivity : Activity() {
         setContentView(binding.root)
 
         val startSurveyBtn = findViewById<Button>(R.id.startSurveyBtn)
+        val prevSurveysBtn = findViewById<Button>(R.id.previousSurvBtn)
+        val settingsBtn = findViewById<Button>(R.id.settingsBtn)
 
         startSurveyBtn.setOnClickListener{
 
             val openStartSurvey = Intent(applicationContext, LoggingActivity::class.java)
             startActivity(openStartSurvey)
+        }
+        prevSurveysBtn.setOnClickListener{
+
+            /*val openPreviousSurv = Intent(applicationContext, LoggingActivity::class.java)
+            startActivity(openStartSurvey)*/
+        }
+        settingsBtn.setOnClickListener{
+
+            val openSettings = Intent(applicationContext, SettingsActivity::class.java)
+            startActivity(openSettings)
         }
 
     }

@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/box_inset_layout_padding"
+    android:background="@color/background"
     tools:context=".LogInActivity"
     tools:deviceIds="wear">
 
@@ -19,7 +20,8 @@
             android:id="@+id/imageView"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:src="@drawable/mimirlogo" />
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/logo" />
 
         <TextView
             android:id="@+id/appNameText"
@@ -30,6 +32,16 @@
             android:textColor="@color/fontLogo"
             android:layout_marginBottom="5dp"
             android:text="Mimir" />
+
+        <TextView
+            android:id="@+id/appInfoText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:fontFamily="@font/montserrat_regular"
+            android:textColor="@color/fontLogo"
+            android:layout_marginBottom="5dp"
+            android:text="Sensor Logger" />
 
     </LinearLayout>
 </androidx.wear.widget.BoxInsetLayout>

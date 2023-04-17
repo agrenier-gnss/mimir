@@ -10,4 +10,5 @@
     <string name="title_activity_logging">LoggingActivity</string>
     <string name="title_activity_prev_surveys">PrevSurveysActivity</string>
     <string name="title_activity_logged_event">LoggedEvent</string>
+    <string name="title_activity_settings">SettingsActivity</string>
 </resources>
