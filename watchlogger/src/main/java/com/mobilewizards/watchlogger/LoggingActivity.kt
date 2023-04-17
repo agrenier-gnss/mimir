@@ -4,7 +4,9 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
+import android.widget.TextView
 import com.mobilewizards.logging_app.databinding.ActivityLoggingBinding
 
 class LoggingActivity : Activity() {
@@ -18,29 +20,40 @@ class LoggingActivity : Activity() {
         setContentView(binding.root)
 
         val startLogBtn = findViewById<Button>(R.id.startLogBtn)
-        var isLogging = false
+        startLogBtn.visibility = View.VISIBLE
+
+        val stopLogBtn = findViewById<Button>(R.id.stopLogBtn)
+        stopLogBtn.visibility = View.GONE
+
+        val reviewBtn = findViewById<Button>(R.id.reviewBtn)
+        reviewBtn.visibility = View.GONE
+
+        val logText =  findViewById<TextView>(R.id.logInfoText)
+        logText.visibility = View.GONE
+
+
 
         startLogBtn.setOnClickListener{
+            startLogBtn.visibility = View.GONE
+            stopLogBtn.visibility = View.VISIBLE
+            logText.visibility = View.VISIBLE
+            logText.text = "Surveying..."
 
-            if(!isLogging){
-                isLogging = true
-                startLogBtn.text = "Stop"
 
-                //Näihin oikeat värit
-                startLogBtn.setBackgroundColor(Color.BLUE);
-                startLogBtn.setTextColor(Color.WHITE);
+        }
+        stopLogBtn.setOnClickListener{
 
-            } else {
+            reviewBtn.visibility = View.VISIBLE
+            stopLogBtn.visibility = View.GONE
+            logText.text = "Survey ended"
+            //logText.visibility = View.GONE
+        }
 
-                isLogging = false
-                startLogBtn.text = "Start"
+        reviewBtn.setOnClickListener{
 
-                //Näihin oikeat värit
-                startLogBtn.setBackgroundColor(Color.WHITE);
-                startLogBtn.setTextColor(Color.BLACK);
-
-            }
-
+            val openLoading = Intent(applicationContext, LoggedEvent::class.java)
+            startActivity(openLoading)
+            //Tästä seuraava näkymä
         }
 
     }

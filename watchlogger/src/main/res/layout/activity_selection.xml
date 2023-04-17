@@ -49,17 +49,17 @@
                         android:text="Start survey" />
 
                     <Button
-                        android:id="@+id/historyListBtn"
+                        android:id="@+id/previousSurvBtn"
                         android:layout_width="140dp"
                         android:layout_height="50dp"
                         android:background="@drawable/rounded_corners"
                         android:layout_marginBottom="15dp"
                         android:fontFamily="@font/montserrat_regular"
                         android:textColor="@color/fontBlack"
-                        android:text="History listing" />
+                        android:text="Previous surveys" />
 
                     <Button
-                        android:id="@+id/settingBtn"
+                        android:id="@+id/settingsBtn"
                         android:layout_width="140dp"
                         android:layout_height="50dp"
                         android:background="@drawable/rounded_corners"

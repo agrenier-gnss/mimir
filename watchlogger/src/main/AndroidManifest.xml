@@ -32,15 +32,26 @@
             android:value="true" />
 
         <activity
+            android:name=".LoggedEvent"
+            android:exported="true"
+            android:label="@string/title_activity_logged_event">
+        </activity>
+        <activity
+            android:name=".PrevSurveysActivity"
+            android:exported="true"
+            android:label="logging_app">
+
+        </activity>
+        <activity
             android:name=".LoggingActivity"
             android:exported="true"
             android:label="logging_app">
-        </activity>
 
+        </activity>
         <activity
             android:name=".SelectionActivity"
             android:exported="true"
-            android:label="@string/title_activity_selection"></activity>
+            android:label="@string/title_activity_selection" />
         <activity
             android:name=".LogInActivity"
             android:exported="true"
@@ -54,7 +65,7 @@
         <activity
             android:name=".MainActivityWatch"
             android:exported="true"
-            android:label="logging_app"></activity>
+            android:label="logging_app" />
     </application>
 
 </manifest>

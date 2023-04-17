@@ -4,10 +4,12 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.os.Handler
+import android.os.Looper
 import com.mobilewizards.logging_app.databinding.ActivityLogInBinding
 
 
-
+@Suppress("DEPRECATION")
 class LogInActivity : Activity() {
 
     private lateinit var binding: ActivityLogInBinding
@@ -18,13 +20,13 @@ class LogInActivity : Activity() {
         binding = ActivityLogInBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val startBtn = findViewById<Button>(R.id.startBtn)
 
-        startBtn.setOnClickListener{
+        Handler(Looper.getMainLooper()).postDelayed({
+            val intent = Intent(this, SelectionActivity::class.java)
+            startActivity(intent)
+            finish()
+        }, 4000)
 
-            val openSelections = Intent(applicationContext, SelectionActivity::class.java)
-           startActivity(openSelections)
-        }
 
     }
 }

@@ -8,4 +8,6 @@
     <string name="title_activity_log_in">LogInActivity</string>
     <string name="title_activity_selection">SelectionActivity</string>
     <string name="title_activity_logging">LoggingActivity</string>
+    <string name="title_activity_prev_surveys">PrevSurveysActivity</string>
+    <string name="title_activity_logged_event">LoggedEvent</string>
 </resources>
