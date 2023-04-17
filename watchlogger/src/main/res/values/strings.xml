@@ -11,4 +11,6 @@
     <string name="title_activity_prev_surveys">PrevSurveysActivity</string>
     <string name="title_activity_logged_event">LoggedEvent</string>
     <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_previous_surveys">PreviousSurveysActivity</string>
+    <string name="title_activity_send_surveys">SendSurveysActivity</string>
 </resources>

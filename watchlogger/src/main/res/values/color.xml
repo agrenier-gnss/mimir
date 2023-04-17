@@ -3,6 +3,7 @@
 
     <color name="selectionBtnColor">#C2AFF0</color>
     <color name="fontBlack">#000000</color>
+    <color name="fontWhite">#FFFF</color>
     <color name="background">#000000</color>
     <color name="fontLogo">#C2AFF0</color>
 </resources>

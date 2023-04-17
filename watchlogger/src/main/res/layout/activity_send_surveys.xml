@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:padding="@dimen/box_inset_layout_padding"
+    tools:context=".SendSurveysActivity"
+    tools:deviceIds="wear">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/MimirText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/montserrat_bold"
+                android:textColor="@color/fontLogo"
+                android:text="Mimir" />
+
+            <TextView
+                android:id="@+id/SendToText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:textColor="@color/fontWhite"
+                android:text="Send survey to" />
+            <Button
+                android:id="@+id/SendToPhoneBtn"
+                android:layout_width="140dp"
+                android:layout_height="50dp"
+                android:background="@drawable/rounded_corners"
+                android:layout_marginBottom="15dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:textColor="@color/fontBlack"
+                android:text="Phone" />
+
+            <Button
+                android:id="@+id/SendToDrive"
+                android:layout_width="140dp"
+                android:layout_height="50dp"
+                android:background="@drawable/rounded_corners"
+                android:layout_marginBottom="15dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:textColor="@color/fontBlack"
+                android:text="Drive" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.wear.widget.BoxInsetLayout>
