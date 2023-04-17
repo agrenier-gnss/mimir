@@ -14,17 +14,16 @@ class LogEventActivity : AppCompatActivity() {
         setContentView(R.layout.activity_logevent)
         supportActionBar?.hide()
 
-        val activityHandler = ActivityHandler.getInstance()
 
         var isInitialLoad = true
 
         val footerButton = findViewById<Button>(R.id.footer_button)
 
         footerButton.setOnClickListener {
-            activityHandler.toggleButton()
+            ActivityHandler.toggleButton()
         }
 
-        activityHandler.getButtonState().observe(this) { isPressed ->
+        ActivityHandler.getButtonState().observe(this) { isPressed ->
 
             footerButton.isSelected = isPressed
 

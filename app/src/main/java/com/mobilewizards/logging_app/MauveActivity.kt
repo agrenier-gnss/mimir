@@ -16,7 +16,6 @@ class MauveActivity : AppCompatActivity() {
         setContentView(R.layout.activity_mauve)
         supportActionBar?.hide()
 
-        val activityHandler = ActivityHandler.getInstance()
 
         var isInitialLoad = true
 
@@ -27,10 +26,10 @@ class MauveActivity : AppCompatActivity() {
         //if logging button is toggled in other activities, it is also toggled in here.
 
         loggingButton.setOnClickListener {
-            activityHandler.toggleButton()
+            ActivityHandler.toggleButton()
         }
 
-        activityHandler.getButtonState().observe(this) { isPressed ->
+        ActivityHandler.getButtonState().observe(this) { isPressed ->
             loggingButton.isSelected = isPressed
 
             // Check if app has just started and skip toggled off code

@@ -13,6 +13,7 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 import com.google.android.gms.wearable.DataMap
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.Wearable
@@ -38,15 +39,24 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
-
-        var gnssToggle = true
-        var IMUToggle = true
-        var magnetometerToggle = true
-        var barometerToggle = true
-
         val gnssStateTextView = findViewById<TextView>(R.id.gnssState)
-
+        val gnssSwitch: SwitchCompat = findViewById(R.id.gnssSwitch)
+        gnssSwitch.isChecked = ActivityHandler.getGnssToggle()
+        if(gnssSwitch.isChecked){
+            gnssStateTextView.setText("Enabled")
+        }
+        else{
+            gnssStateTextView.setText("Disabled")
+        }
+        gnssSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                gnssStateTextView.setText("Enabled")
+                ActivityHandler.setGnssToggle(true)
+            } else {
+                gnssStateTextView.setText("Disabled")
+                ActivityHandler.setGnssToggle(false)
+            }
+        }
 
 
 
@@ -55,32 +65,58 @@ class MainActivity : AppCompatActivity() {
         val IMUSlider = findViewById<SeekBar>(R.id.sliderIMU)
         IMUSlider.min = 10
         IMUSlider.max = 100
+        IMUSlider.progress = ActivityHandler.getIMUFrequency()
+        IMUSliderTextView.setText(IMUSlider.progress.toString()+"hz")
         IMUSlider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 Log.d("IMUPROGRESS", IMUSlider.progress.toString())
                 val accelerometerMap = DataMap().apply{
                     putInt("accelerometer",IMUSlider.progress)
                 }
+                ActivityHandler.setIMUFrequency(IMUSlider.progress)
                 IMUSliderTextView.setText(IMUSlider.progress.toString()+"hz")
+
                 //sendParameterToWatch(accelerometerMap)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
-        IMUSliderTextView.setText(IMUSlider.progress.toString()+"hz")
+
+        val IMUSwitch = findViewById<SwitchCompat>(R.id.IMUSwitch)
+        IMUSwitch.isChecked = ActivityHandler.getIMUToggle()
+        if(IMUSwitch.isChecked){
+            IMUStateTextView.setText("Enabled")
+        }
+        else{
+            IMUStateTextView.setText("Disabled")
+        }
+        IMUSwitch.setOnCheckedChangeListener { _, isChecked ->
+            // Perform action based on the switch state (checked or unchecked)
+            if (isChecked) {
+                IMUStateTextView.setText("Enabled")
+                ActivityHandler.setIMUToggle(true)
+            } else {
+                IMUStateTextView.setText("Disabled")
+                ActivityHandler.setIMUToggle(false)
+            }
+        }
 
         val barometerStateTextView = findViewById<TextView>(R.id.baroState)
         val barometerSliderTextView = findViewById<TextView>(R.id.baroValue)
         val BarometerSlider = findViewById<SeekBar>(R.id.sliderBarometer)
         BarometerSlider.min = 1
         BarometerSlider.max = 10
+        BarometerSlider.progress = ActivityHandler.getBarometerFrequency()
+        barometerSliderTextView.setText(BarometerSlider.progress.toString()+"hz")
+
         BarometerSlider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 Log.d("BAROSLIDERPROGRESS", BarometerSlider.progress.toString())
                 val barometerMap = DataMap().apply{
                     putInt("barometer",BarometerSlider.progress)
                 }
+                ActivityHandler.setBarometerFrequency(BarometerSlider.progress)
                 barometerSliderTextView.setText(BarometerSlider.progress.toString()+"hz")
                 //sendParameterToWatch(barometerMap)
             }
@@ -88,20 +124,41 @@ class MainActivity : AppCompatActivity() {
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
-        barometerSliderTextView.setText(BarometerSlider.progress.toString()+"hz")
 
+        val barometerSwitch = findViewById<SwitchCompat>(R.id.baroSwitch)
+        barometerSwitch.isChecked = ActivityHandler.getBarometerToggle()
+        if(barometerSwitch.isChecked){
+            barometerStateTextView.setText("Enabled")
+        }
+        else{
+            barometerStateTextView.setText("Disabled")
+        }
+        barometerSwitch.setOnCheckedChangeListener { _, isChecked ->
+            // Perform action based on the switch state (checked or unchecked)
+            if (isChecked) {
+                barometerStateTextView.setText("Enabled")
+                ActivityHandler.setBarometerToggle(true)
+            } else {
+                barometerStateTextView.setText("Disabled")
+                ActivityHandler.setBarometerToggle(false)
+            }
+        }
 
         val magnetometerStateTextView = findViewById<TextView>(R.id.magnetoState)
         val magnetometerSliderTextView = findViewById<TextView>(R.id.magnetoValue)
         val MagnetometerSlider = findViewById<SeekBar>(R.id.sliderMagnetometer)
         MagnetometerSlider.min = 1
         MagnetometerSlider.max = 10
+        MagnetometerSlider.progress = ActivityHandler.getMagnetometerFrequency()
+        magnetometerSliderTextView.setText(MagnetometerSlider.progress.toString()+"hz")
+
         MagnetometerSlider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 Log.d("MAGNESLIDERPROGRESS", MagnetometerSlider.progress.toString())
                 val magnetometerMap = DataMap().apply{
                     putInt("magnetometer",MagnetometerSlider.progress)
                 }
+                ActivityHandler.setMagnetometerFrequency(MagnetometerSlider.progress)
                 magnetometerSliderTextView.setText(MagnetometerSlider.progress.toString()+"hz")
                 //sendParameterToWatch(magnetometerMap)
             }
@@ -109,16 +166,30 @@ class MainActivity : AppCompatActivity() {
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
-        magnetometerSliderTextView.setText(MagnetometerSlider.progress.toString()+"hz")
 
+        val magnetometerSwitch = findViewById<SwitchCompat>(R.id.IMUSwitch)
+        magnetometerSwitch.isChecked = ActivityHandler.getMagnetometerToggle()
+        if(magnetometerSwitch.isChecked){
+            magnetometerStateTextView.setText("Enabled")
+        }
+        else{
+            magnetometerStateTextView.setText("Disabled")
+        }
+
+        magnetometerSwitch.setOnCheckedChangeListener { _, isChecked ->
+            // Perform action based on the switch state (checked or unchecked)
+            if (isChecked) {
+                magnetometerStateTextView.setText("Enabled")
+                ActivityHandler.setMagnetometerToggle(true)
+            } else {
+                magnetometerStateTextView.setText("Disabled")
+                ActivityHandler.setMagnetometerToggle(false)
+            }
+        }
 
         val loggingButton = findViewById<Button>(R.id.startLogButton)
         val motionSensors = MotionSensorsHandler(this)
         val gnss = GnssHandler(this)
-
-
-
-
         val BLE = BLEHandler(this)
 
 
@@ -127,7 +198,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        loggingButton.setOnClickListener{
+        /*loggingButton.setOnClickListener{
             loggingButton.isEnabled = false
             //stopLogButton.isEnabled = true
             MagnetometerSlider.isEnabled = false
@@ -136,7 +207,7 @@ class MainActivity : AppCompatActivity() {
             motionSensors.setUpSensors()
             if (gnssToggle) {gnss.setUpLogging()}
             BLE.setUpLogging()
-        }
+        }*/
 
         /*stopLogButton.setOnClickListener {
             loggingButton.isEnabled = true
