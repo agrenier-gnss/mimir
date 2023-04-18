@@ -53,7 +53,6 @@ class LoggingActivity : Activity() {
 
             val openLoading = Intent(applicationContext, LoggedEvent::class.java)
             startActivity(openLoading)
-            //Tästä seuraava näkymä
         }
 
     }
