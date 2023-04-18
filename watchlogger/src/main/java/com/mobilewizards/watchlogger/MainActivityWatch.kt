@@ -2,6 +2,7 @@ package com.mobilewizards.logging_app
 
 import android.Manifest
 import android.app.Activity
+import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
 import android.content.pm.PackageManager
@@ -17,14 +18,19 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.net.toUri
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.*
 import com.mobilewizards.logging_app.databinding.ActivityMainWatchBinding
 import com.mobilewizards.watchlogger.BLEHandlerWatch
 import com.mobilewizards.watchlogger.HealthServicesHandler
 import com.mobilewizards.watchlogger.WatchGNSSHandler
+import java.io.BufferedReader
 import java.io.File
 import java.io.FileOutputStream
+import java.io.FileReader
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.concurrent.ExecutionException
 
 
@@ -33,14 +39,14 @@ class MainActivityWatch : Activity() {
     private lateinit var binding: ActivityMainWatchBinding
     private lateinit var mMessageClient: MessageClient
     private lateinit var mChannelClient: ChannelClient
-
+    private lateinit var mSensorManager: SensorManager
     private val CSV_FILE_CHANNEL_PATH = MediaStore.Downloads.EXTERNAL_CONTENT_URI
     private var barometerFrequency: Int = 1
     private var magnetometerFrequency: Int = 1
     private var IMUFrequency: Int = 10
     private val TAG = "watchLogger"
 
-    private val testFile = "test_file.txt"
+    private val testFile = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss"))
     private val testDataToFile = listOf<Int>(1,2,3,4,5,6)
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
@@ -70,10 +76,26 @@ class MainActivityWatch : Activity() {
                 outputStream.write("SvId,Time offset in nanos,State,cn0DbHz,carrierFrequencyHz,pseudorangeRateMeterPerSecond,pseudorangeRateUncertaintyMeterPerSecond\n".toByteArray())
                 testDataToFile.forEach { measurementString ->
                     outputStream.write("$measurementString\n".toByteArray())
+
                 }
                 outputStream.flush()
             }
         }
+
+        // Fetching file path for sendCsvToPhone function
+        var filePath = ""
+        fun getRealPathFromUri(contentResolver: ContentResolver, uri: Uri): String {
+            val projection = arrayOf(MediaStore.Images.Media.DATA)
+            val cursor = contentResolver.query(uri, projection, null, null, null)
+            val columnIndex = cursor?.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            cursor?.moveToFirst()
+            val path = columnIndex?.let { cursor?.getString(it) }
+            cursor?.close()
+            return path ?: ""
+        }
+        uri?.let { getRealPathFromUri(applicationContext.contentResolver, it) }
+            ?.let { Log.d("uri", it)
+                filePath = it}
 
 
         // Get messages from phone
@@ -103,6 +125,12 @@ class MainActivityWatch : Activity() {
         val sendButton = findViewById<Button>(R.id.btn_send)
         sendButton.setOnClickListener {
             isLogging = !isLogging
+            val mSensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+
+            val sensorList = mSensorManager.getSensorList(Sensor.TYPE_ALL)
+            for (currentSensor in sensorList) {
+                Log.d("List sensors", "Name: ${currentSensor.name} /Type_String: ${currentSensor.stringType} /Type_number: ${currentSensor.type}")
+            }
 //            healthServices.getHeartRate()// For testing is here. (un)comment if needed or not
 //            gnss.setUpLogging() // For testing is here. (un)comment if needed or not
 //            ble.setUpLogging()// For testing is here. (un)comment if needed or not
@@ -118,30 +146,53 @@ class MainActivityWatch : Activity() {
 //            Log.d(TAG, "in button press, nodeId size " + getPhoneNodeId().size.toString())
             // TODO: Add no connected node handler
             getPhoneNodeId { nodeIds ->
-            Log.d(TAG, "Received nodeIds: $nodeIds")
-                var connectedNode: String = nodeIds[0]
+                Log.d(TAG, "Received nodeIds: $nodeIds")
+
+                var connectedNode: String = if (nodeIds.size > 0) nodeIds[0] else ""
 
                 if (connectedNode.isEmpty()) {
                     Log.d(TAG, "no nodes found")
                 } else {
                     Log.d(TAG, "nodes found, sending")
-                    sendCsvFileToPhone(File("${CSV_FILE_CHANNEL_PATH}/${testFile}"), connectedNode, this)
+                    sendCsvFileToPhone(File(filePath), connectedNode, applicationContext)
                 }
             }
         }
     }
 
     private fun sendCsvFileToPhone(csvFile: File, nodeId: String, context: Context) {
+
+        // Check if the file is found and read
+        try {
+            val bufferedReader = BufferedReader(FileReader(csvFile))
+
+            var line: String? = bufferedReader.readLine()
+
+            while (line != null) {
+                Log.d(TAG, line)
+                line = bufferedReader.readLine()
+            }
+
+            bufferedReader.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
         val channelClient = Wearable.getChannelClient(context)
 
         val callback = object : ChannelClient.ChannelCallback() {
             override fun onChannelOpened(channel: ChannelClient.Channel) {
                 Log.d(TAG, "onChannelOpened")
                 // Send the CSV file to the phone
-                channelClient.sendFile(channel, Uri.fromFile(csvFile)).addOnCompleteListener {
+                channelClient.sendFile(channel, csvFile.toUri()).addOnCompleteListener {task ->
                     // The CSV file has been sent, close the channel
-                    Log.d(TAG, "inSendFile")
-                    channelClient.close(channel)
+                    if (task.isSuccessful) {
+                        Log.d(TAG, "inSendFile:" + csvFile.toUri().toString())
+                        channelClient.close(channel)
+                    } else {
+                        Log.e(TAG, "Error with file sending")
+                    }
+
                 }
             }
 
