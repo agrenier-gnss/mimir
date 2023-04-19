@@ -125,18 +125,38 @@ class MainActivityWatch : Activity() {
         val sendButton = findViewById<Button>(R.id.btn_send)
         sendButton.setOnClickListener {
             isLogging = !isLogging
-            val mSensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
-            val sensorList = mSensorManager.getSensorList(Sensor.TYPE_ALL)
-            for (currentSensor in sensorList) {
-                Log.d("List sensors", "Name: ${currentSensor.name} /Type_String: ${currentSensor.stringType} /Type_number: ${currentSensor.type}")
+            // Uncomment for listing all sensors
+//            val mSensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+//            val sensorList = mSensorManager.getSensorList(Sensor.TYPE_ALL)
+//            for (currentSensor in sensorList) {
+//                Log.d("List sensors", "Name: ${currentSensor.name} /Type_String: ${currentSensor.stringType} /Type_number: ${currentSensor.type}")
+//            }
+
+            if (isLogging){
+//                gnss.setUpLogging()
+                healthServices.getHeartRate()
+//                ble.setUpLogging()
+            } else{
+//                gnss.stopLogging(this)
+                healthServices.stopHeatRate()
+//                ble.stopLogging()
+
+                getPhoneNodeId { nodeIds ->
+                    Log.d(TAG, "Received nodeIds: $nodeIds")
+                    // Check if there are connected nodes
+                    var connectedNode: String = if (nodeIds.size > 0) nodeIds[0] else ""
+
+                    if (connectedNode.isEmpty()) {
+                        Log.d(TAG, "no nodes found")
+                        Toast.makeText(this, "Phone not connected", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Log.d(TAG, "nodes found, sending")
+                        // TODO: Get filepath, and maybe use sendTextToPhone to send the filename/uri to phone
+                        sendCsvFileToPhone(File(filePath), connectedNode, applicationContext)
+                    }
+                }
             }
-//            healthServices.getHeartRate()// For testing is here. (un)comment if needed or not
-//            gnss.setUpLogging() // For testing is here. (un)comment if needed or not
-//            ble.setUpLogging()// For testing is here. (un)comment if needed or not
-
-            // Commented this out for because testing only heart rate
-//            if (isLogging) Gnss.setUpLogging() else Gnss.stopLogging(this)
 
 //            var textToSend = "This is a test text sent from watch"
 //            sendTextToWatch(textToSend.toString())
@@ -144,42 +164,25 @@ class MainActivityWatch : Activity() {
 
             // Send file to phone
 //            Log.d(TAG, "in button press, nodeId size " + getPhoneNodeId().size.toString())
-            // TODO: Add no connected node handler
-            getPhoneNodeId { nodeIds ->
-                Log.d(TAG, "Received nodeIds: $nodeIds")
-
-                var connectedNode: String = if (nodeIds.size > 0) nodeIds[0] else ""
-
-                if (connectedNode.isEmpty()) {
-                    Log.d(TAG, "no nodes found")
-                } else {
-                    Log.d(TAG, "nodes found, sending")
-                    sendCsvFileToPhone(File(filePath), connectedNode, applicationContext)
-                }
-            }
         }
     }
 
     private fun sendCsvFileToPhone(csvFile: File, nodeId: String, context: Context) {
-
         // Check if the file is found and read
         try {
             val bufferedReader = BufferedReader(FileReader(csvFile))
-
             var line: String? = bufferedReader.readLine()
 
             while (line != null) {
                 Log.d(TAG, line)
                 line = bufferedReader.readLine()
             }
-
             bufferedReader.close()
         } catch (e: Exception) {
             e.printStackTrace()
         }
 
         val channelClient = Wearable.getChannelClient(context)
-
         val callback = object : ChannelClient.ChannelCallback() {
             override fun onChannelOpened(channel: ChannelClient.Channel) {
                 Log.d(TAG, "onChannelOpened")
@@ -192,7 +195,6 @@ class MainActivityWatch : Activity() {
                     } else {
                         Log.e(TAG, "Error with file sending")
                     }
-
                 }
             }
 
@@ -230,7 +232,7 @@ class MainActivityWatch : Activity() {
         }
     }
 
-    private fun sendTextToWatch(text: String) {
+    private fun sendTextToPhone(text: String) {
         val dataMap = DataMap().apply {
            //§ putString("dataFromWatch", text)
         }
