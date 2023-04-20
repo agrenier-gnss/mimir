@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.TextView
+import com.mobilewizards.logging_app.LoggingActivity
 import com.mobilewizards.logging_app.databinding.ActivityLoggedEventBinding
 
 class LoggedEvent : Activity() {
@@ -23,6 +24,7 @@ class LoggedEvent : Activity() {
         logInfoText.text = "23.04.23 time 400 logged events from phone"
 
 
+
         val loadSurvey = findViewById<ImageButton>(R.id.loadBtn)
         val doNotLoad = findViewById<ImageButton>(R.id.deleteBtn)
 
@@ -37,5 +39,8 @@ class LoggedEvent : Activity() {
             val goBack = Intent(applicationContext, LoggingActivity::class.java)
             startActivity(goBack)
         }
+
     }
+
+
 }

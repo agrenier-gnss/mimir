@@ -36,8 +36,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="15dp"
                 android:fontFamily="@font/montserrat_regular"
                 android:textColor="@color/fontWhite"
                 android:text="Send survey to" />
@@ -47,7 +47,8 @@
                 android:layout_height="50dp"
                 android:background="@drawable/rounded_corners"
                 android:layout_marginBottom="15dp"
-                android:fontFamily="@font/montserrat_regular"
+                android:fontFamily="@font/montserrat_bold"
+                android:textAllCaps="false"
                 android:textColor="@color/fontBlack"
                 android:text="Phone" />
 
@@ -57,7 +58,8 @@
                 android:layout_height="50dp"
                 android:background="@drawable/rounded_corners"
                 android:layout_marginBottom="15dp"
-                android:fontFamily="@font/montserrat_regular"
+                android:fontFamily="@font/montserrat_bold"
+                android:textAllCaps="false"
                 android:textColor="@color/fontBlack"
                 android:text="Drive" />
 

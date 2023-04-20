@@ -37,31 +37,31 @@
 
                 <Button
                     android:id="@+id/GnssBtn"
-                    android:layout_width="140dp"
+                    android:layout_width="150dp"
                     android:layout_height="50dp"
                     android:background="@drawable/rounded_corners"
                     android:layout_marginBottom="15dp"
-                    android:fontFamily="@font/montserrat_regular"
+                    android:fontFamily="@font/montserrat_bold"
                     android:textColor="@color/fontBlack"
                     android:text="GNSS" />
 
                 <Button
                     android:id="@+id/ImuBtn"
-                    android:layout_width="140dp"
+                    android:layout_width="150dp"
                     android:layout_height="50dp"
                     android:background="@drawable/rounded_corners"
                     android:layout_marginBottom="15dp"
-                    android:fontFamily="@font/montserrat_regular"
+                    android:fontFamily="@font/montserrat_bold"
                     android:textColor="@color/fontBlack"
                     android:text="IMU" />
 
                 <Button
                     android:id="@+id/EcgBtn"
-                    android:layout_width="140dp"
+                    android:layout_width="150dp"
                     android:layout_height="50dp"
                     android:background="@drawable/rounded_corners"
                     android:layout_marginBottom="15dp"
-                    android:fontFamily="@font/montserrat_regular"
+                    android:fontFamily="@font/montserrat_bold"
                     android:textColor="@color/fontBlack"
                     android:text="ECG" />
 
@@ -76,41 +76,56 @@
 
                 <Button
                     android:id="@+id/FiveSecondsBtn"
-                    android:layout_width="140dp"
+                    android:layout_width="150dp"
                     android:layout_height="50dp"
                     android:background="@drawable/rounded_corners"
                     android:layout_marginBottom="15dp"
-                    android:fontFamily="@font/montserrat_regular"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:textAllCaps="false"
                     android:textColor="@color/fontBlack"
                     android:text="5 sec" />
                 <Button
                     android:id="@+id/FifteenSecondsBtn"
-                    android:layout_width="140dp"
+                    android:layout_width="150dp"
                     android:layout_height="50dp"
                     android:background="@drawable/rounded_corners"
                     android:layout_marginBottom="15dp"
-                    android:fontFamily="@font/montserrat_regular"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:textAllCaps="false"
                     android:textColor="@color/fontBlack"
                     android:text="15 sec" />
                 <Button
                     android:id="@+id/ThirtySecondsBtn"
-                    android:layout_width="140dp"
+                    android:layout_width="150dp"
                     android:layout_height="50dp"
                     android:background="@drawable/rounded_corners"
                     android:layout_marginBottom="15dp"
-                    android:fontFamily="@font/montserrat_regular"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:textAllCaps="false"
                     android:textColor="@color/fontBlack"
                     android:text="30 sec" />
 
                 <Button
                     android:id="@+id/OneMinuteBtn"
-                    android:layout_width="140dp"
+                    android:layout_width="150dp"
                     android:layout_height="50dp"
                     android:background="@drawable/rounded_corners"
                     android:layout_marginBottom="25dp"
-                    android:fontFamily="@font/montserrat_regular"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:textAllCaps="false"
                     android:textColor="@color/fontBlack"
                     android:text="1 min" />
+
+                <Button
+                    android:id="@+id/saveSettingsBtn"
+                    android:layout_width="160dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/rounded_corners"
+                    android:layout_marginBottom="50dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:textAllCaps="false"
+                    android:textColor="@color/fontBlack"
+                    android:text="Save settings" />
 
             </LinearLayout>
         </ScrollView>

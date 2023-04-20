@@ -21,20 +21,6 @@ class SettingsActivity : Activity() {
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-/*
-        layout = findViewById(R.id.activity_settings_layout)
-
-        layout.setOnTouchListener(object : OnSwipeTouchListener(this@SettingsActivity) {
-            override fun onSwipeLeft() {
-                super.onSwipeLeft()
-                val goBack = Intent(applicationContext, SelectionActivity::class.java)
-                startActivity(goBack)
-                /*Toast.makeText(this@SettingsActivity, "Swipe Left gesture detected",
-                    Toast.LENGTH_SHORT)
-                    .show()*/
-            }
-        })
-*/
 
 
         val gnssBtn = findViewById<Button>(R.id.GnssBtn)

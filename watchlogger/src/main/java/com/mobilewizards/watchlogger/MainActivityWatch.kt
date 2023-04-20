@@ -25,6 +25,7 @@ import com.mobilewizards.logging_app.databinding.ActivityMainWatchBinding
 import com.mobilewizards.watchlogger.BLEHandlerWatch
 import com.mobilewizards.watchlogger.HealthServicesHandler
 import com.mobilewizards.watchlogger.WatchGNSSHandler
+import com.mobilewizards.logging_app.LoggingActivity
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileOutputStream
@@ -82,6 +83,7 @@ class MainActivityWatch : Activity() {
                 outputStream.flush()
             }
         }
+
 
         // Fetching file path for sendCsvToPhone function
         var filePath = ""
