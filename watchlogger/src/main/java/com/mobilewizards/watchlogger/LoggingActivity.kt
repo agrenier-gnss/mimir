@@ -38,7 +38,7 @@ class LoggingActivity : Activity() {
     private lateinit var mMessageClient: MessageClient
     private lateinit var mChannelClient: ChannelClient
     private lateinit var mSensorManager: SensorManager
-  //  private val CSV_FILE_CHANNEL_PATH = MediaStore.Downloads.EXTERNAL_CONTENT_URI
+    private val CSV_FILE_CHANNEL_PATH = MediaStore.Downloads.EXTERNAL_CONTENT_URI
     private var barometerFrequency: Int = 1
     private var magnetometerFrequency: Int = 1
     private var IMUFrequency: Int = 10
@@ -53,8 +53,15 @@ class LoggingActivity : Activity() {
         binding = ActivityLoggingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+        this.checkPermissions()
+
         val ble =  BLEHandlerWatch(this)
         val gnss = WatchGNSSHandler(this)
+
+        //Constructor huono, kellossa ei näytetä sykettä käyttäjälle, ei tarvita text?
+        //val healthServices = HealthServicesHandler(this, text)
+
         //val loggedEvent = LoggedEvent()
 
 
@@ -126,6 +133,8 @@ class LoggingActivity : Activity() {
             logTimeText.visibility = View.VISIBLE
             logTimeText.text = currentTime.toString()
 
+            //tähän tarkistus, mitkä logattavat arvot valittu
+            //healthServices.getHeartRate()
             gnss.setUpLogging()
             ble.setUpLogging()
 
@@ -144,12 +153,34 @@ class LoggingActivity : Activity() {
 
         reviewBtn.setOnClickListener{
 
-
            WatchActivityHandler.getFilePath(filePath)
             val openLoading = Intent(applicationContext, LoggedEvent::class.java)
             startActivity(openLoading)
         }
 
+    }
+
+    fun checkPermissions() {
+        val permissions = arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.MANAGE_EXTERNAL_STORAGE,
+            Manifest.permission.BODY_SENSORS,
+        )
+
+        var allPermissionsGranted = true
+        for (permission in permissions) {
+            if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                allPermissionsGranted = false
+                break
+            }
+        }
+
+        if (!allPermissionsGranted) {
+            ActivityCompat.requestPermissions(this, permissions, 225)
+        }
     }
 
 }

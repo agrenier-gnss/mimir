@@ -32,40 +32,34 @@
             android:value="true" />
 
         <activity
+            android:name=".FileSendActivity"
+            android:exported="true"
+            android:label="@string/title_activity_file_send">
+        </activity>
+        <activity
             android:name=".SendSurveysActivity"
             android:exported="true"
-            android:label="@string/title_activity_send_surveys">
-        </activity>
+            android:label="@string/title_activity_send_surveys"></activity>
         <activity
             android:name=".PreviousSurveysActivity"
             android:exported="true"
-            android:label="@string/title_activity_previous_surveys">
-
-        </activity>
+            android:label="@string/title_activity_previous_surveys"></activity>
         <activity
             android:name=".SettingsActivity"
             android:exported="true"
-            android:label="@string/title_activity_settings">
-
-        </activity>
+            android:label="@string/title_activity_settings"></activity>
         <activity
             android:name=".LoggedEvent"
             android:exported="true"
-            android:label="@string/title_activity_logged_event">
-
-        </activity>
+            android:label="@string/title_activity_logged_event"></activity>
         <activity
             android:name=".PrevSurveysActivity"
             android:exported="true"
-            android:label="logging_app">
-
-        </activity>
+            android:label="logging_app"></activity>
         <activity
             android:name=".LoggingActivity"
             android:exported="true"
-            android:label="logging_app">
-
-        </activity>
+            android:label="logging_app"></activity>
         <activity
             android:name=".SelectionActivity"
             android:exported="true"
