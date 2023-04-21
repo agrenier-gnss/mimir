@@ -35,7 +35,7 @@
 
                     <Button
                         android:id="@+id/startSurveyBtn"
-                        android:layout_width="150dp"
+                        android:layout_width="160dp"
                         android:layout_height="50dp"
                         android:background="@drawable/rounded_corners"
                         android:layout_marginBottom="15dp"
@@ -46,7 +46,7 @@
 
                     <Button
                         android:id="@+id/previousSurvBtn"
-                        android:layout_width="150dp"
+                        android:layout_width="160dp"
                         android:layout_height="50dp"
                         android:background="@drawable/rounded_corners"
                         android:layout_marginBottom="15dp"
@@ -57,10 +57,10 @@
 
                     <Button
                         android:id="@+id/settingsBtn"
-                        android:layout_width="150dp"
+                        android:layout_width="160dp"
                         android:layout_height="50dp"
                         android:background="@drawable/rounded_corners"
-                        android:layout_marginBottom="25dp"
+                        android:layout_marginBottom="40dp"
                         android:fontFamily="@font/montserrat_bold"
                         android:textAllCaps="false"
                         android:textColor="@color/fontBlack"

@@ -20,7 +20,7 @@ class LoggedEvent : Activity() {
 
         val logInfoText =  findViewById<TextView>(R.id.logInfotext)
 
-        //Tähän aito teksti
+        //Tähän aito teksti eventistä
         logInfoText.text = "23.04.23 time 400 logged events from phone"
 
 

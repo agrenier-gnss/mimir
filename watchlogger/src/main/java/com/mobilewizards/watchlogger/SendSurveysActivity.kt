@@ -20,7 +20,6 @@ import java.io.File
 import java.io.FileReader
 import java.security.KeyStore.TrustedCertificateEntry
 
-//Tänne tiedoston lähetys
 class SendSurveysActivity : Activity() {
 
     private lateinit var binding: ActivitySendSurveysBinding
@@ -113,7 +112,7 @@ class SendSurveysActivity : Activity() {
 
     private fun sendCsvFileToPhone(csvFile: File, nodeId: String, context: Context) {
 
-        // Check if the file is found and read
+        // Checks if the file is found and read
         try {
             val bufferedReader = BufferedReader(FileReader(csvFile))
 

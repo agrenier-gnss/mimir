@@ -34,7 +34,6 @@ class LoggingActivity : Activity() {
 
     private lateinit var binding: ActivityLoggingBinding
 
-    //Tänne tiedoston tallennus?
     private lateinit var mMessageClient: MessageClient
     private lateinit var mChannelClient: ChannelClient
     private lateinit var mSensorManager: SensorManager
@@ -121,7 +120,7 @@ class LoggingActivity : Activity() {
 
 
 
-
+        //When clicked, starts logging
         startLogBtn.setOnClickListener{
 
             val currentTime = LocalDateTime.now()
@@ -139,6 +138,8 @@ class LoggingActivity : Activity() {
             ble.setUpLogging()
 
         }
+
+        //When clicked, stops logging
         stopLogBtn.setOnClickListener{
 
             reviewBtn.visibility = View.VISIBLE
@@ -151,6 +152,7 @@ class LoggingActivity : Activity() {
             //logText.visibility = View.GONE
         }
 
+        //When clicked, opens LoggedEvent.kt for deciding what to do with the logged events
         reviewBtn.setOnClickListener{
 
            WatchActivityHandler.getFilePath(filePath)
@@ -160,6 +162,7 @@ class LoggingActivity : Activity() {
 
     }
 
+    //TÄMÄ EI VIELÄ NÄY KÄYTTÄJÄLLE
     fun checkPermissions() {
         val permissions = arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,

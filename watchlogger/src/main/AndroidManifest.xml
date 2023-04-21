@@ -52,10 +52,7 @@
             android:name=".LoggedEvent"
             android:exported="true"
             android:label="@string/title_activity_logged_event"></activity>
-        <activity
-            android:name=".PrevSurveysActivity"
-            android:exported="true"
-            android:label="logging_app"></activity>
+
         <activity
             android:name=".LoggingActivity"
             android:exported="true"
@@ -65,7 +62,7 @@
             android:exported="true"
             android:label="@string/title_activity_selection" />
         <activity
-            android:name=".LogInActivity"
+            android:name=".LoadingScreenActivity"
             android:exported="true"
             android:label="logging_app">
             <intent-filter>

@@ -118,7 +118,7 @@
 
                 <Button
                     android:id="@+id/saveSettingsBtn"
-                    android:layout_width="160dp"
+                    android:layout_width="170dp"
                     android:layout_height="50dp"
                     android:background="@drawable/rounded_corners"
                     android:layout_marginBottom="50dp"
