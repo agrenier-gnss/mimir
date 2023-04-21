@@ -34,14 +34,14 @@
             <ImageView
                 android:id="@+id/imageOk"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@android:drawable/ic_input_add" />
+                android:layout_height="50dp"
+                android:src="@drawable/okmark" />
 
             <ImageView
                 android:id="@+id/imageFailed"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@android:drawable/ic_delete" />
+                android:layout_height="50dp"
+                android:src="@drawable/xmark" />
 
             <TextView
                 android:id="@+id/logInfoText"

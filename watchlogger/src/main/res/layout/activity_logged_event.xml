@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:padding="@dimen/box_inset_layout_padding"
+    android:visibility="visible"
     tools:context=".LoggedEvent"
     tools:deviceIds="wear">
 
@@ -21,21 +22,22 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/nameTxtView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_marginBottom ="30dp"
+                android:layout_marginBottom="20dp"
                 android:fontFamily="@font/montserrat_bold"
-                android:textColor="@color/fontLogo"
-                android:text="Mimir" />
+                android:gravity="center"
+                android:text="Mimir"
+                android:textColor="@color/fontLogo" />
 
             <TextView
                 android:id="@+id/logInfotext"
-                android:gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:gravity="center" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -46,18 +48,27 @@
                     android:id="@+id/deleteBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp"
                     android:layout_weight="1"
-                    android:contentDescription="Delete the survey"
-                    android:src="@android:drawable/btn_dialog" />
+                    android:background="@null"
+                    android:contentDescription="Do not load the survey"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/cancel" />
 
                 <ImageButton
                     android:id="@+id/loadBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp"
                     android:layout_weight="1"
+                    android:background="@null"
                     android:contentDescription="Load the survey"
-
-                    android:src="@android:drawable/ic_menu_upload" />
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/load" />
             </LinearLayout>
         </LinearLayout>
 

@@ -38,6 +38,7 @@
                 android:layout_width="150dp"
                 android:layout_height="50dp"
                 android:background="@drawable/rounded_corners"
+                android:textAllCaps="false"
                 android:fontFamily="@font/montserrat_bold"
                 android:textColor="@color/fontBlack"
                 android:text="Start" />
@@ -60,6 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@drawable/rounded_corners"
+                android:textAllCaps="false"
                 android:fontFamily="@font/montserrat_bold"
                 android:text="Stop"
                 android:textColor="@color/fontBlack" />
@@ -69,6 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@drawable/rounded_corners"
+                android:textAllCaps="false"
                 android:fontFamily="@font/montserrat_bold"
                 android:text="Review survey"
                 android:textColor="@color/fontBlack" />
