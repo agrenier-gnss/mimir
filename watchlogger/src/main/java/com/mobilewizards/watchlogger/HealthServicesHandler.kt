@@ -22,11 +22,11 @@ class HealthServicesHandler: SensorEventListener{
     private lateinit var mHeartRateSensor: Sensor
     private lateinit var mSensorManager: SensorManager
     private lateinit var context: Context
-    private lateinit var text: TextView
+
     private val heartRateMeasurementList = mutableListOf<String>()
-    constructor(context: Context, text: TextView) {
+
+    constructor(context: Context) {
         this.context = context.applicationContext
-        this.text = text
     }
 
     fun getHeartRate() {
@@ -40,7 +40,7 @@ class HealthServicesHandler: SensorEventListener{
         }
     }
 
-    fun stopHeatRate() {
+    fun stopHeartRate() {
         mSensorManager.unregisterListener(this)
 
         val contentValues = ContentValues().apply {

@@ -7,6 +7,9 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Button
 import androidx.core.app.ActivityCompat
+import androidx.wear.widget.WearableLinearLayoutManager
+import androidx.wear.widget.WearableRecyclerView
+//import android.support.widget.RecyclerView
 import com.mobilewizards.logging_app.databinding.ActivitySelectionBinding
 
 class SelectionActivity : Activity() {
@@ -18,6 +21,7 @@ class SelectionActivity : Activity() {
 
         binding = ActivitySelectionBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
 
         this.checkPermissions()
 
@@ -32,8 +36,8 @@ class SelectionActivity : Activity() {
         }
         prevSurveysBtn.setOnClickListener{
 
-            /*val openPreviousSurv = Intent(applicationContext, LoggingActivity::class.java)
-            startActivity(openStartSurvey)*/
+            val openPreviousSurv = Intent(applicationContext, PreviousSurveysActivity::class.java)
+            startActivity(openPreviousSurv)
         }
         settingsBtn.setOnClickListener{
 

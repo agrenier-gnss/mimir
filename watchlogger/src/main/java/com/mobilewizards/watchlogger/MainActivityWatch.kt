@@ -61,7 +61,7 @@ class MainActivityWatch : Activity() {
 
         val ble =  BLEHandlerWatch(this)
         val gnss = WatchGNSSHandler(this)
-        val healthServices = HealthServicesHandler(this, text)
+        val healthServices = HealthServicesHandler(this)//, text)
         // writing into test file
 
         val contentValues = ContentValues().apply {
@@ -142,7 +142,7 @@ class MainActivityWatch : Activity() {
 //                ble.setUpLogging()
             } else{
 //                gnss.stopLogging(this)
-                healthServices.stopHeatRate()
+                healthServices.stopHeartRate()
 //                ble.stopLogging()
 
                 getPhoneNodeId { nodeIds ->

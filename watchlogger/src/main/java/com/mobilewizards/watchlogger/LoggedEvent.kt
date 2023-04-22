@@ -23,8 +23,6 @@ class LoggedEvent : Activity() {
         //Tähän aito teksti eventistä
         logInfoText.text = "23.04.23 time 400 logged events from phone"
 
-
-
         val loadSurvey = findViewById<ImageButton>(R.id.loadBtn)
         val doNotLoad = findViewById<ImageButton>(R.id.deleteBtn)
 

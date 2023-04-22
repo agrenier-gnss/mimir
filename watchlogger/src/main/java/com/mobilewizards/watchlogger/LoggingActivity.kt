@@ -57,11 +57,8 @@ class LoggingActivity : Activity() {
 
         val ble =  BLEHandlerWatch(this)
         val gnss = WatchGNSSHandler(this)
+        val healthServices = HealthServicesHandler(this)
 
-        //Constructor huono, kellossa ei näytetä sykettä käyttäjälle, ei tarvita text?
-        //val healthServices = HealthServicesHandler(this, text)
-
-        //val loggedEvent = LoggedEvent()
 
 
         // writing into test file
@@ -133,9 +130,10 @@ class LoggingActivity : Activity() {
             logTimeText.text = currentTime.toString()
 
             //tähän tarkistus, mitkä logattavat arvot valittu
-            //healthServices.getHeartRate()
+           // healthServices.getHeartRate()
             gnss.setUpLogging()
             ble.setUpLogging()
+            healthServices.getHeartRate()
 
         }
 
@@ -148,6 +146,7 @@ class LoggingActivity : Activity() {
             logText.text = "Survey ended"
             gnss.stopLogging(this)
             ble.stopLogging()
+            healthServices.stopHeartRate()
 
             //logText.visibility = View.GONE
         }

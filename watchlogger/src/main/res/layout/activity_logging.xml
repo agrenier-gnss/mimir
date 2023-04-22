@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:layout_marginBottom ="30dp"
+                android:layout_marginBottom ="20dp"
                 android:fontFamily="@font/montserrat_bold"
                 android:textColor="@color/fontLogo"
                 android:text="Mimir" />
@@ -64,6 +64,7 @@
                 android:textAllCaps="false"
                 android:fontFamily="@font/montserrat_bold"
                 android:text="Stop"
+                android:layout_marginBottom="15dp"
                 android:textColor="@color/fontBlack" />
 
             <Button
@@ -74,6 +75,7 @@
                 android:textAllCaps="false"
                 android:fontFamily="@font/montserrat_bold"
                 android:text="Review survey"
+                android:layout_marginBottom="15dp"
                 android:textColor="@color/fontBlack" />
         </LinearLayout>
 

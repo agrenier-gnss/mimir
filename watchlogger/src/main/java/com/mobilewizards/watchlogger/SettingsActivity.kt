@@ -32,7 +32,6 @@ class SettingsActivity : Activity() {
         ecgBtn.isSelected = WatchActivityHandler.getEcgStatus()
 
 
-
         val fiveSecBtn = findViewById<Button>(R.id.FiveSecondsBtn)
         val fifteenSecBtn = findViewById<Button>(R.id.FifteenSecondsBtn)
         val thirtySecBtn = findViewById<Button>(R.id.ThirtySecondsBtn)
