@@ -35,6 +35,14 @@
                     android:textColor="@color/fontLogo"
                     android:text="Mimir" />
 
+                <TextView
+                    android:id="@+id/dataText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginBottom="15dp"
+                    android:text="Collected data" />
+
                 <Button
                     android:id="@+id/GnssBtn"
                     android:layout_width="150dp"
