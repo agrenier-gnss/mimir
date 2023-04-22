@@ -6,10 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import android.view.MotionEvent
-import android.view.View
+import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -39,6 +36,52 @@ class MainActivity : AppCompatActivity() {
             // Implementation of code that require concurrent threads to be running
         }
 
+
+        val sensorList = arrayOf(
+            //1st value: name. second value: is there a slider. third and fourth are min and max values for sliders
+            arrayOf("GNSS", false),
+            arrayOf("IMU", true, 10, 100),
+            arrayOf("Barometer", true, 1, 10),
+            arrayOf("Magnetometer", true, 1, 10),
+            arrayOf("Bluetooth", false)
+        )
+
+        val parentView = findViewById<ViewGroup>(R.id.square_layout)
+
+        //create a layout for each sensor in sensorList
+        for(i in sensorList.indices) {
+
+            // Inflate the layout file that contains the TableLayout
+            val tableLayout = layoutInflater.inflate(R.layout.layout_presets, parentView, false).findViewById<TableLayout>(R.id.sensorSquarePreset)
+
+            val row = tableLayout.getChildAt(0) as TableRow
+            val sensorTitleTextView = row.findViewById<TextView>(R.id.sensorTitle)
+            sensorTitleTextView.text = sensorList[i][0].toString()
+            val row2 = tableLayout.getChildAt(1) as TableRow
+            val description = row2.findViewById<TextView>(R.id.description)
+
+
+            if(sensorList[i][1] == false) {
+                // if frequency is can not be changed
+                description.text = "${sensorList[i][0]} is always sampled at 1 Hz" // Change the description text
+                row.removeViewAt(2) // Remove the SwitchCompat
+            } else {
+                // if frequency can be changed
+                description.text = "Sampling frequency"
+                val row3 = tableLayout.getChildAt(2) as TableRow
+                val slider = row3.findViewById<SeekBar>(R.id.sensorSlider)
+                slider.min = sensorList[i][2].toString().toInt()
+                slider.max = sensorList[i][3].toString().toInt()
+            }
+
+            // Remove the tableLayout's parent, if it has one
+            (tableLayout.parent as? ViewGroup)?.removeView(tableLayout)
+
+            // Add the TableLayout to the parent view
+            parentView.addView(tableLayout)
+
+        }
+        /*
 
         val gnssStateTextView = findViewById<TextView>(R.id.gnssState)
         val gnssSwitch: SwitchCompat = findViewById(R.id.gnssSwitch)
@@ -149,6 +192,7 @@ class MainActivity : AppCompatActivity() {
             ActivityHandler.setMagnetometerToggle()
             setStateTextview(magnetometerSwitch.isChecked, magnetometerStateTextView)
         }
+        */
 
         val loggingButton = findViewById<MaterialButton>(R.id.loggingButton)
 
