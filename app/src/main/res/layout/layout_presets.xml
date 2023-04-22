@@ -5,6 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
+
+    <!--
     <TableLayout
         android:id="@+id/sensorSquarePreset"
         android:layout_width="match_parent"
@@ -68,6 +70,8 @@
     </TableLayout>
 
     <!--This layout is used in SurveyHistoryActivity.kt to create layout for each survey-->
+
+    <!--
     <TableLayout
         android:id="@+id/surveySquarePreset"
         android:layout_width="match_parent"
@@ -157,6 +161,59 @@
 
 
         </TableRow>
+    </TableLayout>
+    -->
+
+    <TableLayout
+        android:id="@+id/logEventSquarePreset"
+        android:layout_width="match_parent"
+        android:layout_height="143dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:stretchColumns="*"
+        android:shrinkColumns="*"
+        app:layout_constraintTop_toBottomOf="@+id/settings"
+        android:background="@drawable/sensor_layout">
+
+        <TextView
+            android:id="@+id/logEventTitle"
+            android:layout_width="193dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="17dp"
+            android:text="00.00.00"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="parent"
+            app:shapeAppearance="@style/MyTextAppearance"
+            />
+
+        <TextView
+            android:id="@+id/logEventDataPoint"
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="0dp"
+            android:text="00:01:23"
+            android:textColor="@color/lighter_gray"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toBottomOf="parent"
+            app:shapeAppearance="@style/MyTextAppearance"/>
+
+        <TextView
+            android:id="@+id/logEventDescription"
+            android:layout_height="20dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="0dp"
+            android:text="Survey duration"
+            android:textColor="@color/lighter_gray"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="parent"
+            app:shapeAppearance="@style/MyTextAppearance"/>
+
     </TableLayout>
 
 </LinearLayout>
