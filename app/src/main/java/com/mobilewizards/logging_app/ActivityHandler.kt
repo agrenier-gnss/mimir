@@ -6,11 +6,14 @@ import androidx.lifecycle.MutableLiveData
 //this class handles logging data and log events all from one class
 object ActivityHandler{
 
+    private lateinit var motionSensors: MotionSensorsHandler
+    private lateinit var gnss: GnssHandler
+    private lateinit var ble: BLEHandler
     private var isLogging: Boolean = false
 
     private var IMUFrequency: Int = 10
     private var barometerFrequency: Int = 1
-    private var magneometreFrequency: Int = 1
+    private var magnetometerFrequency: Int = 1
 
     //Boolean values to enable or disable sensors.
     private var IMUToggle: Boolean = true
@@ -25,6 +28,12 @@ object ActivityHandler{
 
     fun toggleButton() {
         buttonState.value = !(buttonState.value ?: false)
+        /*if(buttonState.value==true){
+            startLogging()
+        }
+        else{
+            stopLogging()
+        }*/
     }
 
     fun getIsLogging(): Boolean{
@@ -33,40 +42,44 @@ object ActivityHandler{
 
     //Functions to both logging and stopping it.
     fun startLogging(){
-
+        if(IMUToggle){motionSensors.setUpSensors()}
+        if (GNSSToggle) {gnss.setUpLogging()}
+        ble.setUpLogging()
     }
 
     fun stopLogging(){
-
+        if(IMUToggle){motionSensors.setUpSensors()}
+        if (GNSSToggle) {gnss.setUpLogging()}
+        ble.setUpLogging()
     }
 
     //Next 4 functions will change availability of sensors. They are used in switches in MainActivity
-    fun setGnssToggle(enabled: Boolean){
-        GNSSToggle = enabled
+    fun setGnssToggle(){
+        GNSSToggle = !GNSSToggle
     }
 
     fun getGnssToggle(): Boolean{
         return GNSSToggle
     }
 
-    fun setBarometerToggle(enabled: Boolean){
-        barometerToggle = enabled
+    fun setBarometerToggle(){
+        barometerToggle = !barometerToggle
     }
 
     fun getBarometerToggle(): Boolean{
         return barometerToggle
     }
 
-    fun setIMUToggle(enabled: Boolean){
-        IMUToggle = enabled
+    fun setIMUToggle(){
+        IMUToggle = !IMUToggle
     }
 
     fun getIMUToggle(): Boolean{
         return IMUToggle
     }
 
-    fun setMagnetometerToggle(enabled: Boolean){
-        magnetometerToggle = enabled
+    fun setMagnetometerToggle(){
+        magnetometerToggle = !magnetometerToggle
     }
 
     fun getMagnetometerToggle(): Boolean{
@@ -90,10 +103,10 @@ object ActivityHandler{
     }
 
     fun getMagnetometerFrequency(): Int{
-        return magneometreFrequency
+        return magnetometerFrequency
     }
     fun setMagnetometerFrequency(Value: Int){
-        magneometreFrequency = Value
+        magnetometerFrequency = Value
     }
 
     //counter for keeping time on logging

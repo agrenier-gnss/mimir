@@ -17,6 +17,11 @@ class MauveActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
 
+        val motionSensors = MotionSensorsHandler(this)
+        val gnss = GnssHandler(this)
+        val BLE = BLEHandler(this)
+
+
         var isInitialLoad = true
 
         val loggingButton = findViewById<Button>(R.id.loggingButton)

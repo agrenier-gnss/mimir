@@ -18,6 +18,7 @@ import com.google.android.gms.wearable.DataMap
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.Wearable
 import androidx.core.app.ActivityCompat
+import com.google.android.material.button.MaterialButton
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,7 +32,7 @@ class MainActivity : AppCompatActivity() {
 
         this.checkPermissions()
 
-
+        var isInitialLoad = true
 
         // Check if thread is alive to rightfully enable/disable buttons
         if (counterThread?.isAlive == true) {
@@ -41,21 +42,13 @@ class MainActivity : AppCompatActivity() {
 
         val gnssStateTextView = findViewById<TextView>(R.id.gnssState)
         val gnssSwitch: SwitchCompat = findViewById(R.id.gnssSwitch)
+
         gnssSwitch.isChecked = ActivityHandler.getGnssToggle()
-        if(gnssSwitch.isChecked){
-            gnssStateTextView.setText("Enabled")
-        }
-        else{
-            gnssStateTextView.setText("Disabled")
-        }
+        setStateTextview(gnssSwitch.isChecked,gnssStateTextView)
+
         gnssSwitch.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                gnssStateTextView.setText("Enabled")
-                ActivityHandler.setGnssToggle(true)
-            } else {
-                gnssStateTextView.setText("Disabled")
-                ActivityHandler.setGnssToggle(false)
-            }
+            ActivityHandler.setGnssToggle()
+            setStateTextview(gnssSwitch.isChecked,gnssStateTextView)
         }
 
 
@@ -85,21 +78,12 @@ class MainActivity : AppCompatActivity() {
 
         val IMUSwitch = findViewById<SwitchCompat>(R.id.IMUSwitch)
         IMUSwitch.isChecked = ActivityHandler.getIMUToggle()
-        if(IMUSwitch.isChecked){
-            IMUStateTextView.setText("Enabled")
-        }
-        else{
-            IMUStateTextView.setText("Disabled")
-        }
+        setStateTextview(IMUSwitch.isChecked, IMUStateTextView)
+
         IMUSwitch.setOnCheckedChangeListener { _, isChecked ->
-            // Perform action based on the switch state (checked or unchecked)
-            if (isChecked) {
-                IMUStateTextView.setText("Enabled")
-                ActivityHandler.setIMUToggle(true)
-            } else {
-                IMUStateTextView.setText("Disabled")
-                ActivityHandler.setIMUToggle(false)
-            }
+            ActivityHandler.setIMUToggle()
+            setStateTextview(IMUSwitch.isChecked, IMUStateTextView)
+
         }
 
         val barometerStateTextView = findViewById<TextView>(R.id.baroState)
@@ -127,21 +111,11 @@ class MainActivity : AppCompatActivity() {
 
         val barometerSwitch = findViewById<SwitchCompat>(R.id.baroSwitch)
         barometerSwitch.isChecked = ActivityHandler.getBarometerToggle()
-        if(barometerSwitch.isChecked){
-            barometerStateTextView.setText("Enabled")
-        }
-        else{
-            barometerStateTextView.setText("Disabled")
-        }
+        setStateTextview(barometerSwitch.isChecked, barometerStateTextView)
+
         barometerSwitch.setOnCheckedChangeListener { _, isChecked ->
-            // Perform action based on the switch state (checked or unchecked)
-            if (isChecked) {
-                barometerStateTextView.setText("Enabled")
-                ActivityHandler.setBarometerToggle(true)
-            } else {
-                barometerStateTextView.setText("Disabled")
-                ActivityHandler.setBarometerToggle(false)
-            }
+            ActivityHandler.setBarometerToggle()
+            setStateTextview(barometerSwitch.isChecked, barometerStateTextView)
         }
 
         val magnetometerStateTextView = findViewById<TextView>(R.id.magnetoState)
@@ -150,7 +124,7 @@ class MainActivity : AppCompatActivity() {
         MagnetometerSlider.min = 1
         MagnetometerSlider.max = 10
         MagnetometerSlider.progress = ActivityHandler.getMagnetometerFrequency()
-        magnetometerSliderTextView.setText(MagnetometerSlider.progress.toString()+"hz")
+        magnetometerSliderTextView.text = MagnetometerSlider.progress.toString()+"hz"
 
         MagnetometerSlider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -167,60 +141,41 @@ class MainActivity : AppCompatActivity() {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
 
-        val magnetometerSwitch = findViewById<SwitchCompat>(R.id.IMUSwitch)
+        val magnetometerSwitch = findViewById<SwitchCompat>(R.id.magnetoSwitch)
         magnetometerSwitch.isChecked = ActivityHandler.getMagnetometerToggle()
-        if(magnetometerSwitch.isChecked){
-            magnetometerStateTextView.setText("Enabled")
-        }
-        else{
-            magnetometerStateTextView.setText("Disabled")
-        }
+        setStateTextview(magnetometerSwitch.isChecked, magnetometerStateTextView)
 
         magnetometerSwitch.setOnCheckedChangeListener { _, isChecked ->
-            // Perform action based on the switch state (checked or unchecked)
-            if (isChecked) {
-                magnetometerStateTextView.setText("Enabled")
-                ActivityHandler.setMagnetometerToggle(true)
-            } else {
-                magnetometerStateTextView.setText("Disabled")
-                ActivityHandler.setMagnetometerToggle(false)
-            }
+            ActivityHandler.setMagnetometerToggle()
+            setStateTextview(magnetometerSwitch.isChecked, magnetometerStateTextView)
         }
 
-        val loggingButton = findViewById<Button>(R.id.startLogButton)
-        val motionSensors = MotionSensorsHandler(this)
-        val gnss = GnssHandler(this)
-        val BLE = BLEHandler(this)
+        val loggingButton = findViewById<MaterialButton>(R.id.loggingButton)
 
+        loggingButton.setOnClickListener{
+            ActivityHandler.toggleButton()
+        }
 
+        ActivityHandler.getButtonState().observe(this) { isPressed ->
 
+            loggingButton.isSelected = isPressed
 
+            if (isInitialLoad) {
+                isInitialLoad = false
+                return@observe
+            }
 
+            if(isPressed) {
 
+                loggingButton.text = "Stop survey"
 
-        /*loggingButton.setOnClickListener{
-            loggingButton.isEnabled = false
-            //stopLogButton.isEnabled = true
-            MagnetometerSlider.isEnabled = false
-            BarometerSlider.isEnabled = false
-            Log.d("start logging", "Start logging")
-            motionSensors.setUpSensors()
-            if (gnssToggle) {gnss.setUpLogging()}
-            BLE.setUpLogging()
-        }*/
+            } else {
 
-        /*stopLogButton.setOnClickListener {
-            loggingButton.isEnabled = true
-            stopLogButton.isEnabled = false
-            accelerometerSlider.isEnabled = true
-            MagnetometerSlider.isEnabled = true
-            BarometerSlider.isEnabled = true
-            motionSensors.stopLogging()
-            if (gnssToggle) {gnss.stopLogging(this)}
-            BLE.stopLogging()
-        }*/
+                loggingButton.text = "Start survey"
 
+            }
 
+        }
 /*
         val etTextToWatch: EditText = findViewById(R.id.etTextToWear)
         val sendButton: Button = findViewById(R.id.btnSend)
@@ -370,6 +325,14 @@ class MainActivity : AppCompatActivity() {
             else -> {
                 // Ignore all other requests.
             }
+        }
+    }
+
+    fun setStateTextview(enabled: Boolean,textview: TextView) {
+        if (enabled) {
+            textview.text = "Enabled"
+        } else {
+            textview.text = "Disabled"
         }
     }
 }
