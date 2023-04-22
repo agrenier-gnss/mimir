@@ -19,7 +19,7 @@ class SurveyHistoryActivity : AppCompatActivity() {
         for(x in surveyList) {
 
             // Inflate the layout file that contains the TableLayout
-            val tableLayout = layoutInflater.inflate(R.layout.layout_presets, parentView, false).findViewById<TableLayout>(R.id.sensorSquarePreset)
+            val tableLayout = layoutInflater.inflate(R.layout.layout_presets, parentView, false).findViewById<TableLayout>(R.id.surveySquarePreset)
 
 
 

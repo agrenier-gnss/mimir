@@ -29,6 +29,11 @@ class MauveActivity : AppCompatActivity() {
             ActivityHandler.toggleButton()
         }
 
+        dataButton.setOnClickListener {
+            val intent = Intent(this, SurveyHistoryActivity::class.java)
+            startActivity(intent)
+        }
+
         ActivityHandler.getButtonState().observe(this) { isPressed ->
             loggingButton.isSelected = isPressed
 
@@ -64,10 +69,6 @@ class MauveActivity : AppCompatActivity() {
                     dataButton.visibility = View.VISIBLE
                 }, 100)
             }
-        }
-
-        dataButton.setOnClickListener {
-
         }
 
         //change to another activity by sweeping
