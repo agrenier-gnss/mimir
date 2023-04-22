@@ -18,7 +18,7 @@ class FileSendActivity : Activity() {
         binding = ActivityFileSendBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        var fileSuccessful = WatchActivityHandler.fileSendOk
+        var fileSuccessful = WatchActivityHandler.checkFileSend()
 
         val logText =  findViewById<TextView>(R.id.logInfoText)
        // logText.visibility = View.GONE

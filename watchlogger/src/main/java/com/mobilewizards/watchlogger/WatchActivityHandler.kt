@@ -15,6 +15,10 @@ object WatchActivityHandler {
     private var filepath = ""
     private val TAG = "watchLogger"
     var fileSendOk : Boolean = false
+    var collectGnns : Boolean = true
+    var collectImu : Boolean = true
+    var collectEcg : Boolean = true
+    var selectedFrequency = 5
 
     fun getFilePath(filePath: String){
 
@@ -22,11 +26,6 @@ object WatchActivityHandler {
 
     }
 
-
-    fun sendFileToPhone(){
-
-
-    }
 
     fun fileSendStatus(fileSend: Boolean){
 
@@ -41,6 +40,47 @@ object WatchActivityHandler {
 
     fun giveFilePath(): String {
         return filepath
+    }
+
+    fun changeGnssStatus(status: Boolean) {
+
+        collectGnns = status
+
+    }
+    fun getGnssStatus() : Boolean {
+
+        return collectGnns
+
+    }
+    fun changeImuStatus(status: Boolean) {
+
+        collectImu = status
+
+    }
+    fun getImuStatus() : Boolean {
+
+        return collectImu
+
+    }
+    fun changeEcgStatus(status: Boolean) {
+
+        collectEcg = status
+
+    }
+    fun getEcgStatus() : Boolean {
+
+        return collectEcg
+
+    }
+    fun changeFrequency(time: Int){
+
+        selectedFrequency = time
+    }
+
+    fun getFrequency() : Int {
+
+        return selectedFrequency
+
     }
 
 }
