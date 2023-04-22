@@ -9,7 +9,7 @@
     <TableLayout
         android:id="@+id/sensorSquarePreset"
         android:layout_width="match_parent"
-        android:layout_height="110dp"
+        android:layout_height="120dp"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="15dp"
@@ -21,7 +21,7 @@
         <TableRow
             android:id="@+id/sensorSquareRow"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="28dp"
             android:paddingBottom="10dp">
 
             <TextView
@@ -41,7 +41,7 @@
             <TextView
                 android:id="@+id/sensorState"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="30dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="0dp"
                 android:layout_weight="2"
@@ -66,6 +66,56 @@
                 app:track="@drawable/custom_track" />
 
         </TableRow>
+
+        <TableRow
+            android:id="@+id/textRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp">
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="0dp"
+                android:layout_weight="2"
+                android:text="Placeholder text"
+                android:textColor="@color/lighter_gray"
+                android:textSize="12sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="parent"
+                app:shapeAppearance="@style/MyTextAppearance" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/sliderRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/description">
+
+            <TextView
+                android:id="@+id/sliderValue"
+                android:layout_width="85dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="0dp"
+                android:text="100 hz"
+                android:textColor="@color/lighter_gray"
+                android:textSize="12sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="parent"
+                app:shapeAppearance="@style/MyTextAppearance" />
+
+            <SeekBar
+                android:id="@+id/sensorSlider"
+                android:layout_width="260dp"
+                android:layout_height="wrap_content" />
+
+        </TableRow>
+
     </TableLayout>
 
     <!--This layout is used in SurveyHistoryActivity.kt to create layout for each survey-->
