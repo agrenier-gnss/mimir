@@ -197,17 +197,6 @@
                 app:backgroundTint="@color/red"
                 app:tint="@color/lighter_black"/>
 
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/accept_button"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginRight="16dp"
-                android:src="@drawable/ic_file_upload"
-                app:backgroundTint="@color/green"
-                app:tint="@color/lighter_black"/>
-
-
-
         </TableRow>
     </TableLayout>
 
