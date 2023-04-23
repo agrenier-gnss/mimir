@@ -23,38 +23,8 @@ class SurveyHistoryActivity : AppCompatActivity() {
         // Get the parent view to add the TableLayout to
         val parentView = findViewById<ViewGroup>(R.id.container_layout)
 
-        // Path used for searching scan results
-        val path = "/storage/emulated/0/Download/"
-        val folder = File(path)
-
         //create a layout for each survey that has been made
-        folder.listFiles()?.forEach { file ->
-
-            // Inflate the layout file that contains the TableLayout
-            val tableLayout = layoutInflater.inflate(R.layout.layout_presets, parentView, false).findViewById<TableLayout>(R.id.surveySquarePreset)
-
-            // Remove the tableLayout's parent, if it has one
-            (tableLayout.parent as? ViewGroup)?.removeView(tableLayout)
-
-            // Set file info into view
-            val surveyTime = tableLayout.findViewById<TextView>(R.id.surveyTime)
-            surveyTime.text = file.name
-            val fileSize = tableLayout.findViewById<TextView>(R.id.fileSize)
-            fileSize.text = "${file.length()} bytes"
-
-            // Add the TableLayout to the parent view
-            parentView.addView(tableLayout)
-
-            var declineButton: AppCompatImageButton = tableLayout.findViewById(R.id.decline_button)
-            declineButton.setOnClickListener {
-                try {
-                    file.delete()
-                }
-                catch (e: Exception) {
-                    Log.e("Error in deletion of file",e.toString())
-                }
-            }
-        }
+        populateView(parentView)
 
         var x1 = 0f
         var y1 = 0f
@@ -92,5 +62,40 @@ class SurveyHistoryActivity : AppCompatActivity() {
         }
 
 
+    }
+
+    fun populateView(parentView: ViewGroup) {
+        parentView.removeAllViews()
+
+        val path = "/storage/emulated/0/Download/"
+        val folder = File(path)
+
+        folder.listFiles()?.forEach { file ->
+            // Inflate the layout file that contains the TableLayout
+            val tableLayout = layoutInflater.inflate(R.layout.layout_presets, parentView, false).findViewById<TableLayout>(R.id.surveySquarePreset)
+
+            // Remove the tableLayout's parent, if it has one
+            (tableLayout.parent as? ViewGroup)?.removeView(tableLayout)
+
+            // Set file info into view
+            val surveyTime = tableLayout.findViewById<TextView>(R.id.surveyTime)
+            surveyTime.text = file.name
+            val fileSize = tableLayout.findViewById<TextView>(R.id.fileSize)
+            fileSize.text = "${file.length()} bytes"
+
+            // Add the TableLayout to the parent view
+            parentView.addView(tableLayout)
+
+            var declineButton: AppCompatImageButton = tableLayout.findViewById(R.id.decline_button)
+            declineButton.setOnClickListener {
+                try {
+                    file.delete()
+                    // Refresh the view after deleting the file
+                    populateView(parentView)
+                } catch (e: Exception) {
+                    Log.e("Error in deletion of file", e.toString())
+                }
+            }
+        }
     }
 }
