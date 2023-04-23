@@ -34,7 +34,7 @@ class MauveActivity : AppCompatActivity() {
         //if logging button is toggled in other activities, it is also toggled in here.
 
         loggingButton.setOnClickListener {
-            ActivityHandler.toggleButton()
+            ActivityHandler.toggleButton(this)
         }
 
         dataButton.setOnClickListener {
