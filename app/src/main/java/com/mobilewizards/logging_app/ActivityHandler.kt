@@ -194,7 +194,6 @@ object ActivityHandler{
     fun getLogData(tag: String): Int {
         if(tag.equals("Time")) {
             //todo: fetch time
-            return 0
         } else if(tag.equals("GNSS")) {
             return GNSSLogs
         } else if(tag.equals("IMU")){
@@ -206,6 +205,7 @@ object ActivityHandler{
         } else if(tag.equals("Bluetooth")) {
             return BLELogs
         }
+        return 0
     }
 
 }
