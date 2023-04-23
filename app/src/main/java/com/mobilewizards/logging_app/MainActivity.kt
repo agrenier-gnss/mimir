@@ -57,6 +57,11 @@ class MainActivity : AppCompatActivity() {
             val row = tableLayout.getChildAt(0) as TableRow
             val sensorTitleTextView = row.findViewById<TextView>(R.id.sensorTitle)
             sensorTitleTextView.text = sensorList[i][0].toString()
+            var sensorSwitch = row.findViewById<SwitchCompat>(R.id.sensorSwitch)
+
+            var sensorStateTextView = row.findViewById<TextView>(R.id.sensorState)
+            setStateTextview(sensorSwitch.isChecked, sensorStateTextView)
+
             val row2 = tableLayout.getChildAt(1) as TableRow
             val description = row2.findViewById<TextView>(R.id.description)
 
@@ -64,7 +69,7 @@ class MainActivity : AppCompatActivity() {
             if(sensorList[i][1] == false) {
                 // if frequency is can not be changed
                 description.text = "${sensorList[i][0]} is always sampled at 1 Hz" // Change the description text
-                row.removeViewAt(2) // Remove the SwitchCompat
+                tableLayout.removeViewAt(2) // Remove the row with the slider.
             } else {
                 // if frequency can be changed
                 description.text = "Sampling frequency"

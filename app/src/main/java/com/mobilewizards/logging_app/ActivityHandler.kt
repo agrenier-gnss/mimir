@@ -20,6 +20,8 @@ object ActivityHandler{
     private var GNSSToggle: Boolean = true
     private var barometerToggle: Boolean = true
     private var magnetometerToggle: Boolean = true
+    private var BLEToggle: Boolean = true
+
     //keeps track of the button state and synchronises them between activities
     private val buttonState = MutableLiveData<Boolean>(false)
     fun getButtonState(): LiveData<Boolean> {
@@ -44,69 +46,77 @@ object ActivityHandler{
     fun startLogging(){
         if(IMUToggle){motionSensors.setUpSensors()}
         if (GNSSToggle) {gnss.setUpLogging()}
-        ble.setUpLogging()
+        if(BLEToggle){ble.setUpLogging()}
     }
 
     fun stopLogging(){
         if(IMUToggle){motionSensors.setUpSensors()}
         if (GNSSToggle) {gnss.setUpLogging()}
-        ble.setUpLogging()
+        if(BLEToggle){ble.setUpLogging()}
+
     }
 
-    //Next 4 functions will change availability of sensors. They are used in switches in MainActivity
-    fun setGnssToggle(){
-        GNSSToggle = !GNSSToggle
+    fun getToggle(tag: String): Boolean{
+        if(tag.equals("GNSS")){
+            return GNSSToggle
+        }
+        else if(tag.equals("IMU")){
+            return IMUToggle
+        }
+        else if(tag.equals("Barometer")){
+            return barometerToggle
+        }
+        else if(tag.equals("Magnetometer")){
+            return magnetometerToggle
+        }
+        else if(tag.equals("Bluetooth")){
+            return BLEToggle
+        }
+        return false
     }
 
-    fun getGnssToggle(): Boolean{
-        return GNSSToggle
+    fun setToggle(tag: String){
+        if(tag.equals("GNSS")){
+             GNSSToggle = !GNSSToggle
+        }
+        else if(tag.equals("IMU")){
+            IMUToggle = !IMUToggle
+        }
+        else if(tag.equals("Barometer")){
+            barometerToggle = !barometerToggle
+        }
+        else if(tag.equals("Magnetometer")){
+            magnetometerToggle = !magnetometerToggle
+        }
+        else if(tag.equals("Bluetooth")){
+            BLEToggle = !BLEToggle
+        }
     }
 
-    fun setBarometerToggle(){
-        barometerToggle = !barometerToggle
+    fun getFrequency(tag: String): Int{
+        if(tag.equals("IMU")){
+            return IMUFrequency
+        }
+        else if(tag.equals("Barometer")){
+            return barometerFrequency
+        }
+        else if(tag.equals("Magnetometer")){
+            return magnetometerFrequency
+        }
+        return 0
     }
 
-    fun getBarometerToggle(): Boolean{
-        return barometerToggle
-    }
+    fun setFrequency(tag: String, value: Int){
 
-    fun setIMUToggle(){
-        IMUToggle = !IMUToggle
-    }
-
-    fun getIMUToggle(): Boolean{
-        return IMUToggle
-    }
-
-    fun setMagnetometerToggle(){
-        magnetometerToggle = !magnetometerToggle
-    }
-
-    fun getMagnetometerToggle(): Boolean{
-        return magnetometerToggle
-    }
-
-    fun getIMUFrequency(): Int{
-        return IMUFrequency
-    }
-
-    fun setIMUFrequency(Value: Int){
-        IMUFrequency = Value
-    }
-
-    fun getBarometerFrequency(): Int{
-        return barometerFrequency
-    }
-
-    fun setBarometerFrequency(Value: Int){
-        barometerFrequency = Value
-    }
-
-    fun getMagnetometerFrequency(): Int{
-        return magnetometerFrequency
-    }
-    fun setMagnetometerFrequency(Value: Int){
-        magnetometerFrequency = Value
+        if(tag.equals("IMU")){
+            IMUFrequency = value
+        }
+        else if(tag.equals("Barometer")){
+            barometerFrequency = value
+        }
+        else if(tag.equals("Magnetometer")){
+            magnetometerFrequency = value
+        }
     }
 
     //counter for keeping time on logging
