@@ -1,15 +1,19 @@
 package com.mobilewizards.logging_app
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TableLayout
 import androidx.appcompat.widget.AppCompatImageButton
+import java.io.File
 
 class SurveyHistoryActivity : AppCompatActivity() {
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_surveyhistory)
@@ -18,15 +22,15 @@ class SurveyHistoryActivity : AppCompatActivity() {
         // Get the parent view to add the TableLayout to
         val parentView = findViewById<ViewGroup>(R.id.container_layout)
 
-        val surveyList = arrayOf("a", "b")
+        // Path used for searching scan results
+        val path = "/storage/emulated/0/Download/"
+        val folder = File(path)
 
         //create a layout for each survey that has been made
-        for(x in surveyList) {
+        folder.listFiles()?.forEach { file ->
 
             // Inflate the layout file that contains the TableLayout
             val tableLayout = layoutInflater.inflate(R.layout.layout_presets, parentView, false).findViewById<TableLayout>(R.id.surveySquarePreset)
-
-
 
             // Remove the tableLayout's parent, if it has one
             (tableLayout.parent as? ViewGroup)?.removeView(tableLayout)
@@ -36,7 +40,12 @@ class SurveyHistoryActivity : AppCompatActivity() {
 
             var declineButton: AppCompatImageButton = tableLayout.findViewById(R.id.decline_button)
             declineButton.setOnClickListener {
-                //todo: on decline button click delete file
+                try {
+                    file.delete()
+                }
+                catch (e: Exception) {
+                    Log.e("Error in deletion of file",e.toString())
+                }
             }
         }
 

@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private lateinit var mMessageClient: MessageClient
-    @SuppressLint("SuspiciousIndentation")
+    @SuppressLint("SuspiciousIndentation", "ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("phoneLogger", "onCreate called")
