@@ -86,7 +86,28 @@ class MainActivity : AppCompatActivity() {
                 val slider = row3.findViewById<SeekBar>(R.id.sensorSlider)
                 slider.min = sensorList[i][2].toString().toInt()
                 slider.max = sensorList[i][3].toString().toInt()
+
+                val sliderValue = row3.findViewById<TextView>(R.id.sliderValue)
+                sliderValue.text = sensorList[i][2].toString() //set slider starting value to lowest value
+
+                slider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                    override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                        sliderValue.text = progress.toString()
+                    }
+
+                    override fun onStartTrackingTouch(seekBar: SeekBar) {
+                        // Not used
+                    }
+
+                    override fun onStopTrackingTouch(seekBar: SeekBar) {
+                        // Not used
+                    }
+                })
+
+
             }
+
+
 
             // Remove the tableLayout's parent, if it has one
             (tableLayout.parent as? ViewGroup)?.removeView(tableLayout)
