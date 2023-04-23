@@ -9,6 +9,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TableLayout
+import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageButton
 import java.io.File
 
@@ -34,6 +35,12 @@ class SurveyHistoryActivity : AppCompatActivity() {
 
             // Remove the tableLayout's parent, if it has one
             (tableLayout.parent as? ViewGroup)?.removeView(tableLayout)
+
+            // Set file info into view
+            val surveyTime = tableLayout.findViewById<TextView>(R.id.surveyTime)
+            surveyTime.text = file.name
+            val fileSize = tableLayout.findViewById<TextView>(R.id.fileSize)
+            fileSize.text = "${file.length()} bytes"
 
             // Add the TableLayout to the parent view
             parentView.addView(tableLayout)
