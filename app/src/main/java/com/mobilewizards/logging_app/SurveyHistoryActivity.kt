@@ -7,6 +7,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TableLayout
+import androidx.appcompat.widget.AppCompatImageButton
 
 class SurveyHistoryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +34,10 @@ class SurveyHistoryActivity : AppCompatActivity() {
             // Add the TableLayout to the parent view
             parentView.addView(tableLayout)
 
+            var declineButton: AppCompatImageButton = tableLayout.findViewById(R.id.decline_button)
+            declineButton.setOnClickListener {
+                //todo: on decline button click delete file
+            }
         }
 
         var x1 = 0f
