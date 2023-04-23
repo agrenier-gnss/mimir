@@ -184,4 +184,20 @@ object ActivityHandler{
         }
     }
 
+    fun getLogData(tag: String) {
+        if(tag.equals("Time")) {
+
+        } else if(tag.equals("GNSS")) {
+
+        } else if(tag.equals("IMU")){
+
+        } else if(tag.equals("Barometer")){
+
+        } else if(tag.equals("Magnetometer")){
+
+        } else if(tag.equals("Bluetooth")) {
+
+        }
+    }
+
 }

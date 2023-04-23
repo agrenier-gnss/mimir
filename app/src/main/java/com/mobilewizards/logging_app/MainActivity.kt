@@ -61,20 +61,16 @@ class MainActivity : AppCompatActivity() {
             val sensorTitleTextView = row.findViewById<TextView>(R.id.sensorTitle)
             sensorTitleTextView.text = sensorList[i][0].toString()
             var sensorSwitch = row.findViewById<SwitchCompat>(R.id.sensorSwitch)
+            sensorSwitch.isChecked = ActivityHandler.getToggle(sensorList[i][0].toString())
 
             var sensorStateTextView = row.findViewById<TextView>(R.id.sensorState)
+            setStateTextview(sensorSwitch.isChecked, sensorStateTextView)
 
             val row2 = tableLayout.getChildAt(1) as TableRow
             val description = row2.findViewById<TextView>(R.id.description)
 
             sensorSwitch.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) {
-                    sensorStateTextView.setText("Enabled")
-                    sensorStateTextView.setTextColor(ContextCompat.getColor(this, R.color.mauve))
-                } else {
-                    sensorStateTextView.setText("Disabled")
-                    sensorStateTextView.setTextColor(ContextCompat.getColor(this, R.color.lighter_gray))
-                }
+                setStateTextview(sensorSwitch.isChecked, sensorStateTextView)
                 ActivityHandler.setToggle(sensorList[i][0].toString()) //toggle the status in singleton
             }
 
@@ -89,6 +85,7 @@ class MainActivity : AppCompatActivity() {
                 val slider = row3.findViewById<SeekBar>(R.id.sensorSlider)
                 slider.min = sensorList[i][2].toString().toInt()
                 slider.max = sensorList[i][3].toString().toInt()
+                slider.progress = ActivityHandler.getFrequency(sensorList[i][0].toString())
 
                 val sliderValue = row3.findViewById<TextView>(R.id.sliderValue)
                 sliderValue.text = sensorList[i][2].toString() //set slider starting value to lowest value
