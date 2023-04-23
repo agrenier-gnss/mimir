@@ -225,7 +225,7 @@ class MainActivity : AppCompatActivity() {
         var x2 = 0f
         var y2 = 0f
 
-        findViewById<View>(R.id.activity_main_layout).setOnTouchListener { _, touchEvent ->
+        findViewById<View>(R.id.scroll_id).setOnTouchListener { _, touchEvent ->
             when (touchEvent.action) {
                 MotionEvent.ACTION_DOWN -> {
                     x1 = touchEvent.x
