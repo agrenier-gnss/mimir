@@ -20,6 +20,8 @@ import com.google.android.material.button.MaterialButton
 
 class MainActivity : AppCompatActivity() {
 
+
+
     private lateinit var mMessageClient: MessageClient
     @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,6 +95,7 @@ class MainActivity : AppCompatActivity() {
                 slider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                         sliderValue.text = progress.toString()
+                        ActivityHandler.setFrequency(sensorList[i][0].toString(), progress)
                     }
 
                     override fun onStartTrackingTouch(seekBar: SeekBar) {
@@ -106,8 +109,6 @@ class MainActivity : AppCompatActivity() {
 
 
             }
-
-
 
             // Remove the tableLayout's parent, if it has one
             (tableLayout.parent as? ViewGroup)?.removeView(tableLayout)
