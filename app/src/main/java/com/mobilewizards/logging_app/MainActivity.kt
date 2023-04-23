@@ -75,6 +75,7 @@ class MainActivity : AppCompatActivity() {
                     sensorStateTextView.setText("Disabled")
                     sensorStateTextView.setTextColor(ContextCompat.getColor(this, R.color.lighter_gray))
                 }
+                ActivityHandler.setToggle(sensorList[i][0].toString()) //toggle the status in singleton
             }
 
             if(sensorList[i][1] == false) {
