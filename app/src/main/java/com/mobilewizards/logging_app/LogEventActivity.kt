@@ -52,8 +52,9 @@ class LogEventActivity : AppCompatActivity() {
             activityTitleTextView.text = activityList[i][0].toString()
             val description = layout.findViewById<TextView>(R.id.logEventDescription)
             description.text = activityList[i][1].toString()
+            val datapoint = layout.findViewById<TextView>(R.id.logEventDescription)
 
-            //todo: change @+id/logEventDataPoint to a fitting value by fetching data
+            datapoint.text = ActivityHandler.getLogData(activityList[i][0]).toString()
 
             // Remove the tableLayout's parent, if it has one
             (layout.parent as? ViewGroup)?.removeView(layout)
