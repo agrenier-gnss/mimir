@@ -26,6 +26,13 @@ object ActivityHandler{
     private var imuSensor = mutableListOf<MotionSensorsHandler>()
     private var bleSensor = mutableListOf<BLEHandler>()
 
+    // Amount of logged events
+    private var IMULogs: Int = 0
+    private var GNSSLogs: Int = 0
+    private var barometerLogs: Int = 0
+    private var magnetometerLogs: Int = 0
+    private var BLELogs: Int = 0
+
     //keeps track of the button state and synchronises them between activities
     private val buttonState = MutableLiveData<Boolean>(false)
     fun getButtonState(): LiveData<Boolean> {
@@ -184,19 +191,20 @@ object ActivityHandler{
         }
     }
 
-    fun getLogData(tag: String) {
+    fun getLogData(tag: String): Int {
         if(tag.equals("Time")) {
-
+            //todo: fetch time
+            return 0
         } else if(tag.equals("GNSS")) {
-
+            return GNSSLogs
         } else if(tag.equals("IMU")){
-
+            return IMULogs
         } else if(tag.equals("Barometer")){
-
+            return barometerLogs
         } else if(tag.equals("Magnetometer")){
-
+            return magnetometerLogs
         } else if(tag.equals("Bluetooth")) {
-
+            return BLELogs
         }
     }
 
