@@ -78,6 +78,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearance="@style/MyTextAppearance"/>/>
+        app:shapeAppearance="@style/MyTextAppearance"/>
+
+    <TextView
+        android:id="@+id/loggingTimeTextView"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/loggingButton"
+        app:shapeAppearance="@style/MyTextAppearance"/>
+    />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

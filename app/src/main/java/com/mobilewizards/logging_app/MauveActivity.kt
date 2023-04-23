@@ -8,6 +8,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MauveActivity : AppCompatActivity() {
 
@@ -27,6 +29,7 @@ class MauveActivity : AppCompatActivity() {
         val loggingButton = findViewById<Button>(R.id.loggingButton)
         val dataButton = findViewById<Button>(R.id.downloadDataButton)
         val loggingText = findViewById<TextView>(R.id.loggingTextView)
+        val timeText = findViewById<TextView>(R.id.loggingTimeTextView)
 
         //if logging button is toggled in other activities, it is also toggled in here.
 
@@ -57,14 +60,20 @@ class MauveActivity : AppCompatActivity() {
                     .setDuration(500)
                     .start()
 
+                val currentTime = Calendar.getInstance().time
+                val dateFormat = SimpleDateFormat("HH:mm")
+                val formattedTime = dateFormat.format(currentTime)
+
                 Handler().postDelayed({
-                    loggingText.text = "Placeholder text ..."
+                    loggingText.text = "Surveying..."
+                    timeText.text = "Started $formattedTime"
                 }, 300)
 
             } else {
                 // Stop logging
                 findViewById<Button>(R.id.loggingButton).text = "Start logging"
                 loggingText.text = ""
+                timeText.text = ""
                 loggingButton.animate()
                     .translationYBy(-250f)
                     .setDuration(200)
