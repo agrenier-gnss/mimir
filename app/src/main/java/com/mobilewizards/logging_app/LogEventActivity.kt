@@ -10,6 +10,23 @@ import android.widget.*
 
 class LogEventActivity : AppCompatActivity() {
 
+    private val myTimer = ActivityHandler.MyTimer()
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        myTimer.stopTimer()
+    }
+
+    private fun updateTextViews() {
+        // get the data from the other class
+        // update the textviews with the data
+        val currentTime = myTimer.getCurrentTime()
+        val parentView = findViewById<LinearLayout>(R.id.data_layout)
+        val layout = layoutInflater.inflate(R.layout.layout_presets, parentView, false).findViewById<LinearLayout>(R.id.logEventSquarePreset)
+        layout.findViewById<TextView>(R.id.logEventDataPoint).text = currentTime
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_logevent)
@@ -35,7 +52,6 @@ class LogEventActivity : AppCompatActivity() {
             activityTitleTextView.text = activityList[i][0].toString()
             val description = layout.findViewById<TextView>(R.id.logEventDescription)
             description.text = activityList[i][1].toString()
-
 
             //todo: change @+id/logEventDataPoint to a fitting value by fetching data
 
@@ -69,6 +85,10 @@ class LogEventActivity : AppCompatActivity() {
                 footerButton.text = "Stop survey"
 
             } else {
+
+                myTimer.startTimer {
+                    updateTextViews()
+                }
 
                 footerButton.text = "Start survey"
 

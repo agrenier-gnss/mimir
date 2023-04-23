@@ -2,6 +2,7 @@ package com.mobilewizards.logging_app
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import java.util.*
 
 //this class handles logging data and log events all from one class
 object ActivityHandler{
@@ -135,6 +136,33 @@ object ActivityHandler{
         if (counterThread != null) {
             counterThread?.cancel()
             counterThread = null
+        }
+    }
+
+    class MyTimer {
+        private val timer = Timer()
+
+        private var currentTime: Long = 0
+
+        fun startTimer(callback: () -> Unit) {
+            timer.scheduleAtFixedRate(object : TimerTask() {
+                override fun run() {
+                    updateTime()
+                    callback()
+                }
+            }, 0, 1000) // update every second
+        }
+
+        fun stopTimer() {
+            timer.cancel()
+        }
+
+        fun getCurrentTime(): String {
+            return currentTime.toString()
+        }
+
+        private fun updateTime() {
+            currentTime = System.currentTimeMillis()
         }
     }
 
