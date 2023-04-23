@@ -15,6 +15,7 @@ import com.google.android.gms.wearable.DataMap
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.Wearable
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.android.material.button.MaterialButton
 
 class MainActivity : AppCompatActivity() {
@@ -60,11 +61,19 @@ class MainActivity : AppCompatActivity() {
             var sensorSwitch = row.findViewById<SwitchCompat>(R.id.sensorSwitch)
 
             var sensorStateTextView = row.findViewById<TextView>(R.id.sensorState)
-            setStateTextview(sensorSwitch.isChecked, sensorStateTextView)
 
             val row2 = tableLayout.getChildAt(1) as TableRow
             val description = row2.findViewById<TextView>(R.id.description)
 
+            sensorSwitch.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    sensorStateTextView.setText("Enabled")
+                    sensorStateTextView.setTextColor(ContextCompat.getColor(this, R.color.mauve))
+                } else {
+                    sensorStateTextView.setText("Disabled")
+                    sensorStateTextView.setTextColor(ContextCompat.getColor(this, R.color.lighter_gray))
+                }
+            }
 
             if(sensorList[i][1] == false) {
                 // if frequency is can not be changed
