@@ -5,7 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
-import android.widget.Button
+import android.view.ViewGroup
+import android.widget.*
 
 class LogEventActivity : AppCompatActivity() {
 
@@ -14,6 +15,37 @@ class LogEventActivity : AppCompatActivity() {
         setContentView(R.layout.activity_logevent)
         supportActionBar?.hide()
 
+
+        val parentView = findViewById<LinearLayout>(R.id.data_layout)
+
+        val activityList = arrayOf(
+            //1st value: name. 2nd value: description text
+            arrayOf("Time", "Survey duration"),
+            arrayOf("GNSS", "1 hz frequency"),
+            arrayOf("Accelometer", "1 hz frequency")
+        )
+
+        //create a layout for each activity in activityList
+        for(i in activityList.indices) {
+
+            // Inflate the layout file that contains the gridview
+            val layout = layoutInflater.inflate(R.layout.layout_presets, parentView, false).findViewById<LinearLayout>(R.id.logEventSquarePreset)
+
+            val activityTitleTextView = layout.findViewById<TextView>(R.id.logEventTitle)
+            activityTitleTextView.text = activityList[i][0].toString()
+            val description = layout.findViewById<TextView>(R.id.logEventDescription)
+            description.text = activityList[i][1].toString()
+
+
+            //todo: change @+id/logEventDataPoint to a fitting value by fetching data
+
+            // Remove the tableLayout's parent, if it has one
+            (layout.parent as? ViewGroup)?.removeView(layout)
+
+            // Add the TableLayout to the parent view
+            parentView.addView(layout)
+
+        }
 
         var isInitialLoad = true
 

@@ -211,26 +211,25 @@
         </TableRow>
     </TableLayout>
 
-    <TableLayout
+    <LinearLayout
         android:id="@+id/logEventSquarePreset"
         android:layout_width="match_parent"
-        android:layout_height="143dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:stretchColumns="*"
-        android:shrinkColumns="*"
-        app:layout_constraintTop_toBottomOf="@+id/settings"
-        android:background="@drawable/sensor_layout">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:paddingBottom="20dp"
+        android:background="@drawable/sensor_layout"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/logEventTitle"
-            android:layout_width="193dp"
+            android:layout_width="match_parent"
             android:layout_height="32dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="17dp"
-            android:text="00.00.00"
-            android:textColor="@color/white"
+            android:text="Placeholder"
+            android:textColor="@color/lighter_gray"
             android:textSize="14sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="parent"
@@ -239,28 +238,29 @@
 
         <TextView
             android:id="@+id/logEventDataPoint"
-            android:layout_width="0dp"
-            android:layout_height="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="0dp"
-            android:text="00:01:23"
-            android:textColor="@color/lighter_gray"
-            android:textSize="14sp"
+            android:text="Placeholder"
+            android:textColor="@color/white"
+            android:textSize="32sp"
             app:layout_constraintTop_toBottomOf="parent"
-            app:shapeAppearance="@style/MyTextAppearance"/>
+            app:shapeAppearance="@style/MyTextAppearance" />
 
         <TextView
             android:id="@+id/logEventDescription"
+            android:layout_width="match_parent"
             android:layout_height="20dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="0dp"
-            android:text="Survey duration"
+            android:text="Placeholder"
             android:textColor="@color/lighter_gray"
             android:textSize="14sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="parent"
             app:shapeAppearance="@style/MyTextAppearance"/>
 
-    </TableLayout>
+    </LinearLayout>
 
 </LinearLayout>
