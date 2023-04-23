@@ -199,32 +199,7 @@ class MainActivity : AppCompatActivity() {
         }
         */
 
-        val loggingButton = findViewById<MaterialButton>(R.id.loggingButton)
 
-        loggingButton.setOnClickListener{
-            ActivityHandler.toggleButton()
-        }
-
-        ActivityHandler.getButtonState().observe(this) { isPressed ->
-
-            loggingButton.isSelected = isPressed
-
-            if (isInitialLoad) {
-                isInitialLoad = false
-                return@observe
-            }
-
-            if(isPressed) {
-
-                loggingButton.text = "Stop survey"
-
-            } else {
-
-                loggingButton.text = "Start survey"
-
-            }
-
-        }
 /*
         val etTextToWatch: EditText = findViewById(R.id.etTextToWear)
         val sendButton: Button = findViewById(R.id.btnSend)

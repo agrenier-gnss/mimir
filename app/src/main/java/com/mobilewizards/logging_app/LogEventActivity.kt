@@ -63,39 +63,6 @@ class LogEventActivity : AppCompatActivity() {
 
         }
 
-        var isInitialLoad = true
-
-        val footerButton = findViewById<Button>(R.id.footer_button)
-
-        footerButton.setOnClickListener {
-            ActivityHandler.toggleButton()
-        }
-
-        ActivityHandler.getButtonState().observe(this) { isPressed ->
-
-            footerButton.isSelected = isPressed
-
-            if (isInitialLoad) {
-                isInitialLoad = false
-                return@observe
-            }
-
-            if(isPressed) {
-
-                footerButton.text = "Stop survey"
-
-            } else {
-
-                myTimer.startTimer {
-                    updateTextViews()
-                }
-
-                footerButton.text = "Start survey"
-
-            }
-
-        }
-
         var x1 = 0f
         var y1 = 0f
         var x2 = 0f
