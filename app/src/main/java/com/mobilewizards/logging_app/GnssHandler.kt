@@ -34,12 +34,13 @@ class GnssHandler{
 
     public fun setUpLogging(){
         locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        logLocation(locationManager, 1000)
-        logGNSS(locationManager, 1000)
+        logLocation(1000)
+        logGNSS( 1000)
+        logGnssNavigationMessages(1000)
     }
 
     private var locationList = mutableListOf<String>()
-    private fun logLocation(locationManager: LocationManager, samplingFrequency: Long) {
+    private fun logLocation(samplingFrequency: Long) {
         //Locationlistener for Gps
         gpsLocationListener = object : LocationListener{
 
@@ -106,7 +107,7 @@ class GnssHandler{
     }
 
     private var gnssMeasurementsList = mutableListOf<String>()
-    private fun logGNSS(locationManager: LocationManager, samplingFrequency: Long) {
+    private fun logGNSS( samplingFrequency: Long) {
         gnssMeasurementsEventListener = object : android.location.GnssMeasurementsEvent.Callback(){
             var lastMeasurementTime = 0L
             override fun onGnssMeasurementsReceived(event: GnssMeasurementsEvent) {
@@ -197,24 +198,26 @@ class GnssHandler{
 
     }
     private var gnssNavigationMessagesList = mutableListOf<String>()
-    fun logGnssNavigationMessages(){
+    fun logGnssNavigationMessages(samplingFrequency: Long){
         gnssNavigationMessageListener = object : GnssNavigationMessage.Callback(){
-
+            var lastMeasurementTime = 0L
             override fun onGnssNavigationMessageReceived(event: GnssNavigationMessage?) {
 
+                val currentTime = SystemClock.elapsedRealtime()
+                if (currentTime - lastMeasurementTime >= samplingFrequency) {
+                    var gnssNavigationMessageString = "Nav," +
+                            "${event?.getSvid()}," +
+                            "${event?.getType()}," +
+                            "${event?.getStatus()}," +
+                            "${event?.getMessageId()}," +
+                            "${event?.submessageId},"
 
-                var gnssNavigationMessageString = "Nav," +
-                        "${event?.getSvid()}," +
-                        "${event?.getType()}," +
-                        "${event?.getStatus()}," +
-                        "${event?.getMessageId()}," +
-                        "${event?.submessageId},"
 
-
-                val data: ByteArray? = event?.getData()
-                if (data != null) {
-                    for (word in data) {
-                        gnssNavigationMessageString = gnssNavigationMessageString + "${word.toInt()},"
+                    val data: ByteArray? = event?.getData()
+                    if (data != null) {
+                        for (word in data) {
+                            gnssNavigationMessageString += "${word.toInt()},"
+                        }
                     }
                 }
             }

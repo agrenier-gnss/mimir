@@ -1,5 +1,6 @@
 package com.mobilewizards.logging_app
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import java.util.*
@@ -7,9 +8,7 @@ import java.util.*
 //this class handles logging data and log events all from one class
 object ActivityHandler{
 
-    private lateinit var motionSensors: MotionSensorsHandler
-    private lateinit var gnss: GnssHandler
-    private lateinit var ble: BLEHandler
+
     private var isLogging: Boolean = false
 
     private var IMUFrequency: Int = 10
@@ -23,20 +22,25 @@ object ActivityHandler{
     private var magnetometerToggle: Boolean = true
     private var BLEToggle: Boolean = true
 
+    private var gnssSensor = mutableListOf<GnssHandler>()
+    private var imuSensor = mutableListOf<MotionSensorsHandler>()
+    private var bleSensor = mutableListOf<BLEHandler>()
+
     //keeps track of the button state and synchronises them between activities
     private val buttonState = MutableLiveData<Boolean>(false)
     fun getButtonState(): LiveData<Boolean> {
         return buttonState
     }
 
-    fun toggleButton() {
+    fun toggleButton(context: Context) {
         buttonState.value = !(buttonState.value ?: false)
-        /*if(buttonState.value==true){
-            startLogging()
+
+        if(buttonState.value==true){
+            startLogging(context)
         }
         else{
-            stopLogging()
-        }*/
+            stopLogging(context)
+        }
     }
 
     fun getIsLogging(): Boolean{
@@ -44,16 +48,30 @@ object ActivityHandler{
     }
 
     //Functions to both logging and stopping it.
-    fun startLogging(){
+    fun startLogging(context: Context){
+        val motionSensors = MotionSensorsHandler(context)
+        val gnss= GnssHandler(context)
+        val ble =  BLEHandler(context)
+        gnssSensor.add(gnss)
+        imuSensor.add(motionSensors)
+        bleSensor.add(ble)
         if(IMUToggle){motionSensors.setUpSensors()}
         if (GNSSToggle) {gnss.setUpLogging()}
         if(BLEToggle){ble.setUpLogging()}
     }
 
-    fun stopLogging(){
-        if(IMUToggle){motionSensors.setUpSensors()}
-        if (GNSSToggle) {gnss.setUpLogging()}
-        if(BLEToggle){ble.setUpLogging()}
+    fun stopLogging(context: Context){
+        if (GNSSToggle) {
+            gnssSensor[0].stopLogging(context)}
+        if(IMUToggle){
+            imuSensor[0].stopLogging()
+        }
+        if(BLEToggle){
+            bleSensor[0].stopLogging()
+        }
+        gnssSensor.clear()
+        imuSensor.clear()
+        bleSensor.clear()
 
     }
 
