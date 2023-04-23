@@ -85,6 +85,7 @@ class MainActivity : AppCompatActivity() {
                 val slider = row3.findViewById<SeekBar>(R.id.sensorSlider)
                 slider.min = sensorList[i][2].toString().toInt()
                 slider.max = sensorList[i][3].toString().toInt()
+                slider.progress = ActivityHandler.getFrequency(sensorList[i][0].toString())
 
                 val sliderValue = row3.findViewById<TextView>(R.id.sliderValue)
                 sliderValue.text = sensorList[i][2].toString() //set slider starting value to lowest value
