@@ -13,6 +13,10 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.getSystemService
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 
 private lateinit var sensorManager : SensorManager
@@ -23,6 +27,8 @@ private var gyroSensor : Sensor? = null
 private var unCalGyroSensor : Sensor? = null
 private var gravSensor : Sensor? = null
 private var stepSensor : Sensor? = null
+private var magnetometer : Sensor? = null
+private var barometer : Sensor? = null
 
 private var side: Float = Float.MIN_VALUE
 private var upDown: Float = Float.MIN_VALUE
@@ -34,7 +40,6 @@ private var verticalNoBias: Float = Float.MIN_VALUE
 private var sideBias : Float = Float.MIN_VALUE
 private var upDownBias : Float = Float.MIN_VALUE
 private var verticalBias : Float = Float.MIN_VALUE
-
 
 private var gravX: Float = Float.MIN_VALUE
 private var gravY: Float = Float.MIN_VALUE
@@ -52,6 +57,11 @@ private var rotationYDrift: Float = Float.MIN_VALUE
 private var rotationZDrift: Float = Float.MIN_VALUE
 
 private var stepCount: Float = Float.MIN_VALUE
+
+data class MagnetometerValues(val timestamp: String, val x: Float, val y: Float, val z: Float)
+private var magnetometerValues = mutableListOf<MagnetometerValues>()
+
+private var barometerValues = mutableListOf<Pair<String,Float>>()
 
 class MotionSensorsHandler: SensorEventListener{
 
@@ -115,6 +125,22 @@ class MotionSensorsHandler: SensorEventListener{
             Log.i("Does not have sensor for STEP COUNTER", stepSensor.toString())
         }
 
+        if(sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null){
+            magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
+            sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_FASTEST)
+        }   else {
+
+            Log.i("Does not have sensor for MAGNETOMETER", magnetometer.toString())
+        }
+
+        if(sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE) != null){
+            barometer = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE)
+            sensorManager.registerListener(this, barometer, SensorManager.SENSOR_DELAY_FASTEST)
+        }   else {
+
+            Log.i("Does not have sensor for BAROMETER", barometer.toString())
+        }
+
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
@@ -140,6 +166,14 @@ class MotionSensorsHandler: SensorEventListener{
 
         if (event?.sensor?.type == stepSensor?.type) {
             logSteps(event)
+        }
+
+        if (event?.sensor?.type == magnetometer?.type) {
+            logMagnetometer(event)
+        }
+
+        if (event?.sensor?.type == barometer?.type) {
+            logBarometer(event)
         }
 
     }
@@ -317,11 +351,41 @@ class MotionSensorsHandler: SensorEventListener{
         }
     }
 
+    private fun logMagnetometer(event: SensorEvent?) {
+
+        if (event?.sensor?.type == magnetometer?.type && event?.sensor?.type != null) {
+
+            val dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(event.timestamp / 1000000000, event.timestamp % 1000000000),ZoneId.of("UTC"))
+            val formatter = DateTimeFormatter.ofPattern("ddMMyyyy_HHmmssSSS")
+
+            val x = event.values[0]
+            val y = event.values[1]
+            val z = event.values[2]
+
+            magnetometerValues.add(MagnetometerValues(formatter.format(dateTime).toString(),x,y,z))
+        }
+    }
+
+    private fun logBarometer(event: SensorEvent?) {
+
+        if (event?.sensor?.type == barometer?.type && event?.sensor?.type != null) {
+
+            val dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(event.timestamp / 1000000000, event.timestamp % 1000000000),ZoneId.of("UTC"))
+            val formatter = DateTimeFormatter.ofPattern("ddMMyyyy_HHmmssSSS")
+
+            val pressure = event.values[0]
+
+            barometerValues.add(Pair(formatter.format(dateTime),pressure))
+        }
+    }
+
     fun stopLogging() {
 
         try {
             sensorManager.unregisterListener(this)
             this.listenerActive = false
+
+            Log.e("Time",magnetometerValues.toString())
 
         } catch(e: Exception){
             Log.e("Error", "An error occurred while saving motion sensors results")
