@@ -60,8 +60,10 @@ class MainActivity : AppCompatActivity() {
             val row = tableLayout.getChildAt(0) as TableRow
             val sensorTitleTextView = row.findViewById<TextView>(R.id.sensorTitle)
             sensorTitleTextView.text = sensorList[i][0].toString()
+
             var sensorSwitch = row.findViewById<SwitchCompat>(R.id.sensorSwitch)
             sensorSwitch.isChecked = ActivityHandler.getToggle(sensorList[i][0].toString())
+            sensorSwitch.isEnabled = !ActivityHandler.getIsLogging() // Disable toggling sensor if logging is ongoing
 
             var sensorStateTextView = row.findViewById<TextView>(R.id.sensorState)
             setStateTextview(sensorSwitch.isChecked, sensorStateTextView)
@@ -86,6 +88,7 @@ class MainActivity : AppCompatActivity() {
                 slider.min = sensorList[i][2].toString().toInt()
                 slider.max = sensorList[i][3].toString().toInt()
                 slider.progress = ActivityHandler.getFrequency(sensorList[i][0].toString())
+                slider.isEnabled = !ActivityHandler.getIsLogging() // Disable changing slider if logging is ongoing
 
                 val sliderValue = row3.findViewById<TextView>(R.id.sliderValue)
                 sliderValue.text = sensorList[i][2].toString() //set slider starting value to lowest value
