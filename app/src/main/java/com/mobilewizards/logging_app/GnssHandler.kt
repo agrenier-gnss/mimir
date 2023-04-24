@@ -37,6 +37,11 @@ class GnssHandler{
         this.context = context.applicationContext
     }
     private var gnssMeasurementsList = mutableListOf<String>()
+
+    fun getGNSSValues(): MutableList<String> {
+        return gnssMeasurementsList
+    }
+
     public fun setUpLogging(){
         locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         startTime = System.currentTimeMillis()
