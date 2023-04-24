@@ -24,6 +24,7 @@ object ActivityHandler{
     private var barometerToggle: Boolean = true
     private var magnetometerToggle: Boolean = true
     private var BLEToggle: Boolean = true
+    private var timeToggle: Boolean = true
 
     //Lists where sensors will be put when logging.
     private var gnssSensor = mutableListOf<GnssHandler>()
@@ -37,8 +38,10 @@ object ActivityHandler{
     private var magnetometerLogs: Int = 0
     private var BLELogs: Int = 0
 
-    // Survey start time
-    private var surveyStartTime: String = "Time not set"
+    // Time related
+    private val myTimer = MyTimer()
+    private var surveyDuration: Int = 0 // Survey duration in seconds
+    private var surveyStartTime: String = "Time not set" // Survey start time
 
     //keeps track of the button state and synchronises them between activities
     private val buttonState = MutableLiveData<Boolean>(false)
@@ -75,6 +78,10 @@ object ActivityHandler{
         if(BLEToggle){ble.setUpLogging()}
         isLogging = true
         setSurveyStartTime()
+
+        myTimer.startTimer {
+            surveyDuration++
+        }
     }
 
     fun stopLogging(context: Context){
@@ -90,6 +97,8 @@ object ActivityHandler{
         imuSensor.clear()
         bleSensor.clear()
         isLogging = false
+
+        myTimer.stopTimer()
     }
 
     fun getToggle(tag: String): Boolean{
@@ -107,6 +116,9 @@ object ActivityHandler{
         }
         else if(tag.equals("Bluetooth")){
             return BLEToggle
+        }
+        else if(tag.equals("Time")) {
+            return timeToggle
         }
         return false
     }
@@ -204,6 +216,7 @@ object ActivityHandler{
     fun getLogData(tag: String): String {
         if(tag.equals("Time")) {
             val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
+            return LocalTime.ofSecondOfDay(surveyDuration.toLong()).format(formatter)
         } else if(tag.equals("GNSS")) {
             return GNSSLogs.toString()
         } else if(tag.equals("IMU")){
