@@ -1,18 +1,21 @@
 package com.mobilewizards.watchlogger
 
 import android.app.Activity
+import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import org.w3c.dom.Text
+import java.io.File
 import java.sql.Time
 import java.time.LocalDateTime
 
@@ -44,7 +47,7 @@ class HealthServicesHandler: SensorEventListener{
         mSensorManager.unregisterListener(this)
 
         val contentValues = ContentValues().apply {
-            put(MediaStore.Downloads.DISPLAY_NAME, "heart-rate_measurements_watch.csv")
+            put(MediaStore.Downloads.DISPLAY_NAME, "watch_heart_rate_measurements")
             put(MediaStore.Downloads.MIME_TYPE, "text/csv")
             put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
         }
@@ -61,7 +64,21 @@ class HealthServicesHandler: SensorEventListener{
                 outputStream.flush()
             }
 
-            Toast.makeText(context, "Heart rate scan results saved to Downloads folder", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(context, "Heart rate scan results saved to Downloads folder", Toast.LENGTH_SHORT).show()
+            var filePath = ""
+            fun getRealPathFromUri(contentResolver: ContentResolver, uri: Uri): String {
+                val projection = arrayOf(MediaStore.Images.Media.DATA)
+                val cursor = contentResolver.query(uri, projection, null, null, null)
+                val columnIndex = cursor?.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+                cursor?.moveToFirst()
+                val path = columnIndex?.let { cursor?.getString(it) }
+                cursor?.close()
+                return path ?: ""
+            }
+            uri?.let { getRealPathFromUri(context.contentResolver, it) }
+                ?.let { Log.d("uri", it)
+                    filePath = it}
+            WatchActivityHandler.setFilePaths(File(filePath))
         }
     }
 

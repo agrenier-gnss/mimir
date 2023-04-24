@@ -3,16 +3,11 @@ package com.mobilewizards.logging_app
 import android.Manifest
 import android.app.Activity
 import android.content.ContentResolver
-import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
-import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
@@ -22,13 +17,11 @@ import androidx.core.app.ActivityCompat
 import com.google.android.gms.wearable.ChannelClient
 import com.google.android.gms.wearable.MessageClient
 import com.mobilewizards.logging_app.databinding.ActivityLoggingBinding
-import com.mobilewizards.logging_app.databinding.ActivityMainWatchBinding
 import com.mobilewizards.watchlogger.BLEHandlerWatch
 import com.mobilewizards.watchlogger.HealthServicesHandler
 import com.mobilewizards.watchlogger.WatchGNSSHandler
 import com.mobilewizards.watchlogger.WatchActivityHandler
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class LoggingActivity : Activity() {
 
@@ -43,8 +36,8 @@ class LoggingActivity : Activity() {
     private var IMUFrequency: Int = 10
     private val TAG = "watchLogger"
 
-    private val testFile = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss"))
-    private val testDataToFile = listOf<Int>(1,2,3,4,5,6)
+//    private val testFile = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss"))
+//    private val testDataToFile = listOf<Int>(1,2,3,4,5,6)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,25 +55,25 @@ class LoggingActivity : Activity() {
 
 
         // writing into test file
-        val contentValues = ContentValues().apply {
-            put(MediaStore.Downloads.DISPLAY_NAME, testFile)
-            put(MediaStore.Downloads.MIME_TYPE, "text/csv")
-            put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
-        }
-
-        val uri = this.contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
-
-        Log.d("uri", uri.toString())
-        uri?.let { mediaUri ->
-            this.contentResolver.openOutputStream(mediaUri)?.use { outputStream ->
-                outputStream.write("SvId,Time offset in nanos,State,cn0DbHz,carrierFrequencyHz,pseudorangeRateMeterPerSecond,pseudorangeRateUncertaintyMeterPerSecond\n".toByteArray())
-                testDataToFile.forEach { measurementString ->
-                    outputStream.write("$measurementString\n".toByteArray())
-
-                }
-                outputStream.flush()
-            }
-        }
+//        val contentValues = ContentValues().apply {
+//            put(MediaStore.Downloads.DISPLAY_NAME, testFile)
+//            put(MediaStore.Downloads.MIME_TYPE, "text/csv")
+//            put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+//        }
+//
+//        val uri = this.contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
+//
+//        Log.d("uri", uri.toString())
+//        uri?.let { mediaUri ->
+//            this.contentResolver.openOutputStream(mediaUri)?.use { outputStream ->
+//                outputStream.write("SvId,Time offset in nanos,State,cn0DbHz,carrierFrequencyHz,pseudorangeRateMeterPerSecond,pseudorangeRateUncertaintyMeterPerSecond\n".toByteArray())
+//                testDataToFile.forEach { measurementString ->
+//                    outputStream.write("$measurementString\n".toByteArray())
+//
+//                }
+//                outputStream.flush()
+//            }
+//        }
 
 
         // Fetching file path for sendCsvToPhone function
@@ -94,9 +87,9 @@ class LoggingActivity : Activity() {
             cursor?.close()
             return path ?: ""
         }
-        uri?.let { getRealPathFromUri(applicationContext.contentResolver, it) }
-            ?.let { Log.d("uri", it)
-                filePath = it}
+//        uri?.let { getRealPathFromUri(applicationContext.contentResolver, it) }
+//            ?.let { Log.d("uri", it)
+//                filePath = it}
 
 
 
@@ -154,7 +147,8 @@ class LoggingActivity : Activity() {
         //When clicked, opens LoggedEvent.kt for deciding what to do with the logged events
         reviewBtn.setOnClickListener{
 
-           WatchActivityHandler.getFilePath(filePath)
+//            WatchActivityHandler.setFilePaths(filePath)
+//            Log.d(TAG, "path " +filePath)
             val openLoading = Intent(applicationContext, LoggedEvent::class.java)
             startActivity(openLoading)
         }

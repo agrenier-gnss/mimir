@@ -25,6 +25,8 @@ import androidx.core.net.toFile
 import androidx.core.net.toUri
 import com.google.android.gms.wearable.ChannelClient
 import java.io.*
+import java.util.ArrayDeque
+
 import java.nio.channels.Channels
 import java.nio.charset.StandardCharsets
 import java.time.LocalDateTime
@@ -36,6 +38,7 @@ class MainActivity : AppCompatActivity() {
     private val CSV_FILE_CHANNEL_PATH = MediaStore.Downloads.EXTERNAL_CONTENT_URI
     val TAG = "tagi"
     private lateinit var mMessageClient: MessageClient
+    var filenameStack = ArrayDeque<String>()
     @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -150,7 +153,6 @@ class MainActivity : AppCompatActivity() {
         val etTextToWatch: EditText = findViewById(R.id.etTextToWear)
         val sendButton: Button = findViewById(R.id.btnSend)
         val tvTexfFromWatch = findViewById<TextView>(R.id.tv_textFromWatch)
-        mMessageClient = Wearable.getMessageClient(this)
 
         sendButton.setOnClickListener {
             var textToSend = etTextToWatch.text
@@ -161,105 +163,50 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Text sent", Toast.LENGTH_SHORT).show()
         }
 
+        var filenames = ""
+        // Getting the string csv filenames from phone
+        mMessageClient = Wearable.getMessageClient(this)
         mMessageClient.addListener {
-            Log.d("phoneLogger", "it.data " + DataMap.fromByteArray(it.data).toString())
             val dataMap = DataMap.fromByteArray(it.data)
-            tvTexfFromWatch.text = dataMap.getString("dataFromWatch")
+            filenames = dataMap.getString("dataFromWatch").toString()
+            Log.d(TAG, "filename from watch $filenames")
         }
-
-//        getWatchNodeId { nodeId ->
-//            receiveCsvFileFromWatch(nodeId[0], this)
-//        }
+        // Helper for splitting the csv string and adding to stack
+        val filenamesArray = filenames.split(",").toTypedArray()
+        Log.d(TAG,filenamesArray.size.toString())
+        filenamesArray.forEach { name ->
+            filenameStack.add(name)
+        }
+        Log.d(TAG, filenameStack.size.toString())
 
         val channelClient = Wearable.getChannelClient(applicationContext)
         channelClient.registerChannelCallback(object : ChannelClient.ChannelCallback() {
             override fun onChannelOpened(channel: ChannelClient.Channel) {
-                    channelClient.receiveFile(channel, ("file:///storage/emulated/0/Download/${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss"))}.csv").toUri(), false).addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            if (task.result != null) {
-                                Log.d(TAG, task.result.toString())
-                                // do something with resultString
-                            } else {
-                                Log.e(TAG, "SE TOIMII")
-                                // handle the case where result is null
-                            }
-
+                val filename = filenameStack.pop()
+                Log.d(TAG, filename)
+                channelClient.receiveFile(
+                    channel,
+                    ("file:///storage/emulated/0/Download/${filename}.csv").toUri(),
+                    false
+                ).addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        if (task.result != null) {
+                            Log.d(TAG, task.result.toString())
+                            // do something with resultString
                         } else {
-                            Log.e(TAG, "Epic fail: " + "file:///storage/emulated/0/Download/test_file.csv")
+                            Log.e(TAG, "SE TOIMII")
+                            // handle the case where result is null
                         }
+
+                    } else {
+                        Log.e(TAG, "Epic fail: " + task.isSuccessful)
                     }
-            }
-        })
-/////////////////////////////////////////////////
-    }
-
-
-
-/////////////////////////////////////////////////////
-////////////////////////////////////////////////////
-/////////////////////////////////////////////////////
-////////////////////////////////////////////////////
-/////////////////////////////////////////////////////
-////////////////////////////////////////////////////
-/////////////////////////////////////////////////////
-////////////////////////////////////////////////////
-
-
-
-    private fun receiveCsvFileFromWatch(nodeId: String, context: Context) {
-
-        val channelClient = Wearable.getChannelClient(context)
-
-        val callback = object : ChannelClient.ChannelCallback() {
-            override fun onChannelOpened(channel: ChannelClient.Channel) {
-                channelClient.receiveFile(channel, Uri.fromFile(getCsvFile()), false).addOnCompleteListener {
-                    Log.d(TAG, "CSV file received from watch")
-                    channelClient.close(channel)
                 }
             }
-
-            override fun onChannelClosed(channel: ChannelClient.Channel, closeReason: Int, appSpecificErrorCode: Int) {
-                Log.d(TAG, "Channel closed: nodeId=$nodeId, reason=$closeReason, errorCode=$appSpecificErrorCode")
-            }
-        }
-
-        channelClient.registerChannelCallback(callback)
-
-        channelClient.openChannel(nodeId, CSV_FILE_CHANNEL_PATH.toString()).addOnCompleteListener { result ->
-            if (result.isSuccessful) {
-                Log.d(TAG, "Channel opened: nodeId=$nodeId, path=$CSV_FILE_CHANNEL_PATH")
-            } else {
-                Log.e(TAG, "Failed to open channel: nodeId=$nodeId, path=$CSV_FILE_CHANNEL_PATH")
-                channelClient.unregisterChannelCallback(callback)
-            }
-        }
+        })
     }
 
-    private fun getCsvFile(): File {
-        Log.d(TAG, "filed drir " +this.filesDir.toString())
-        return File(this.filesDir, "received_data.csv")
-    }
 
-    private fun getWatchNodeId(callback: (ArrayList<String>) -> Unit) {
-        var nodeIds = ArrayList<String>()
-        Wearable.getNodeClient(this).connectedNodes.addOnSuccessListener { nodes ->
-            for (node in nodes) {
-                Log.d(TAG, "connected node in getPhoneId " + node.id.toString())
-                nodeIds.add(node.id.toString())
-            }
-            Log.d(TAG, "in getPhonenodeids size " + nodeIds.size.toString())
-            callback(nodeIds)
-        }
-    }
-
-/////////////////////////////////////////////////////
-////////////////////////////////////////////////////
-/////////////////////////////////////////////////////
-////////////////////////////////////////////////////
-/////////////////////////////////////////////////////
-////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////
 
     private fun sendParameterToWatch(data: DataMap){
         val dataBytes = data.toByteArray()

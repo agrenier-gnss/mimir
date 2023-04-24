@@ -1,5 +1,6 @@
 package com.mobilewizards.watchlogger
 
+import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
 import android.hardware.Sensor
@@ -8,10 +9,13 @@ import android.location.GnssMeasurementsEvent
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
+import java.io.File
+
 //import androidx.health.services.client.proto.DataProto.HeartRateAlertParams
 
 class WatchGNSSHandler {
@@ -20,6 +24,7 @@ class WatchGNSSHandler {
     private lateinit var networkLocationListener: LocationListener
     private lateinit var gnssMeasurementsEventListener: GnssMeasurementsEvent.Callback
     protected var context: Context
+    private val TAG = "watchLogger"
 
     constructor(context: Context) : super() {
         this.context = context.applicationContext
@@ -161,8 +166,8 @@ class WatchGNSSHandler {
         locationManager.unregisterGnssMeasurementsCallback(gnssMeasurementsEventListener)
 
         val contentValues = ContentValues().apply {
-            put(MediaStore.Downloads.DISPLAY_NAME, "gnss_measurements.txt")
-            put(MediaStore.Downloads.MIME_TYPE, "text/plain")
+            put(MediaStore.Downloads.DISPLAY_NAME, "watch_gnss_measurements")
+            put(MediaStore.Downloads.MIME_TYPE, "text/csv")
             put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
         }
 
@@ -178,7 +183,23 @@ class WatchGNSSHandler {
                 outputStream.flush()
             }
 
-            Toast.makeText(context, "GNSS Measurements saved to Downloads folder", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(context, "GNSS Measurements saved to Downloads folder", Toast.LENGTH_SHORT).show()
         }
+
+        var filePath = ""
+        fun getRealPathFromUri(contentResolver: ContentResolver, uri: Uri): String {
+            val projection = arrayOf(MediaStore.Images.Media.DATA)
+            val cursor = contentResolver.query(uri, projection, null, null, null)
+            val columnIndex = cursor?.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            cursor?.moveToFirst()
+            val path = columnIndex?.let { cursor?.getString(it) }
+            cursor?.close()
+            return path ?: ""
+        }
+        uri?.let { getRealPathFromUri(context.contentResolver, it) }
+            ?.let { Log.d("uri", it)
+                filePath = it}
+        WatchActivityHandler.setFilePaths(File(filePath))
+        Log.d(TAG, "gnss file path $filePath")
     }
 }
