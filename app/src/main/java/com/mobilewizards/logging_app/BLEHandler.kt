@@ -1,5 +1,6 @@
 package com.mobilewizards.logging_app
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.bluetooth.*
 import android.bluetooth.le.BluetoothLeScanner
@@ -8,6 +9,7 @@ import android.bluetooth.le.ScanResult
 import android.content.ContentValues
 import android.content.Context
 import android.graphics.Color.green
+import android.icu.text.SimpleDateFormat
 import android.os.Environment
 import android.os.Handler
 import android.provider.MediaStore
@@ -15,6 +17,8 @@ import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
+
+private var startTime: Long? = null
 
 class BLEHandler(private val context: Context) {
 
@@ -64,17 +68,19 @@ class BLEHandler(private val context: Context) {
     fun setUpLogging() {
         try {
             bluetoothLeScanner?.startScan(scanCallback)
+            startTime = System.currentTimeMillis()
         } catch(e: SecurityException){
             Log.d("Error", "No permission for BLE fetching")
         }
     }
 
+    @SuppressLint("SimpleDateFormat")
     fun stopLogging() {
         try {
             bluetoothLeScanner?.stopScan(scanCallback)
 
             val contentValues = ContentValues().apply {
-                put(MediaStore.Downloads.DISPLAY_NAME, "bluetooth_measurements.csv")
+                put(MediaStore.Downloads.DISPLAY_NAME, "log_bluetooth_${SimpleDateFormat("ddMMyyyy_hhmmssSSS").format(startTime)}.csv")
                 put(MediaStore.Downloads.MIME_TYPE, "text/csv")
                 put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
             }

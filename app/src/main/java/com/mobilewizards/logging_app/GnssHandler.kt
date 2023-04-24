@@ -1,8 +1,10 @@
 package com.mobilewizards.logging_app
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
+import android.icu.text.SimpleDateFormat
 import android.location.*
 import android.os.Build
 import android.os.Environment
@@ -21,6 +23,8 @@ private lateinit var networkLocationListener: LocationListener
 private lateinit var gnssMeasurementsEventListener: android.location.GnssMeasurementsEvent.Callback
 private lateinit var gnssNavigationMessageListener: android.location.GnssNavigationMessage.Callback
 
+private var startTime: Long? = null
+
 private const val VERSION_TAG = "Version: "
 private const val COMMENT_START = "# "
 
@@ -35,6 +39,7 @@ class GnssHandler{
     private var gnssMeasurementsList = mutableListOf<String>()
     public fun setUpLogging(){
         locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        startTime = System.currentTimeMillis()
         logLocation(1000)
         logGNSS( 1000)
         logGnssNavigationMessages(1000)
@@ -243,6 +248,7 @@ class GnssHandler{
     }
 
 
+    @SuppressLint("SimpleDateFormat")
     fun stopLogging(context: Context) {
         locationManager.removeUpdates(gpsLocationListener)
         locationManager.removeUpdates(networkLocationListener)
@@ -250,7 +256,7 @@ class GnssHandler{
         locationManager.unregisterGnssNavigationMessageCallback(gnssNavigationMessageListener)
 
         val contentValues = ContentValues().apply {
-            put(MediaStore.Downloads.DISPLAY_NAME, "gnss_measurements.csv")
+            put(MediaStore.Downloads.DISPLAY_NAME, "log_gnss_${SimpleDateFormat("ddMMyyyy_hhmmssSSS").format(startTime)}.csv")
             put(MediaStore.Downloads.MIME_TYPE, "text/csv")
             put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
         }

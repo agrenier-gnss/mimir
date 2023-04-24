@@ -8,6 +8,7 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.icu.text.SimpleDateFormat
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
@@ -84,6 +85,8 @@ data class MagnetometerValues(val timestamp: Long, val x: Float, val y: Float, v
 private var magnetometerValues = mutableListOf<MagnetometerValues>()
 private var barometerValues = mutableListOf<Pair<Long,Float>>()
 
+private var startTime: Long? = null
+
 private const val VERSION_TAG = "Version: "
 private const val COMMENT_START = "# "
 
@@ -95,7 +98,7 @@ class MotionSensorsHandler: SensorEventListener{
     constructor(context: Context) : super() {
         this.context = context.applicationContext
     }
-    
+
     fun getIMUValues(): List<MutableList<out Any>> {
         return listOf<MutableList<out Any>>(accelerometerValues,unCalibratedAccelerometer,gravityValues,gyroscopeValues,unCalibratedGyroscopeValues)
     }
@@ -120,6 +123,8 @@ class MotionSensorsHandler: SensorEventListener{
         barometerValues = mutableListOf()
 
         this.listenerActive = true
+
+        startTime = System.currentTimeMillis()
 
         sensorManager = context.getSystemService(SENSOR_SERVICE) as SensorManager
 
@@ -426,7 +431,7 @@ class MotionSensorsHandler: SensorEventListener{
 
     private fun writeIMU() {
         val contentValues = ContentValues().apply {
-            put(MediaStore.Downloads.DISPLAY_NAME, "imu_measurements.csv")
+            put(MediaStore.Downloads.DISPLAY_NAME, "log_imu_${SimpleDateFormat("ddMMyyyy_hhmmssSSS").format(startTime)}.csv")
             put(MediaStore.Downloads.MIME_TYPE, "text/csv")
             put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
         }
@@ -512,7 +517,7 @@ class MotionSensorsHandler: SensorEventListener{
 
         try {
             val contentValues = ContentValues().apply {
-                put(MediaStore.Downloads.DISPLAY_NAME, "magnetometer_measurements.csv")
+                put(MediaStore.Downloads.DISPLAY_NAME, "log_magnetometer_${SimpleDateFormat("ddMMyyyy_hhmmssSSS").format(startTime)}.csv")
                 put(MediaStore.Downloads.MIME_TYPE, "text/csv")
                 put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
             }
@@ -569,7 +574,7 @@ class MotionSensorsHandler: SensorEventListener{
     private fun writeBarometer() {
         try {
             val contentValues = ContentValues().apply {
-                put(MediaStore.Downloads.DISPLAY_NAME, "barometer_measurements.csv")
+                put(MediaStore.Downloads.DISPLAY_NAME, "log_barometer_${SimpleDateFormat("ddMMyyyy_hhmmssSSS").format(startTime)}.csv")
                 put(MediaStore.Downloads.MIME_TYPE, "text/csv")
                 put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
             }
