@@ -1,5 +1,6 @@
 package com.mobilewizards.logging_app
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,6 +11,7 @@ import android.widget.*
 
 class LogEventActivity : AppCompatActivity() {
 
+    @SuppressLint("ClickableViewAccessibility", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_logevent)
@@ -30,10 +32,11 @@ class LogEventActivity : AppCompatActivity() {
         )
 
         //create a layout for each activity in activityList
-        for(i in activityList.indices) {
+        for (i in activityList.indices) {
 
             // Inflate the layout file that contains the gridview
-            val layout = layoutInflater.inflate(R.layout.layout_presets, parentView, false).findViewById<LinearLayout>(R.id.logEventSquarePreset)
+            val layout = layoutInflater.inflate(R.layout.layout_presets, parentView, false)
+                .findViewById<LinearLayout>(R.id.logEventSquarePreset)
 
             val activityTitleTextView = layout.findViewById<TextView>(R.id.logEventTitle)
             activityTitleTextView.text = activityList[i][0].toString()
@@ -43,12 +46,12 @@ class LogEventActivity : AppCompatActivity() {
 
             val datapoint = layout.findViewById<TextView>(R.id.logEventDataPoint)
 
-            if(!ActivityHandler.getToggle(activityList[i][0])) {
+            if (!ActivityHandler.getToggle(activityList[i][0])) {
                 description.text = "${activityList[i][0]} is disabled"
                 datapoint.text = "Data not available"
             } else {
-                if(frequency == 0) {
-                    if(activityList[i][0] == "Time") {
+                if (frequency == 0) {
+                    if (activityList[i][0] == "Time") {
                         description.text = "Survey duration"
                     } else {
                         description.text = "1 hz frequency"
@@ -59,8 +62,11 @@ class LogEventActivity : AppCompatActivity() {
                 datapoint.text = ActivityHandler.getLogData(activityList[i][0]).toString()
             }
 
-
-
+            // TODO: Add other "listeners"
+            if (activityList[i][0] == "Magnetometer" && ActivityHandler.getIsLogging()) {
+                datapoint.text =
+                    ActivityHandler.imuSensor[0].getMagnetometerValues().size.toString()
+            }
 
 
             // Remove the tableLayout's parent, if it has one
@@ -68,7 +74,6 @@ class LogEventActivity : AppCompatActivity() {
 
             // Add the TableLayout to the parent view
             parentView.addView(layout)
-
         }
 
         var x1 = 0f

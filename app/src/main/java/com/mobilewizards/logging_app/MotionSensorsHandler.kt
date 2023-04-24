@@ -62,27 +62,27 @@ private var rotationYDrift: Float = Float.MIN_VALUE
 private var rotationZDrift: Float = Float.MIN_VALUE
 
 
-
-data class AccelerometerValues(val timestamp: String, val sideTilt: Float, val upDownTilt: Float, val verticalTilt: Float)
+data class AccelerometerValues(val timestamp: Long, val sideTilt: Float, val upDownTilt: Float, val verticalTilt: Float)
 private var accelerometerValues = mutableListOf<AccelerometerValues>()
 
-data class UnCalibratedAccelerometerValues(val timestamp: String, val sideX: Float, val upDownY: Float, val verticalZ: Float, val sideXB: Float, val upDownYB: Float, val verticalZB: Float)
+data class UnCalibratedAccelerometerValues(val timestamp: Long, val sideX: Float, val upDownY: Float, val verticalZ: Float, val sideXB: Float, val upDownYB: Float, val verticalZB: Float)
 private var unCalibratedAccelerometer = mutableListOf<UnCalibratedAccelerometerValues>()
 
-data class GravityValues(val timestamp: String, val gravityX: Float, val gravityY: Float, val gravityZ: Float)
+data class GravityValues(val timestamp: Long, val gravityX: Float, val gravityY: Float, val gravityZ: Float)
 private var gravityValues = mutableListOf<GravityValues>()
 
-data class GyroscopeValues(val timestamp: String, val rotX: Float, val rotY: Float, val rotZ: Float)
+data class GyroscopeValues(val timestamp: Long, val rotX: Float, val rotY: Float, val rotZ: Float)
 private var gyroscopeValues = mutableListOf<GyroscopeValues>()
 
-data class UnCalibratedGyroscopeValues(val timestamp: String, val noDriftX: Float, val noDriftY: Float, val noDriftZ: Float, val driftX: Float, val driftY: Float, val driftZ: Float)
+data class UnCalibratedGyroscopeValues(val timestamp: Long, val noDriftX: Float, val noDriftY: Float, val noDriftZ: Float, val driftX: Float, val driftY: Float, val driftZ: Float)
 private var unCalibratedGyroscopeValues = mutableListOf<UnCalibratedGyroscopeValues>()
 
 private var stepCount: Float = Float.MIN_VALUE
 
-data class MagnetometerValues(val timestamp: String, val x: Float, val y: Float, val z: Float)
+data class MagnetometerValues(val timestamp: Long, val x: Float, val y: Float, val z: Float)
+
 private var magnetometerValues = mutableListOf<MagnetometerValues>()
-private var barometerValues = mutableListOf<Pair<String,Float>>()
+private var barometerValues = mutableListOf<Pair<Long,Float>>()
 
 private const val VERSION_TAG = "Version: "
 private const val COMMENT_START = "# "
@@ -96,8 +96,21 @@ class MotionSensorsHandler: SensorEventListener{
         this.context = context.applicationContext
     }
 
+    fun getMagnetometerValues(): MutableList<MagnetometerValues> {
+        return magnetometerValues
+    }
 
-    fun setUpSensors(imuFerquency: Int, magnetometerFrequency: Int, barometerFrequency: Int) {
+
+    fun setUpSensors(imuFrequency: Int, magnetometerFrequency: Int, barometerFrequency: Int) {
+
+        accelerometerValues = mutableListOf()
+        unCalibratedAccelerometer = mutableListOf()
+        gravityValues = mutableListOf()
+        gyroscopeValues = mutableListOf()
+        unCalibratedGyroscopeValues = mutableListOf()
+        stepCount = 0F
+        magnetometerValues = mutableListOf()
+        barometerValues = mutableListOf()
 
         this.listenerActive = true
 
@@ -106,14 +119,14 @@ class MotionSensorsHandler: SensorEventListener{
         if(ActivityHandler.getToggle("IMU")) {
             if (sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null){
                 acSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-                sensorManager.registerListener(this, acSensor, imuFerquency)
+                sensorManager.registerListener(this, acSensor, imuFrequency)
             }  else {
 
                 Log.i("Does not have sensor for ACCELEROMETER", acSensor.toString())
             }
             if (sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER_UNCALIBRATED) != null){
                 biasSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER_UNCALIBRATED)
-                sensorManager.registerListener(this, biasSensor, imuFerquency)
+                sensorManager.registerListener(this, biasSensor, imuFrequency)
 
             } else {
 
@@ -121,7 +134,7 @@ class MotionSensorsHandler: SensorEventListener{
             }
             if(sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE) != null){
                 gyroSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
-                sensorManager.registerListener(this, gyroSensor, imuFerquency)
+                sensorManager.registerListener(this, gyroSensor, imuFrequency)
             }  else {
 
                 Log.i("Does not have sensor for GYROSCOPE", gyroSensor.toString())
@@ -129,14 +142,14 @@ class MotionSensorsHandler: SensorEventListener{
 
             if(sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED) != null){
                 unCalGyroSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED)
-                sensorManager.registerListener(this, unCalGyroSensor, imuFerquency)
+                sensorManager.registerListener(this, unCalGyroSensor, imuFrequency)
             }  else {
 
                 Log.i("Does not have sensor for UNCALIBRATED GYROSCOPE", unCalGyroSensor.toString())
             }
             if(sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY) != null){
                 gravSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY)
-                sensorManager.registerListener(this, gravSensor, imuFerquency)
+                sensorManager.registerListener(this, gravSensor, imuFrequency)
             }   else {
 
                 Log.i("Does not have sensor for GRAVITY", gravSensor.toString())
@@ -144,28 +157,21 @@ class MotionSensorsHandler: SensorEventListener{
 
             if(sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null){
                 stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
-                sensorManager.registerListener(this, stepSensor, imuFerquency)
+                sensorManager.registerListener(this, stepSensor, imuFrequency)
             }   else {
 
                 Log.i("Does not have sensor for STEP COUNTER", stepSensor.toString())
             }
         }
 
-
         if(sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null && ActivityHandler.getToggle("Magnetometer")) {
             magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
             sensorManager.registerListener(this, magnetometer, magnetometerFrequency)
-        }   else {
-
-            Log.i("Does not have sensor for MAGNETOMETER", magnetometer.toString())
         }
 
         if(sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE) != null && ActivityHandler.getToggle("Barometer")){
             barometer = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE)
             sensorManager.registerListener(this, barometer, barometerFrequency)
-        }   else {
-
-            Log.i("Does not have sensor for BAROMETER", barometer.toString())
         }
 
     }
@@ -228,10 +234,7 @@ class MotionSensorsHandler: SensorEventListener{
                 Log.d("Tilting vertically | Acceleration force along the Z axis | Includes gravity", verticalTilt.toString())
             }
 
-            val dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(event.timestamp / 1000000000, event.timestamp % 1000000000),ZoneId.of("UTC"))
-            val formatter = DateTimeFormatter.ofPattern("ddMMyyyy_HHmmssSSS")
-
-            accelerometerValues.add(AccelerometerValues(formatter.format(dateTime),sideTilt,upDownTilt,verticalTilt))
+            accelerometerValues.add(AccelerometerValues(event.timestamp,sideTilt,upDownTilt,verticalTilt))
         }
     }
 
@@ -279,10 +282,7 @@ class MotionSensorsHandler: SensorEventListener{
                 Log.d("Acceleration along the Z axis | WITH bias compensation", verticalZB.toString())
             }
 
-            val dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(event.timestamp / 1000000000, event.timestamp % 1000000000),ZoneId.of("UTC"))
-            val formatter = DateTimeFormatter.ofPattern("ddMMyyyy_HHmmssSSS")
-
-            unCalibratedAccelerometer.add(UnCalibratedAccelerometerValues(formatter.format(dateTime),sideX,upDownY,verticalZ,sideXB,upDownYB,verticalZB))
+            unCalibratedAccelerometer.add(UnCalibratedAccelerometerValues(event.timestamp,sideX,upDownY,verticalZ,sideXB,upDownYB,verticalZB))
         }
     }
     private fun logGravity(event: SensorEvent?) {
@@ -307,10 +307,7 @@ class MotionSensorsHandler: SensorEventListener{
                 Log.d("Gravity along Z", gravityZ.toString())
             }
 
-            val dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(event.timestamp / 1000000000, event.timestamp % 1000000000),ZoneId.of("UTC"))
-            val formatter = DateTimeFormatter.ofPattern("ddMMyyyy_HHmmssSSS")
-
-            gravityValues.add(GravityValues(formatter.format(dateTime),gravityX,gravityY,gravityZ))
+            gravityValues.add(GravityValues(event.timestamp,gravityX,gravityY,gravityZ))
         }
     }
 
@@ -336,10 +333,7 @@ class MotionSensorsHandler: SensorEventListener{
                 Log.d("Rotation along Z axis", rotZ.toString())
             }
 
-            val dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(event.timestamp / 1000000000, event.timestamp % 1000000000),ZoneId.of("UTC"))
-            val formatter = DateTimeFormatter.ofPattern("ddMMyyyy_HHmmssSSS")
-
-            gyroscopeValues.add(GyroscopeValues(formatter.format(dateTime),rotX,rotY,rotZ))
+            gyroscopeValues.add(GyroscopeValues(event.timestamp,rotX,rotY,rotZ))
         }
     }
 
@@ -385,10 +379,7 @@ class MotionSensorsHandler: SensorEventListener{
                 Log.d("Rotation along the Z axis| WITH drift compensation", driftZ.toString())
             }
 
-            val dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(event.timestamp / 1000000000, event.timestamp % 1000000000),ZoneId.of("UTC"))
-            val formatter = DateTimeFormatter.ofPattern("ddMMyyyy_HHmmssSSS")
-
-            unCalibratedGyroscopeValues.add(UnCalibratedGyroscopeValues(formatter.format(dateTime),noDriftX,noDriftY,noDriftZ,driftX,driftY,driftZ))
+            unCalibratedGyroscopeValues.add(UnCalibratedGyroscopeValues(event.timestamp,noDriftX,noDriftY,noDriftZ,driftX,driftY,driftZ))
         }
     }
 
@@ -408,14 +399,11 @@ class MotionSensorsHandler: SensorEventListener{
 
         if (event?.sensor?.type == magnetometer?.type && event?.sensor?.type != null) {
 
-            val dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(event.timestamp / 1000000000, event.timestamp % 1000000000),ZoneId.of("UTC"))
-            val formatter = DateTimeFormatter.ofPattern("ddMMyyyy_HHmmssSSS")
-
             val x = event.values[0]
             val y = event.values[1]
             val z = event.values[2]
 
-            magnetometerValues.add(MagnetometerValues(formatter.format(dateTime).toString(),x,y,z))
+            magnetometerValues.add(MagnetometerValues(event.timestamp,x,y,z))
         }
     }
 
@@ -423,12 +411,9 @@ class MotionSensorsHandler: SensorEventListener{
 
         if (event?.sensor?.type == barometer?.type && event?.sensor?.type != null) {
 
-            val dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(event.timestamp / 1000000000, event.timestamp % 1000000000),ZoneId.of("UTC"))
-            val formatter = DateTimeFormatter.ofPattern("ddMMyyyy_HHmmssSSS")
-
             val pressure = event.values[0]
 
-            barometerValues.add(Pair(formatter.format(dateTime),pressure))
+            barometerValues.add(Pair(event.timestamp,pressure))
         }
     }
 
