@@ -85,6 +85,8 @@ class SurveyHistoryActivity : AppCompatActivity() {
             surveyTitle.text = file.name
             val fileSize = tableLayout.findViewById<TextView>(R.id.fileSize)
             fileSize.text = "${file.length()} bytes"
+            val fileLocation = tableLayout.findViewById<TextView>(R.id.surveyLocation)
+            fileLocation.text = file.canonicalPath
 
             // Add the TableLayout to the parent view
             parentView.addView(tableLayout)
