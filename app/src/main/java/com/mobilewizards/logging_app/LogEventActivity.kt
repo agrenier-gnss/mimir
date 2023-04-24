@@ -44,8 +44,8 @@ class LogEventActivity : AppCompatActivity() {
             val datapoint = layout.findViewById<TextView>(R.id.logEventDataPoint)
 
             if(!ActivityHandler.getToggle(activityList[i][0])) {
-                description.text = "${activityList[i][0]} disabled"
-                datapoint.text = "Error"
+                description.text = "${activityList[i][0]} is disabled"
+                datapoint.text = "Data not available"
             } else {
                 if(frequency == 0) {
                     if(activityList[i][0] == "Time") {
