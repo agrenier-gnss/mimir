@@ -3,6 +3,7 @@ package com.mobilewizards.logging_app
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -35,6 +36,9 @@ object ActivityHandler{
     private var barometerLogs: Int = 0
     private var magnetometerLogs: Int = 0
     private var BLELogs: Int = 0
+
+    // Survey start time
+    private var surveyStartTime: String = "Time not set"
 
     //keeps track of the button state and synchronises them between activities
     private val buttonState = MutableLiveData<Boolean>(false)
@@ -70,6 +74,7 @@ object ActivityHandler{
         if (GNSSToggle) {gnss.setUpLogging()}
         if(BLEToggle){ble.setUpLogging()}
         isLogging = true
+        setSurveyStartTime()
     }
 
     fun stopLogging(context: Context){
@@ -213,4 +218,13 @@ object ActivityHandler{
         return 0.toString()
     }
 
+    fun setSurveyStartTime() {
+        val currentTime = Calendar.getInstance().time
+        val dateFormat = SimpleDateFormat("HH:mm")
+        surveyStartTime = dateFormat.format(currentTime)
+    }
+
+    fun getSurveyStartTime(): String {
+        return surveyStartTime
+    }
 }

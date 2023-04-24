@@ -15,14 +15,11 @@ import java.util.*
 
 class MauveActivity : AppCompatActivity() {
 
-    private var logTime: String = ""
-
     override fun onResume() {
         super.onResume()
 
         if(ActivityHandler.getIsLogging()) {
 
-            Log.d("MyActivity", "logTime = $logTime")
             val loggingButton = findViewById<Button>(R.id.loggingButton)
             val dataButton = findViewById<Button>(R.id.downloadDataButton)
             val loggingText = findViewById<TextView>(R.id.loggingTextView)
@@ -37,7 +34,7 @@ class MauveActivity : AppCompatActivity() {
 
             Handler().postDelayed({
                 loggingText.text = "Surveying..."
-                timeText.text = "Started $logTime"
+                timeText.text = "Started ${ActivityHandler.getSurveyStartTime()}"
             }, 300)
         }
     }
@@ -89,16 +86,10 @@ class MauveActivity : AppCompatActivity() {
                     .setDuration(500)
                     .start()
 
-                val currentTime = Calendar.getInstance().time
-                val dateFormat = SimpleDateFormat("HH:mm")
-                val formattedTime = dateFormat.format(currentTime)
-
                 Handler().postDelayed({
                     loggingText.text = "Surveying..."
-                    timeText.text = "Started $formattedTime"
+                    timeText.text = "Started ${ActivityHandler.getSurveyStartTime()}"
                 }, 300)
-
-                logTime = formattedTime
 
             } else {
                 // Stop logging
