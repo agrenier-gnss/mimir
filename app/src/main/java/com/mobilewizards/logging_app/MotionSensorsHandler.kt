@@ -95,6 +95,10 @@ class MotionSensorsHandler: SensorEventListener{
     constructor(context: Context) : super() {
         this.context = context.applicationContext
     }
+    
+    fun getIMUValues(): List<MutableList<out Any>> {
+        return listOf<MutableList<out Any>>(accelerometerValues,unCalibratedAccelerometer,gravityValues,gyroscopeValues,unCalibratedGyroscopeValues)
+    }
 
     fun getMagnetometerValues(): MutableList<MagnetometerValues> {
         return magnetometerValues
