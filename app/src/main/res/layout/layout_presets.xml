@@ -9,7 +9,7 @@
     <TableLayout
         android:id="@+id/sensorSquarePreset"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="130dp"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="15dp"
@@ -29,7 +29,7 @@
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginLeft="15dp"
-                android:layout_marginTop="0dp"
+                android:layout_marginTop="10dp"
                 android:layout_weight="6"
                 android:text="Placeholder sensor name"
                 android:textColor="@color/white"
@@ -41,8 +41,8 @@
             <TextView
                 android:id="@+id/sensorState"
                 android:layout_width="0dp"
-                android:layout_height="30dp"
-                android:layout_marginLeft="15dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0dp"
                 android:layout_marginTop="0dp"
                 android:layout_weight="2"
                 android:text="Disabled"
