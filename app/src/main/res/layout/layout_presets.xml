@@ -163,7 +163,7 @@
             android:layout_height="20dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="0dp"
-            android:text="400 logged events from phone"
+            android:text=""
             android:textColor="@color/lighter_gray"
             android:textSize="14sp"
             app:layout_constraintLeft_toLeftOf="parent"
