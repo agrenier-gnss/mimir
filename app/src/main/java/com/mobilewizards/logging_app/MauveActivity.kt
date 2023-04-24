@@ -13,6 +13,8 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.app.ActivityCompat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -22,24 +24,36 @@ class MauveActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        if(ActivityHandler.getIsLogging()) {
+        val loggingButton = findViewById<Button>(R.id.loggingButton)
+        val dataButton = findViewById<Button>(R.id.downloadDataButton)
+        val loggingText = findViewById<TextView>(R.id.loggingTextView)
+        val timeText = findViewById<TextView>(R.id.loggingTimeTextView)
 
-            val loggingButton = findViewById<Button>(R.id.loggingButton)
-            val dataButton = findViewById<Button>(R.id.downloadDataButton)
-            val loggingText = findViewById<TextView>(R.id.loggingTextView)
-            val timeText = findViewById<TextView>(R.id.loggingTimeTextView)
+        // Prevent logging button from going to unintended locations
+        if(ActivityHandler.getIsLogging()) {
 
             dataButton.visibility = View.GONE
             loggingButton.text = "Stop logging"
-            loggingButton.animate()
-                .translationYBy(250f)
-                .setDuration(500)
-                .start()
+
+            loggingButton.translationY = 250f
 
             Handler().postDelayed({
                 loggingText.text = "Surveying..."
                 timeText.text = "Started ${ActivityHandler.getSurveyStartTime()}"
             }, 300)
+        } else {
+
+            val layoutParams = ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                ConstraintLayout.LayoutParams.WRAP_CONTENT
+            )
+
+            layoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+            layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
+            layoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+            layoutParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+
+            loggingButton.layoutParams = layoutParams
         }
     }
 
