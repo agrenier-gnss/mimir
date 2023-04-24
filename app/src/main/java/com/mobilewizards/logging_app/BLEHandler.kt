@@ -34,6 +34,11 @@ class BLEHandler(private val context: Context) {
     }
 
     private var bleScanList = mutableListOf<String>()
+
+    fun getBLEValues(): MutableList<String> {
+        return bleScanList
+    }
+
     private fun initializeScanCallback() {
         scanCallback = object : ScanCallback() {
             override fun onScanResult(callbackType: Int, result: ScanResult?) {

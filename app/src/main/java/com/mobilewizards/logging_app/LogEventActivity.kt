@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -25,25 +26,21 @@ class LogEventActivity : AppCompatActivity() {
 
 
         // List of sensors to be logged. Tag only
-        val activityList = arrayOf("Time", "GNSS", "IMU", "Magnetometer", "Barometer")
-
-        //todo: list of active sensors
+        val activityList = arrayOf("GNSS", "IMU", "Magnetometer", "Barometer", "Bluetooth")
         var activeSensorList = mutableListOf<String>()
-
-        val layout = layoutInflater.inflate(R.layout.layout_presets, parentView, false)
-            .findViewById<LinearLayout>(R.id.logEventSquarePreset)
-        val activityTitleTextView = layout.findViewById<TextView>(R.id.logEventTitle)
-        val description = layout.findViewById<TextView>(R.id.logEventDescription)
-        val datapoint = layout.findViewById<TextView>(R.id.logEventDataPoint)
 
         //create a layout for each activity in activityList
         for (i in activityList.indices) {
 
+            val layout = layoutInflater.inflate(R.layout.layout_presets, parentView, false)
+                .findViewById<LinearLayout>(R.id.logEventSquarePreset)
+            val datapoint = layout.findViewById<TextView>(R.id.logEventDataPoint)
+            val activityTitleTextView = layout.findViewById<TextView>(R.id.logEventTitle)
+            val description = layout.findViewById<TextView>(R.id.logEventDescription)
 
             // Inflate the layout file that contains the gridview
 
             val frequency = ActivityHandler.getFrequency(activityList[i])
-
             activityTitleTextView.text = activityList[i]
 
             if (!ActivityHandler.getToggle(activityList[i])) {
@@ -63,23 +60,38 @@ class LogEventActivity : AppCompatActivity() {
                 datapoint.text = ActivityHandler.getLogData(activityList[i]).toString()
             }
 
+            timer.scheduleAtFixedRate(object : TimerTask() {
+                override fun run() {
+                    // This code will run every second
+                    if (activityList[i] == "Magnetometer" && ActivityHandler.getIsLogging()) {
+                        datapoint.text = ActivityHandler.imuSensor[0].getMagnetometerValues().size.toString()
+                    }
+                    if(activityList[i] == "Bluetooth" && ActivityHandler.getIsLogging()) {
+                        //todo: not logging anything
+                        datapoint.text = ActivityHandler.bleSensor[0].getBLEValues().size.toString()
+                    }
+                    if(activityList[i] == "GNSS" && ActivityHandler.getIsLogging()) {
+                        datapoint.text = ActivityHandler.gnssSensor[0].getGNSSValues().size.toString()
+                    }
+                    if(activityList[i] == "Barometer" && ActivityHandler.getIsLogging()) {
+                        datapoint.text = ActivityHandler.imuSensor[0].getBarometerValues().size.toString()
+                    }
+                    if(activityList[i] == "IMU" && ActivityHandler.getIsLogging()) {
+                        var sum = 0
+                        for(j in ActivityHandler.imuSensor[0].getIMUValues()) {
+                            sum += j.size
+                        }
+                        datapoint.text = sum.toString()
+                    }
+                }
+            }, 0, 1000)
+
+
             // Remove the tableLayout's parent, if it has one
             (layout.parent as? ViewGroup)?.removeView(layout)
 
             // Add the TableLayout to the parent view
             parentView.addView(layout)
-        }
-
-        for(i in activeSensorList.indices) {
-            // TODO: Add other "listeners"
-            timer.scheduleAtFixedRate(object : TimerTask() {
-                override fun run() {
-                    // This code will run every second
-                    if (activeSensorList[i] == "Magnetometer" && ActivityHandler.getIsLogging()) {
-                        datapoint.text = ActivityHandler.imuSensor[0].getMagnetometerValues().size.toString()
-                    }
-                }
-            }, 0, 1000)
         }
 
 
