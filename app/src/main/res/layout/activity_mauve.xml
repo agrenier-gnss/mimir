@@ -59,7 +59,7 @@
         android:layout_height="50dp"
         android:layout_marginTop="36dp"
         android:drawableLeft="@drawable/ic_mauve_download"
-        android:text="Download latest report"
+        android:text="View finished surveys"
         android:textColor="@color/mauve"
         android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
