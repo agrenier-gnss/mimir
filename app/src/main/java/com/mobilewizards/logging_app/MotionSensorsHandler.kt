@@ -8,6 +8,7 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
@@ -60,12 +61,31 @@ private var rotationXDrift: Float = Float.MIN_VALUE
 private var rotationYDrift: Float = Float.MIN_VALUE
 private var rotationZDrift: Float = Float.MIN_VALUE
 
+
+
+data class AccelerometerValues(val timestamp: String, val sideTilt: Float, val upDownTilt: Float, val verticalTilt: Float)
+private var accelerometerValues = mutableListOf<AccelerometerValues>()
+
+data class UnCalibratedAccelerometerValues(val timestamp: String, val sideX: Float, val upDownY: Float, val verticalZ: Float, val sideXB: Float, val upDownYB: Float, val verticalZB: Float)
+private var unCalibratedAccelerometer = mutableListOf<UnCalibratedAccelerometerValues>()
+
+data class GravityValues(val timestamp: String, val gravityX: Float, val gravityY: Float, val gravityZ: Float)
+private var gravityValues = mutableListOf<GravityValues>()
+
+data class GyroscopeValues(val timestamp: String, val rotX: Float, val rotY: Float, val rotZ: Float)
+private var gyroscopeValues = mutableListOf<GyroscopeValues>()
+
+data class UnCalibratedGyroscopeValues(val timestamp: String, val noDriftX: Float, val noDriftY: Float, val noDriftZ: Float, val driftX: Float, val driftY: Float, val driftZ: Float)
+private var unCalibratedGyroscopeValues = mutableListOf<UnCalibratedGyroscopeValues>()
+
 private var stepCount: Float = Float.MIN_VALUE
 
 data class MagnetometerValues(val timestamp: String, val x: Float, val y: Float, val z: Float)
 private var magnetometerValues = mutableListOf<MagnetometerValues>()
-
 private var barometerValues = mutableListOf<Pair<String,Float>>()
+
+private const val VERSION_TAG = "Version: "
+private const val COMMENT_START = "# "
 
 class MotionSensorsHandler: SensorEventListener{
 
@@ -157,9 +177,10 @@ class MotionSensorsHandler: SensorEventListener{
             logUnCalibratedAccelerometer(event)
         }
 
-        /* if(event?.sensor?.type == Sensor.TYPE_GRAVITY){
+        if(event?.sensor?.type == Sensor.TYPE_GRAVITY){
              logGravity(event)
-         }*/
+        }
+
         if (event?.sensor?.type == gyroSensor?.type) {
             logGyroscope(event)
         }
@@ -183,26 +204,31 @@ class MotionSensorsHandler: SensorEventListener{
     }
 
     private fun logAccelerometer(event: SensorEvent?) {
-        if (event?.sensor?.type == acSensor?.type) {
+        if (event?.sensor?.type == acSensor?.type && event?.sensor?.type != null) {
 
-            val sideTilt = event?.values?.get(0)
-            if (sideTilt != side && sideTilt != null) {
+            val sideTilt = event.values[0]
+            if (sideTilt != side) {
                 side = sideTilt
                 Log.d("Tilting from side to side | Acceleration force along the X axis | Includes gravity", sideTilt.toString())
 
             }
 
-            val upDownTilt = event?.values?.get(1)
-            if (upDownTilt != upDown && upDownTilt != null) {
+            val upDownTilt = event.values[1]
+            if (upDownTilt != upDown) {
                 upDown = upDownTilt
                 Log.d("Tilting up or down | Acceleration force along the Y axis | Includes gravity", upDownTilt.toString())
             }
 
-            val verticalTilt = event?.values?.get(2)
-            if (verticalTilt != vertical && verticalTilt != null) {
+            val verticalTilt = event.values[2]
+            if (verticalTilt != vertical) {
                 vertical = verticalTilt
                 Log.d("Tilting vertically | Acceleration force along the Z axis | Includes gravity", verticalTilt.toString())
             }
+
+            val dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(event.timestamp / 1000000000, event.timestamp % 1000000000),ZoneId.of("UTC"))
+            val formatter = DateTimeFormatter.ofPattern("ddMMyyyy_HHmmssSSS")
+
+            accelerometerValues.add(AccelerometerValues(formatter.format(dateTime),sideTilt,upDownTilt,verticalTilt))
         }
     }
 
@@ -249,6 +275,11 @@ class MotionSensorsHandler: SensorEventListener{
                 verticalBias = verticalZB
                 Log.d("Acceleration along the Z axis | WITH bias compensation", verticalZB.toString())
             }
+
+            val dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(event.timestamp / 1000000000, event.timestamp % 1000000000),ZoneId.of("UTC"))
+            val formatter = DateTimeFormatter.ofPattern("ddMMyyyy_HHmmssSSS")
+
+            unCalibratedAccelerometer.add(UnCalibratedAccelerometerValues(formatter.format(dateTime),sideX,upDownY,verticalZ,sideXB,upDownYB,verticalZB))
         }
     }
     private fun logGravity(event: SensorEvent?) {
@@ -272,6 +303,11 @@ class MotionSensorsHandler: SensorEventListener{
                 gravZ = gravityZ
                 Log.d("Gravity along Z", gravityZ.toString())
             }
+
+            val dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(event.timestamp / 1000000000, event.timestamp % 1000000000),ZoneId.of("UTC"))
+            val formatter = DateTimeFormatter.ofPattern("ddMMyyyy_HHmmssSSS")
+
+            gravityValues.add(GravityValues(formatter.format(dateTime),gravityX,gravityY,gravityZ))
         }
     }
 
@@ -296,6 +332,11 @@ class MotionSensorsHandler: SensorEventListener{
                 rotationZ = rotZ
                 Log.d("Rotation along Z axis", rotZ.toString())
             }
+
+            val dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(event.timestamp / 1000000000, event.timestamp % 1000000000),ZoneId.of("UTC"))
+            val formatter = DateTimeFormatter.ofPattern("ddMMyyyy_HHmmssSSS")
+
+            gyroscopeValues.add(GyroscopeValues(formatter.format(dateTime),rotX,rotY,rotZ))
         }
     }
 
@@ -340,6 +381,11 @@ class MotionSensorsHandler: SensorEventListener{
                 rotationZDrift = driftZ
                 Log.d("Rotation along the Z axis| WITH drift compensation", driftZ.toString())
             }
+
+            val dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(event.timestamp / 1000000000, event.timestamp % 1000000000),ZoneId.of("UTC"))
+            val formatter = DateTimeFormatter.ofPattern("ddMMyyyy_HHmmssSSS")
+
+            unCalibratedGyroscopeValues.add(UnCalibratedGyroscopeValues(formatter.format(dateTime),noDriftX,noDriftY,noDriftZ,driftX,driftY,driftZ))
         }
     }
 
@@ -383,13 +429,214 @@ class MotionSensorsHandler: SensorEventListener{
         }
     }
 
+    private fun writeIMU() {
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Downloads.DISPLAY_NAME, "imu_measurements.csv")
+            put(MediaStore.Downloads.MIME_TYPE, "text/csv")
+            put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+        }
+
+        val uri = context.contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
+
+        Log.d("uri", uri.toString())
+        uri?.let { mediaUri ->
+            context.contentResolver.openOutputStream(mediaUri)?.use { outputStream ->
+                outputStream.write(COMMENT_START.toByteArray())
+                outputStream.write("\n".toByteArray())
+                outputStream.write(COMMENT_START.toByteArray());
+                outputStream.write("Header Description:".toByteArray());
+                outputStream.write("\n".toByteArray())
+                outputStream.write(COMMENT_START.toByteArray())
+                outputStream.write("\n".toByteArray())
+                outputStream.write(COMMENT_START.toByteArray())
+                outputStream.write(VERSION_TAG.toByteArray())
+                var manufacturer: String = Build.MANUFACTURER
+                var model: String = Build.MODEL
+                var fileVersion: String = "${BuildConfig.VERSION_CODE}" + " Platform: " +
+                        "${Build.VERSION.RELEASE}" + " " + "Manufacturer: " +
+                        "${manufacturer}" + " " + "Model: " + "${model}"
+
+                outputStream.write(fileVersion.toByteArray())
+                outputStream.write("\n".toByteArray())
+                outputStream.write(COMMENT_START.toByteArray())
+                outputStream.write("\n".toByteArray())
+                outputStream.write(COMMENT_START.toByteArray())
+                outputStream.write("timestamp,AccelerometerValues".toByteArray())
+                outputStream.write("\n".toByteArray())
+                outputStream.write(COMMENT_START.toByteArray())
+                outputStream.write("\n".toByteArray())
+                outputStream.write(COMMENT_START.toByteArray())
+                outputStream.write("timestamp,UnCalibratedAccelerometerValues".toByteArray())
+                outputStream.write("\n".toByteArray())
+                outputStream.write(COMMENT_START.toByteArray())
+                outputStream.write("\n".toByteArray())
+                outputStream.write(COMMENT_START.toByteArray())
+                outputStream.write("timestamp,GyroscopeValues".toByteArray())
+                outputStream.write("\n".toByteArray())
+                outputStream.write(COMMENT_START.toByteArray())
+                outputStream.write("\n".toByteArray())
+                outputStream.write(COMMENT_START.toByteArray())
+                outputStream.write("timestamp,GyroscopeValues".toByteArray())
+                outputStream.write("\n".toByteArray())
+                outputStream.write(COMMENT_START.toByteArray())
+                outputStream.write("\n".toByteArray())
+                outputStream.write(COMMENT_START.toByteArray())
+                outputStream.write("timestamp,UnCalibratedGyroscopeValues".toByteArray())
+                outputStream.write("\n".toByteArray())
+                outputStream.write(COMMENT_START.toByteArray())
+                outputStream.write("\n".toByteArray())
+                outputStream.write(COMMENT_START.toByteArray())
+                outputStream.write("stepcount".toByteArray())
+                outputStream.write("\n".toByteArray())
+                outputStream.write(COMMENT_START.toByteArray())
+                outputStream.write("\n".toByteArray())
+
+                accelerometerValues.forEach { measurementString ->
+                    outputStream.write("$measurementString\n".toByteArray())
+                }
+                unCalibratedAccelerometer.forEach { measurementString ->
+                    outputStream.write("$measurementString\n".toByteArray())
+                }
+                gravityValues.forEach { measurementString ->
+                    outputStream.write("$measurementString\n".toByteArray())
+                }
+                gyroscopeValues.forEach { measurementString ->
+                    outputStream.write("$measurementString\n".toByteArray())
+                }
+                unCalibratedGyroscopeValues.forEach { measurementString ->
+                    outputStream.write("$measurementString\n".toByteArray())
+                }
+                outputStream.write("Step Count,$stepCount\n".toByteArray())
+
+                outputStream.flush()
+            }
+        }
+    }
+
+    private fun writeMagnetometer() {
+
+        try {
+            val contentValues = ContentValues().apply {
+                put(MediaStore.Downloads.DISPLAY_NAME, "magnetometer_measurements.csv")
+                put(MediaStore.Downloads.MIME_TYPE, "text/csv")
+                put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+            }
+
+            val uri = context.contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
+
+            Log.d("uri", uri.toString())
+            uri?.let { mediaUri ->
+                context.contentResolver.openOutputStream(mediaUri)?.use { outputStream ->
+                    outputStream.write(COMMENT_START.toByteArray())
+                    outputStream.write("\n".toByteArray())
+                    outputStream.write(COMMENT_START.toByteArray());
+                    outputStream.write("Header Description:".toByteArray());
+                    outputStream.write("\n".toByteArray())
+                    outputStream.write(COMMENT_START.toByteArray())
+                    outputStream.write("\n".toByteArray())
+                    outputStream.write(COMMENT_START.toByteArray())
+                    outputStream.write(VERSION_TAG.toByteArray())
+                    var manufacturer: String = Build.MANUFACTURER
+                    var model: String = Build.MODEL
+                    var fileVersion: String = "${BuildConfig.VERSION_CODE}" + " Platform: " +
+                            "${Build.VERSION.RELEASE}" + " " + "Manufacturer: " +
+                            "${manufacturer}" + " " + "Model: " + "${model}"
+
+                    outputStream.write(fileVersion.toByteArray())
+                    outputStream.write("\n".toByteArray())
+                    outputStream.write(COMMENT_START.toByteArray())
+                    outputStream.write("\n".toByteArray())
+                    outputStream.write(COMMENT_START.toByteArray())
+                    outputStream.write("timestamp,x,y,z".toByteArray())
+                    outputStream.write("\n".toByteArray())
+                    outputStream.write(COMMENT_START.toByteArray())
+                    outputStream.write("\n".toByteArray())
+
+                    magnetometerValues.forEach { measurementString ->
+                        outputStream.write("$measurementString\n".toByteArray())
+                    }
+
+                    outputStream.flush()
+                }
+            }
+        } catch(e: Exception){
+            Log.e("Error", "An error occurred while saving magnetometer results")
+            val view = (context as Activity).findViewById<View>(android.R.id.content)
+            val snackbar = Snackbar.make(view, "Error. An error occurred while saving magnetometer results-", Snackbar.LENGTH_LONG)
+            snackbar.setAction("Close") {
+                snackbar.dismiss()
+            }
+            snackbar.view.setBackgroundColor(ContextCompat.getColor(context, R.color.red))
+            snackbar.show()
+        }
+    }
+
+    private fun writeBarometer() {
+        try {
+            val contentValues = ContentValues().apply {
+                put(MediaStore.Downloads.DISPLAY_NAME, "barometer_measurements.csv")
+                put(MediaStore.Downloads.MIME_TYPE, "text/csv")
+                put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+            }
+
+            val uri = context.contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
+
+            Log.d("uri", uri.toString())
+            uri?.let { mediaUri ->
+                context.contentResolver.openOutputStream(mediaUri)?.use { outputStream ->
+                    outputStream.write(COMMENT_START.toByteArray())
+                    outputStream.write("\n".toByteArray())
+                    outputStream.write(COMMENT_START.toByteArray());
+                    outputStream.write("Header Description:".toByteArray());
+                    outputStream.write("\n".toByteArray())
+                    outputStream.write(COMMENT_START.toByteArray())
+                    outputStream.write("\n".toByteArray())
+                    outputStream.write(COMMENT_START.toByteArray())
+                    outputStream.write(VERSION_TAG.toByteArray())
+                    var manufacturer: String = Build.MANUFACTURER
+                    var model: String = Build.MODEL
+                    var fileVersion: String = "${BuildConfig.VERSION_CODE}" + " Platform: " +
+                            "${Build.VERSION.RELEASE}" + " " + "Manufacturer: " +
+                            "${manufacturer}" + " " + "Model: " + "${model}"
+
+                    outputStream.write(fileVersion.toByteArray())
+                    outputStream.write("\n".toByteArray())
+                    outputStream.write(COMMENT_START.toByteArray())
+                    outputStream.write("\n".toByteArray())
+                    outputStream.write(COMMENT_START.toByteArray())
+                    outputStream.write("timestamp,pressure".toByteArray())
+                    outputStream.write("\n".toByteArray())
+                    outputStream.write(COMMENT_START.toByteArray())
+                    outputStream.write("\n".toByteArray())
+
+                    barometerValues.forEach { measurementString ->
+                        outputStream.write("$measurementString\n".toByteArray())
+                    }
+
+                    outputStream.flush()
+                }
+            }
+        } catch(e: Exception){
+            Log.e("Error", "An error occurred while saving barometer results")
+            val view = (context as Activity).findViewById<View>(android.R.id.content)
+            val snackbar = Snackbar.make(view, "Error. An error occurred while saving barometer results-", Snackbar.LENGTH_LONG)
+            snackbar.setAction("Close") {
+                snackbar.dismiss()
+            }
+            snackbar.view.setBackgroundColor(ContextCompat.getColor(context, R.color.red))
+            snackbar.show()
+        }
+    }
+
     fun stopLogging() {
 
         try {
             sensorManager.unregisterListener(this)
             this.listenerActive = false
 
-            Log.e("Time",magnetometerValues.toString())
+            writeIMU()
+            writeMagnetometer()
+            writeBarometer()
 
         } catch(e: Exception){
             Log.e("Error", "An error occurred while saving motion sensors results")
