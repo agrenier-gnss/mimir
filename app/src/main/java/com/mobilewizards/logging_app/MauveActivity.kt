@@ -1,7 +1,9 @@
 package com.mobilewizards.logging_app
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -10,6 +12,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -44,6 +48,7 @@ class MauveActivity : AppCompatActivity() {
         setContentView(R.layout.activity_mauve)
         supportActionBar?.hide()
 
+        this.checkPermissions()
 
         val motionSensors = MotionSensorsHandler(this)
         val gnss = GnssHandler(this)
@@ -146,6 +151,59 @@ class MauveActivity : AppCompatActivity() {
                     false
                 }
                 else -> false
+            }
+        }
+    }
+
+    private fun checkPermissions() {
+        val permissions = arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.MANAGE_EXTERNAL_STORAGE,
+            Manifest.permission.BLUETOOTH_SCAN
+        )
+
+        var allPermissionsGranted = true
+        for (permission in permissions) {
+            if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                allPermissionsGranted = false
+                break
+            }
+        }
+
+        if (!allPermissionsGranted) {
+            ActivityCompat.requestPermissions(this, permissions, 225)
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode) {
+
+            //location permission
+            225 -> {
+                if ((grantResults.isNotEmpty() &&
+                            grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    // Permission is granted. Continue the action or workflow
+                    // in your app.
+                } else {
+                    // Explain to the user that the feature is unavailable
+                    AlertDialog.Builder(this)
+                        .setTitle("Location permission denied")
+                        .setMessage("Permission is denied.")
+                        .setPositiveButton("OK",null)
+                        .setNegativeButton("Cancel", null)
+                        .show()
+                }
+                return
+            }
+            else -> {
+                // Ignore all other requests.
             }
         }
     }

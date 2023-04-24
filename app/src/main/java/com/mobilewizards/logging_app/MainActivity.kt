@@ -30,8 +30,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         supportActionBar?.hide()
 
-        this.checkPermissions()
-
         var isInitialLoad = true
 
         // Check if thread is alive to rightfully enable/disable buttons
@@ -196,59 +194,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return true
-    }
-
-    fun checkPermissions() {
-        val permissions = arrayOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.MANAGE_EXTERNAL_STORAGE,
-            Manifest.permission.BLUETOOTH_SCAN
-        )
-
-        var allPermissionsGranted = true
-        for (permission in permissions) {
-            if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-                allPermissionsGranted = false
-                break
-            }
-        }
-
-        if (!allPermissionsGranted) {
-            ActivityCompat.requestPermissions(this, permissions, 225)
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when(requestCode) {
-
-            //location permission
-            225 -> {
-                if ((grantResults.isNotEmpty() &&
-                            grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    // Permission is granted. Continue the action or workflow
-                    // in your app.
-                } else {
-                    // Explain to the user that the feature is unavailable
-                    AlertDialog.Builder(this)
-                        .setTitle("Location permission denied")
-                        .setMessage("Permission is denied.")
-                        .setPositiveButton("OK",null)
-                        .setNegativeButton("Cancel", null)
-                        .show()
-                }
-                return
-            }
-            else -> {
-                // Ignore all other requests.
-            }
-        }
     }
 
     fun setStateTextview(enabled: Boolean,textview: TextView) {
