@@ -100,6 +100,9 @@ class MotionSensorsHandler: SensorEventListener{
         return magnetometerValues
     }
 
+    fun getBarometerValues(): MutableList<Pair<Long,Float>> {
+        return barometerValues
+    }
 
     fun setUpSensors(imuFrequency: Int, magnetometerFrequency: Int, barometerFrequency: Int) {
 
