@@ -3,8 +3,11 @@ package com.mobilewizards.logging_app
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.StrictMode
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
@@ -13,6 +16,7 @@ import android.widget.TableLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import com.google.android.material.snackbar.Snackbar
 import java.io.File
 
@@ -67,6 +71,7 @@ class SurveyHistoryActivity : AppCompatActivity() {
 
     }
 
+    @SuppressLint("SetTextI18n", "QueryPermissionsNeeded")
     fun populateView(parentView: ViewGroup) {
         parentView.removeAllViews()
 
@@ -86,7 +91,30 @@ class SurveyHistoryActivity : AppCompatActivity() {
             val fileSize = tableLayout.findViewById<TextView>(R.id.fileSize)
             fileSize.text = "${file.length()} bytes"
             val fileLocation = tableLayout.findViewById<TextView>(R.id.surveyLocation)
-            fileLocation.text = file.canonicalPath
+            fileLocation.text = file.canonicalPath.toString()
+
+            fileLocation.setOnClickListener {
+                try {
+
+                    val builder = StrictMode.VmPolicy.Builder()
+                    StrictMode.setVmPolicy(builder.build())
+
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    val uri = Uri.parse("content://" + file.canonicalFile.parent)
+                    intent.setDataAndType(uri, "*/*")
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
+                } catch (e: Exception) {
+                    Log.e("Error in opening of file", e.toString())
+                    val view = findViewById<View>(android.R.id.content)
+                    val snackbar = Snackbar.make(view, "Error in opening of file", Snackbar.LENGTH_LONG)
+                    snackbar.setAction("Close") {
+                        snackbar.dismiss()
+                    }
+                    snackbar.view.setBackgroundColor(ContextCompat.getColor(view.context, R.color.red))
+                    snackbar.show()
+                }
+            }
 
             // Add the TableLayout to the parent view
             parentView.addView(tableLayout)
