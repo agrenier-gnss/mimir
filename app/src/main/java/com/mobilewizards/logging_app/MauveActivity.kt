@@ -1,9 +1,11 @@
 package com.mobilewizards.logging_app
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
@@ -12,6 +14,33 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class MauveActivity : AppCompatActivity() {
+
+    private var logTime: String = ""
+
+    override fun onResume() {
+        super.onResume()
+
+        if(ActivityHandler.getIsLogging()) {
+
+            Log.d("MyActivity", "logTime = $logTime")
+            val loggingButton = findViewById<Button>(R.id.loggingButton)
+            val dataButton = findViewById<Button>(R.id.downloadDataButton)
+            val loggingText = findViewById<TextView>(R.id.loggingTextView)
+            val timeText = findViewById<TextView>(R.id.loggingTimeTextView)
+
+            dataButton.visibility = View.GONE
+            loggingButton.text = "Stop logging"
+            loggingButton.animate()
+                .translationYBy(250f)
+                .setDuration(500)
+                .start()
+
+            Handler().postDelayed({
+                loggingText.text = "Surveying..."
+                timeText.text = "Started $logTime"
+            }, 300)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,6 +97,8 @@ class MauveActivity : AppCompatActivity() {
                     loggingText.text = "Surveying..."
                     timeText.text = "Started $formattedTime"
                 }, 300)
+
+                logTime = formattedTime
 
             } else {
                 // Stop logging
@@ -126,7 +157,5 @@ class MauveActivity : AppCompatActivity() {
                 else -> false
             }
         }
-
     }
-
 }
