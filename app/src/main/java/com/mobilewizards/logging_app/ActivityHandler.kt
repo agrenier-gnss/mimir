@@ -67,6 +67,7 @@ object ActivityHandler{
         if(IMUToggle){motionSensors.setUpSensors()}
         if (GNSSToggle) {gnss.setUpLogging()}
         if(BLEToggle){ble.setUpLogging()}
+        isLogging = true
     }
 
     fun stopLogging(context: Context){
@@ -81,7 +82,7 @@ object ActivityHandler{
         gnssSensor.clear()
         imuSensor.clear()
         bleSensor.clear()
-
+        isLogging = false
     }
 
     fun getToggle(tag: String): Boolean{
