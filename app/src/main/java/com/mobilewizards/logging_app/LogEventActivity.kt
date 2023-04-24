@@ -10,23 +10,6 @@ import android.widget.*
 
 class LogEventActivity : AppCompatActivity() {
 
-    private val myTimer = ActivityHandler.MyTimer()
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        myTimer.stopTimer()
-    }
-
-    private fun updateTextViews() {
-        // get the data from the other class
-        // update the textviews with the data
-        val currentTime = myTimer.getCurrentTime()
-        val parentView = findViewById<LinearLayout>(R.id.data_layout)
-        val layout = layoutInflater.inflate(R.layout.layout_presets, parentView, false).findViewById<LinearLayout>(R.id.logEventSquarePreset)
-        layout.findViewById<TextView>(R.id.logEventDataPoint).text = currentTime
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_logevent)
@@ -35,11 +18,15 @@ class LogEventActivity : AppCompatActivity() {
 
         val parentView = findViewById<LinearLayout>(R.id.data_layout)
 
+
+        // List of sensors to be logged. Tag only
         val activityList = arrayOf(
-            //1st value: name. 2nd value: description text
-            arrayOf("Time", "Survey duration"),
-            arrayOf("GNSS", "1 hz frequency"),
-            arrayOf("Accelometer", "1 hz frequency")
+            // 1st value: name. 2nd value: description text
+            arrayOf("Time"),
+            arrayOf("GNSS"),
+            arrayOf("IMU"),
+            arrayOf("Magnetometer"),
+            arrayOf("Barometer")
         )
 
         //create a layout for each activity in activityList
@@ -50,10 +37,21 @@ class LogEventActivity : AppCompatActivity() {
 
             val activityTitleTextView = layout.findViewById<TextView>(R.id.logEventTitle)
             activityTitleTextView.text = activityList[i][0].toString()
-            val description = layout.findViewById<TextView>(R.id.logEventDescription)
-            description.text = activityList[i][1].toString()
-            val datapoint = layout.findViewById<TextView>(R.id.logEventDescription)
 
+            val description = layout.findViewById<TextView>(R.id.logEventDescription)
+            val frequency = ActivityHandler.getFrequency(activityList[i][0])
+            if(frequency == 0) {
+              if(activityList[i][0] == "Time") {
+                  description.text = "Survey duration"
+              } else {
+                  description.text = "1 hz frequency"
+              }
+            } else {
+                description.text = "$frequency hz frequency"
+            }
+
+
+            val datapoint = layout.findViewById<TextView>(R.id.logEventDataPoint)
             datapoint.text = ActivityHandler.getLogData(activityList[i][0]).toString()
 
             // Remove the tableLayout's parent, if it has one

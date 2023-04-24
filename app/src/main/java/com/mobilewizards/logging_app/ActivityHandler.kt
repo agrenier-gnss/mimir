@@ -3,6 +3,8 @@ package com.mobilewizards.logging_app
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 //this class handles logging data and log events all from one class
@@ -167,7 +169,7 @@ object ActivityHandler{
     class MyTimer {
         private val timer = Timer()
 
-        private var currentTime: Long = 0
+        private var currentTime: LocalTime = LocalTime.MIN
 
         fun startTimer(callback: () -> Unit) {
             timer.scheduleAtFixedRate(object : TimerTask() {
@@ -182,30 +184,30 @@ object ActivityHandler{
             timer.cancel()
         }
 
-        fun getCurrentTime(): String {
-            return currentTime.toString()
+        fun getCurrentLocalTime(): LocalTime {
+            return currentTime
         }
 
         private fun updateTime() {
-            currentTime = System.currentTimeMillis()
+            currentTime = currentTime.plusSeconds(1)
         }
     }
 
-    fun getLogData(tag: String): Int {
+    fun getLogData(tag: String): String {
         if(tag.equals("Time")) {
-            //todo: fetch time
+            val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
         } else if(tag.equals("GNSS")) {
-            return GNSSLogs
+            return GNSSLogs.toString()
         } else if(tag.equals("IMU")){
-            return IMULogs
+            return IMULogs.toString()
         } else if(tag.equals("Barometer")){
-            return barometerLogs
+            return barometerLogs.toString()
         } else if(tag.equals("Magnetometer")){
-            return magnetometerLogs
+            return magnetometerLogs.toString()
         } else if(tag.equals("Bluetooth")) {
-            return BLELogs
+            return BLELogs.toString()
         }
-        return 0
+        return 0.toString()
     }
 
 }
