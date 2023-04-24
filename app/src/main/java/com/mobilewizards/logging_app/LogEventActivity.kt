@@ -40,19 +40,28 @@ class LogEventActivity : AppCompatActivity() {
 
             val description = layout.findViewById<TextView>(R.id.logEventDescription)
             val frequency = ActivityHandler.getFrequency(activityList[i][0])
-            if(frequency == 0) {
-              if(activityList[i][0] == "Time") {
-                  description.text = "Survey duration"
-              } else {
-                  description.text = "1 hz frequency"
-              }
+
+            val datapoint = layout.findViewById<TextView>(R.id.logEventDataPoint)
+
+            if(!ActivityHandler.getToggle(activityList[i][0])) {
+                description.text = "${activityList[i][0]} disabled"
+                datapoint.text = "Error"
             } else {
-                description.text = "$frequency hz frequency"
+                if(frequency == 0) {
+                    if(activityList[i][0] == "Time") {
+                        description.text = "Survey duration"
+                    } else {
+                        description.text = "1 hz frequency"
+                    }
+                } else {
+                    description.text = "$frequency hz frequency"
+                }
+                datapoint.text = ActivityHandler.getLogData(activityList[i][0]).toString()
             }
 
 
-            val datapoint = layout.findViewById<TextView>(R.id.logEventDataPoint)
-            datapoint.text = ActivityHandler.getLogData(activityList[i][0]).toString()
+
+
 
             // Remove the tableLayout's parent, if it has one
             (layout.parent as? ViewGroup)?.removeView(layout)
