@@ -1,5 +1,6 @@
 package com.mobilewizards.logging_app
 
+import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
 import android.content.Context.SENSOR_SERVICE
@@ -10,9 +11,12 @@ import android.hardware.SensorManager
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
+import com.google.android.material.snackbar.Snackbar
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -389,6 +393,13 @@ class MotionSensorsHandler: SensorEventListener{
 
         } catch(e: Exception){
             Log.e("Error", "An error occurred while saving motion sensors results")
+            val view = (context as Activity).findViewById<View>(android.R.id.content)
+            val snackbar = Snackbar.make(view, "Error. An error occurred while saving motion sensors results-", Snackbar.LENGTH_LONG)
+            snackbar.setAction("Close") {
+                snackbar.dismiss()
+            }
+            snackbar.view.setBackgroundColor(ContextCompat.getColor(context, R.color.red))
+            snackbar.show()
         }
     }
     // TODO: Implement this when we know accuracy parameters

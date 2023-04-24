@@ -103,6 +103,13 @@ class BLEHandler(private val context: Context) {
 
         } catch(e: SecurityException){
             Log.e("Error", "No permission for BLE fetching")
+            val view = (context as Activity).findViewById<View>(android.R.id.content)
+            val snackbar = Snackbar.make(view, "Error. BLE does not have required permissions.", Snackbar.LENGTH_LONG)
+            snackbar.setAction("Close") {
+                snackbar.dismiss()
+            }
+            snackbar.view.setBackgroundColor(ContextCompat.getColor(context, R.color.red))
+            snackbar.show()
         }
     }
 

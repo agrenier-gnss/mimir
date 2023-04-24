@@ -102,7 +102,14 @@ class GnssHandler{
             }
         }
         catch(e: SecurityException){
-            Log.d("Error", "No permission for location fetching")
+            Log.e("Error", "No permission for location fetching")
+            val view = (context as Activity).findViewById<View>(android.R.id.content)
+            val snackbar = Snackbar.make(view, "Error. GNSS does not have required permissions.", Snackbar.LENGTH_LONG)
+            snackbar.setAction("Close") {
+                snackbar.dismiss()
+            }
+            snackbar.view.setBackgroundColor(ContextCompat.getColor(context, R.color.red))
+            snackbar.show()
         }
     }
 
@@ -194,6 +201,13 @@ class GnssHandler{
             locationManager.registerGnssMeasurementsCallback(gnssMeasurementsEventListener)
         } catch (e: SecurityException) {
             Log.e("Error", "No permission for location fetching")
+            val view = (context as Activity).findViewById<View>(android.R.id.content)
+            val snackbar = Snackbar.make(view, "Error. GNSS does not have required permissions.", Snackbar.LENGTH_LONG)
+            snackbar.setAction("Close") {
+                snackbar.dismiss()
+            }
+            snackbar.view.setBackgroundColor(ContextCompat.getColor(context, R.color.red))
+            snackbar.show()
         }
 
     }
@@ -303,7 +317,6 @@ class GnssHandler{
 
                 outputStream.flush()
             }
-
             val view = (context as Activity).findViewById<View>(android.R.id.content)
             val snackbar = Snackbar.make(view, "GNSS scan results saved to Downloads folder", Snackbar.LENGTH_LONG)
             snackbar.setAction("Close") {
