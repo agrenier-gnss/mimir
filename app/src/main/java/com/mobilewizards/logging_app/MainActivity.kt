@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity() {
                 slider.isEnabled = !ActivityHandler.getIsLogging() // Disable changing slider if logging is ongoing
 
                 val sliderValue = row3.findViewById<TextView>(R.id.sliderValue)
-                sliderValue.text = sensorList[i][2].toString() //set slider starting value to lowest value
+                sliderValue.text = ActivityHandler.getFrequency(sensorList[i][0] as String).toString() //set slider value
 
                 slider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
