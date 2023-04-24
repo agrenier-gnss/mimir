@@ -1,6 +1,7 @@
 package com.mobilewizards.logging_app
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,6 +12,8 @@ import android.view.ViewGroup
 import android.widget.TableLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageButton
+import androidx.core.content.ContextCompat
+import com.google.android.material.snackbar.Snackbar
 import java.io.File
 
 class SurveyHistoryActivity : AppCompatActivity() {
@@ -94,6 +97,13 @@ class SurveyHistoryActivity : AppCompatActivity() {
                     populateView(parentView)
                 } catch (e: Exception) {
                     Log.e("Error in deletion of file", e.toString())
+                    val view = findViewById<View>(android.R.id.content)
+                    val snackbar = Snackbar.make(view, "Error in deletion of file", Snackbar.LENGTH_LONG)
+                    snackbar.setAction("Close") {
+                        snackbar.dismiss()
+                    }
+                    snackbar.view.setBackgroundColor(ContextCompat.getColor(view.context, R.color.red))
+                    snackbar.show()
                 }
             }
         }
