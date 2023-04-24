@@ -28,7 +28,7 @@
                     android:paddingTop="75dp"
                     android:paddingBottom="20dp"
                     android:text="Activity"
-                    android:textColor="@color/lighter_gray"
+                    android:textColor="@color/white"
                     android:textSize="32dp" />
 
                 <LinearLayout

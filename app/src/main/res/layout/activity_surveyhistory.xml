@@ -27,7 +27,7 @@
                 android:layout_marginLeft="13dp"
                 android:layout_marginTop="80dp"
                 android:text="Previous surveys"
-                android:textColor="@color/lighter_gray"
+                android:textColor="@color/white"
                 android:textSize="32sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
