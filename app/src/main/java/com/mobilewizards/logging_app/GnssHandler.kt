@@ -28,10 +28,11 @@ class GnssHandler{
 
     protected var context: Context
 
+
     constructor(context: Context) : super() {
         this.context = context.applicationContext
     }
-
+    private var gnssMeasurementsList = mutableListOf<String>()
     public fun setUpLogging(){
         locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         logLocation(1000)
@@ -39,7 +40,6 @@ class GnssHandler{
         logGnssNavigationMessages(1000)
     }
 
-    private var locationList = mutableListOf<String>()
     private fun logLocation(samplingFrequency: Long) {
         //Locationlistener for Gps
         gpsLocationListener = object : LocationListener{
@@ -57,7 +57,7 @@ class GnssHandler{
                     location.accuracy,
                     location.time
                 )
-                locationList.add(locationStream)
+                gnssMeasurementsList.add(locationStream)
             }
 
             override fun onFlushComplete(requestCode: Int) {}
@@ -80,7 +80,7 @@ class GnssHandler{
                     location.accuracy,
                     location.time
                 )
-                locationList.add(locationStream)
+                gnssMeasurementsList.add(locationStream)
             }
             override fun onFlushComplete(requestCode: Int) {}
             override fun onProviderDisabled(provider: String) {}
@@ -113,7 +113,7 @@ class GnssHandler{
         }
     }
 
-    private var gnssMeasurementsList = mutableListOf<String>()
+
     private fun logGNSS( samplingFrequency: Long) {
         gnssMeasurementsEventListener = object : android.location.GnssMeasurementsEvent.Callback(){
             var lastMeasurementTime = 0L
@@ -173,9 +173,9 @@ class GnssHandler{
                                     "${measurement.getAccumulatedDeltaRangeMeters()}," +
                                     "${measurement.getAccumulatedDeltaRangeUncertaintyMeters()}," +
                                     "${if(measurement.hasCarrierFrequencyHz()) measurement.getCarrierFrequencyHz() else ""}," +
-                                    "${carrierCylceString},"+
-                                    "${carrierPhaseString}," +
-                                    "${carriePhaseUncertaintyString}," +
+                                    "${if(measurement.hasCarrierCycles()) measurement.carrierCycles else ""},"+
+                                    "${if(measurement.hasCarrierPhase()) measurement.carrierPhase else ""}," +
+                                    "${if(measurement.hasCarrierPhaseUncertainty()) measurement.carrierPhaseUncertainty else ""}," +
                                     "${measurement.getMultipathIndicator()}," +
                                     "${if(measurement.hasSnrInDb()) measurement.getSnrInDb() else ""}," +
                                     "${measurement.getConstellationType()}," +
@@ -211,7 +211,7 @@ class GnssHandler{
         }
 
     }
-    private var gnssNavigationMessagesList = mutableListOf<String>()
+
     fun logGnssNavigationMessages(samplingFrequency: Long){
         gnssNavigationMessageListener = object : GnssNavigationMessage.Callback(){
             var lastMeasurementTime = 0L
@@ -233,6 +233,7 @@ class GnssHandler{
                             gnssNavigationMessageString += "${word.toInt()},"
                         }
                     }
+                    gnssMeasurementsList.add(gnssNavigationMessageString)
                 }
             }
 
@@ -307,13 +308,7 @@ class GnssHandler{
                 gnssMeasurementsList.forEach { measurementString ->
                     outputStream.write("$measurementString\n".toByteArray())
                 }
-                locationList.forEach{locationStream ->
-                    outputStream.write("$locationStream\n".toByteArray())
-                }
-                gnssNavigationMessagesList.forEach{navigationMessageString ->
-                    outputStream.write("$navigationMessageString\n".toByteArray())
 
-                }
 
                 outputStream.flush()
             }

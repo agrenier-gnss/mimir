@@ -77,7 +77,7 @@ class MotionSensorsHandler: SensorEventListener{
     }
 
 
-    fun setUpSensors() {
+    fun setUpSensors(imuFerquency: Int, magnetometerFrequency: Int, barometerFrequency: Int) {
 
         this.listenerActive = true
 
@@ -85,14 +85,14 @@ class MotionSensorsHandler: SensorEventListener{
 
         if (sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null){
             acSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-            sensorManager.registerListener(this, acSensor, SensorManager.SENSOR_DELAY_FASTEST)
+            sensorManager.registerListener(this, acSensor, imuFerquency)
         }  else {
 
             Log.i("Does not have sensor for ACCELEROMETER", acSensor.toString())
         }
         if (sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER_UNCALIBRATED) != null){
             biasSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER_UNCALIBRATED)
-            sensorManager.registerListener(this, biasSensor, SensorManager.SENSOR_DELAY_FASTEST)
+            sensorManager.registerListener(this, biasSensor, imuFerquency)
 
         } else {
 
@@ -100,7 +100,7 @@ class MotionSensorsHandler: SensorEventListener{
         }
         if(sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE) != null){
             gyroSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
-            sensorManager.registerListener(this, gyroSensor, SensorManager.SENSOR_DELAY_FASTEST)
+            sensorManager.registerListener(this, gyroSensor, imuFerquency)
         }  else {
 
             Log.i("Does not have sensor for GYROSCOPE", gyroSensor.toString())
@@ -108,14 +108,14 @@ class MotionSensorsHandler: SensorEventListener{
 
         if(sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED) != null){
             unCalGyroSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED)
-            sensorManager.registerListener(this, unCalGyroSensor, SensorManager.SENSOR_DELAY_FASTEST)
+            sensorManager.registerListener(this, unCalGyroSensor, imuFerquency)
         }  else {
 
             Log.i("Does not have sensor for UNCALIBRATED GYROSCOPE", unCalGyroSensor.toString())
         }
         if(sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY) != null){
             gravSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY)
-            sensorManager.registerListener(this, gravSensor, SensorManager.SENSOR_DELAY_FASTEST)
+            sensorManager.registerListener(this, gravSensor, imuFerquency)
         }   else {
 
             Log.i("Does not have sensor for GRAVITY", gravSensor.toString())
@@ -123,7 +123,7 @@ class MotionSensorsHandler: SensorEventListener{
 
         if(sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null){
             stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
-            sensorManager.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_FASTEST)
+            sensorManager.registerListener(this, stepSensor, imuFerquency)
         }   else {
 
             Log.i("Does not have sensor for STEP COUNTER", stepSensor.toString())
@@ -131,7 +131,7 @@ class MotionSensorsHandler: SensorEventListener{
 
         if(sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null){
             magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
-            sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_FASTEST)
+            sensorManager.registerListener(this, magnetometer, magnetometerFrequency)
         }   else {
 
             Log.i("Does not have sensor for MAGNETOMETER", magnetometer.toString())
@@ -139,7 +139,7 @@ class MotionSensorsHandler: SensorEventListener{
 
         if(sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE) != null){
             barometer = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE)
-            sensorManager.registerListener(this, barometer, SensorManager.SENSOR_DELAY_FASTEST)
+            sensorManager.registerListener(this, barometer, barometerFrequency)
         }   else {
 
             Log.i("Does not have sensor for BAROMETER", barometer.toString())

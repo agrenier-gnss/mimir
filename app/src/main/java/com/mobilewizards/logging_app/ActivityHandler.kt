@@ -24,6 +24,7 @@ object ActivityHandler{
     private var magnetometerToggle: Boolean = true
     private var BLEToggle: Boolean = true
 
+    //Lists where sensors will be put when logging.
     private var gnssSensor = mutableListOf<GnssHandler>()
     private var imuSensor = mutableListOf<MotionSensorsHandler>()
     private var bleSensor = mutableListOf<BLEHandler>()
@@ -64,7 +65,8 @@ object ActivityHandler{
         gnssSensor.add(gnss)
         imuSensor.add(motionSensors)
         bleSensor.add(ble)
-        if(IMUToggle){motionSensors.setUpSensors()}
+        if(IMUToggle){motionSensors.setUpSensors(IMUFrequency, magnetometerFrequency,
+            barometerFrequency)}
         if (GNSSToggle) {gnss.setUpLogging()}
         if(BLEToggle){ble.setUpLogging()}
     }
