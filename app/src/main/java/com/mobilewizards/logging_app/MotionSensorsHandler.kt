@@ -103,53 +103,56 @@ class MotionSensorsHandler: SensorEventListener{
 
         sensorManager = context.getSystemService(SENSOR_SERVICE) as SensorManager
 
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null){
-            acSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-            sensorManager.registerListener(this, acSensor, imuFerquency)
-        }  else {
+        if(ActivityHandler.getToggle("IMU")) {
+            if (sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null){
+                acSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+                sensorManager.registerListener(this, acSensor, imuFerquency)
+            }  else {
 
-            Log.i("Does not have sensor for ACCELEROMETER", acSensor.toString())
+                Log.i("Does not have sensor for ACCELEROMETER", acSensor.toString())
+            }
+            if (sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER_UNCALIBRATED) != null){
+                biasSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER_UNCALIBRATED)
+                sensorManager.registerListener(this, biasSensor, imuFerquency)
+
+            } else {
+
+                Log.i("Does not have sensor for UNCALIBRATED ACCELEROMETER", biasSensor.toString())
+            }
+            if(sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE) != null){
+                gyroSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
+                sensorManager.registerListener(this, gyroSensor, imuFerquency)
+            }  else {
+
+                Log.i("Does not have sensor for GYROSCOPE", gyroSensor.toString())
+            }
+
+            if(sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED) != null){
+                unCalGyroSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED)
+                sensorManager.registerListener(this, unCalGyroSensor, imuFerquency)
+            }  else {
+
+                Log.i("Does not have sensor for UNCALIBRATED GYROSCOPE", unCalGyroSensor.toString())
+            }
+            if(sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY) != null){
+                gravSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY)
+                sensorManager.registerListener(this, gravSensor, imuFerquency)
+            }   else {
+
+                Log.i("Does not have sensor for GRAVITY", gravSensor.toString())
+            }
+
+            if(sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null){
+                stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
+                sensorManager.registerListener(this, stepSensor, imuFerquency)
+            }   else {
+
+                Log.i("Does not have sensor for STEP COUNTER", stepSensor.toString())
+            }
         }
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER_UNCALIBRATED) != null){
-            biasSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER_UNCALIBRATED)
-            sensorManager.registerListener(this, biasSensor, imuFerquency)
 
-        } else {
 
-            Log.i("Does not have sensor for UNCALIBRATED ACCELEROMETER", biasSensor.toString())
-        }
-        if(sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE) != null){
-            gyroSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
-            sensorManager.registerListener(this, gyroSensor, imuFerquency)
-        }  else {
-
-            Log.i("Does not have sensor for GYROSCOPE", gyroSensor.toString())
-        }
-
-        if(sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED) != null){
-            unCalGyroSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED)
-            sensorManager.registerListener(this, unCalGyroSensor, imuFerquency)
-        }  else {
-
-            Log.i("Does not have sensor for UNCALIBRATED GYROSCOPE", unCalGyroSensor.toString())
-        }
-        if(sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY) != null){
-            gravSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY)
-            sensorManager.registerListener(this, gravSensor, imuFerquency)
-        }   else {
-
-            Log.i("Does not have sensor for GRAVITY", gravSensor.toString())
-        }
-
-        if(sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null){
-            stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
-            sensorManager.registerListener(this, stepSensor, imuFerquency)
-        }   else {
-
-            Log.i("Does not have sensor for STEP COUNTER", stepSensor.toString())
-        }
-
-        if(sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null){
+        if(sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null && ActivityHandler.getToggle("Magnetometer")) {
             magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
             sensorManager.registerListener(this, magnetometer, magnetometerFrequency)
         }   else {
@@ -157,7 +160,7 @@ class MotionSensorsHandler: SensorEventListener{
             Log.i("Does not have sensor for MAGNETOMETER", magnetometer.toString())
         }
 
-        if(sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE) != null){
+        if(sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE) != null && ActivityHandler.getToggle("Barometer")){
             barometer = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE)
             sensorManager.registerListener(this, barometer, barometerFrequency)
         }   else {
@@ -634,9 +637,16 @@ class MotionSensorsHandler: SensorEventListener{
             sensorManager.unregisterListener(this)
             this.listenerActive = false
 
-            writeIMU()
-            writeMagnetometer()
-            writeBarometer()
+            if(ActivityHandler.getToggle("IMU")){
+                writeIMU()
+            }
+            if(ActivityHandler.getToggle("Magnetometer")){
+                writeMagnetometer()
+            }
+
+            if(ActivityHandler.getToggle("Barometer")){
+                writeBarometer()
+            }
 
         } catch(e: Exception){
             Log.e("Error", "An error occurred while saving motion sensors results")
