@@ -133,7 +133,7 @@
         android:background="@drawable/sensor_layout">
 
         <TextView
-            android:id="@+id/surveyTime"
+            android:id="@+id/surveyTitle"
             android:layout_width="193dp"
             android:layout_height="32dp"
             android:layout_marginLeft="16dp"

@@ -81,8 +81,8 @@ class SurveyHistoryActivity : AppCompatActivity() {
             (tableLayout.parent as? ViewGroup)?.removeView(tableLayout)
 
             // Set file info into view
-            val surveyTime = tableLayout.findViewById<TextView>(R.id.surveyTime)
-            surveyTime.text = file.name
+            val surveyTitle = tableLayout.findViewById<TextView>(R.id.surveyTitle)
+            surveyTitle.text = file.name
             val fileSize = tableLayout.findViewById<TextView>(R.id.fileSize)
             fileSize.text = "${file.length()} bytes"
 
