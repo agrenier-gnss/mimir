@@ -1,13 +1,19 @@
 package com.mobilewizards.logging_app
 
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.icu.text.SimpleDateFormat
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
+import androidx.core.net.toFile
 import androidx.core.net.toUri
 import com.google.android.gms.wearable.ChannelClient
 import com.google.android.gms.wearable.DataMap
@@ -16,8 +22,15 @@ import com.google.android.gms.wearable.Wearable
 import com.mobilewizards.logging_app.databinding.ActivitySendSurveysBinding
 import com.mobilewizards.watchlogger.WatchActivityHandler
 import java.io.BufferedReader
+import java.io.BufferedWriter
 import java.io.File
 import java.io.FileReader
+import java.io.FileWriter
+
+var startTime: Long? = null
+
+private const val VERSION_TAG = "Version: "
+private const val COMMENT_START = "# "
 
 class SendSurveysActivity : Activity() {
 
@@ -25,7 +38,6 @@ class SendSurveysActivity : Activity() {
     private val TAG = "watchLogger"
     private val CSV_FILE_CHANNEL_PATH = MediaStore.Downloads.EXTERNAL_CONTENT_URI
     private var filePaths = mutableListOf<File>()
-    private lateinit var mMessageClient: MessageClient
 
     private var fileSendOk : Boolean = true
 
@@ -73,6 +85,7 @@ class SendSurveysActivity : Activity() {
 
     }
 
+    @SuppressLint("Range", "SimpleDateFormat")
     fun sendFiles(){
         getPhoneNodeId { nodeIds ->
             Log.d(TAG, "Received nodeIds: $nodeIds")
@@ -84,37 +97,72 @@ class SendSurveysActivity : Activity() {
                 Toast.makeText(this, "Phone not connected", Toast.LENGTH_SHORT).show()
             } else {
                 Log.d(TAG, "nodes found, sending")
+
                 // TODO: Get filepath, and maybe use sendTextToPhone to send the filename/uri to phone
 
-                // Makking fileNames to csv string to send all filenames to phone
-                var filenamesToCsv = ""
-                WatchActivityHandler.getFilePaths().forEach { file ->
-                    filenamesToCsv = filenamesToCsv + file.name + ","
+                val contentValues = ContentValues().apply {
+                    put(MediaStore.Downloads.DISPLAY_NAME, "log_watch_${SimpleDateFormat("ddMMyyyy_hhmmssSSS").format(startTime)}.csv")
+                    put(MediaStore.Downloads.MIME_TYPE, "text/csv")
+                    put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
                 }
-                Log.d(TAG, "filenames csv to send " + filenamesToCsv)
-                // Get message client for sending the filename to phone, before file is sent.
-                mMessageClient = Wearable.getMessageClient(applicationContext)
-                Wearable.getNodeClient(applicationContext).connectedNodes.addOnSuccessListener { nodes ->
-                    // making csv string byteArray of the file names
-                    val dataMap = DataMap().apply {
-                        putString("dataFromWatch", filenamesToCsv)
-                    }
-                    val dataByteArray = dataMap.toByteArray()
 
-                    // Sending the file name to phone. After that the corresponding file content should be sent
-                    // ATM this doesn't work. Code continues even it should only execute after sendMessage is done.
-                    mMessageClient.sendMessage(nodes[0].id, "filename", dataByteArray).addOnCompleteListener {
-                        Log.d(TAG, "send message complete listener")
-                    }.also {
+                val uri = this.contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
 
+                var path = ""
+                uri?.let { mediaUri ->
+                    this.contentResolver.openOutputStream(mediaUri)?.use { outputStream ->
 
-                        // Looping the files to send and calling sendCesFileToPhone
-                        // Doesn't get triggered here at all for some reason
-                        WatchActivityHandler.getFilePaths().forEach { path ->
-                            sendCsvFileToPhone(path, connectedNode, this)
+                        outputStream.write(COMMENT_START.toByteArray())
+                        outputStream.write("log_watch_${SimpleDateFormat("ddMMyyyy_hhmmssSSS").format(startTime)}.csv\n".toByteArray())
+                        outputStream.write(COMMENT_START.toByteArray())
+                        outputStream.write("\n".toByteArray())
+                        outputStream.write(COMMENT_START.toByteArray());
+                        outputStream.write("Header Description:".toByteArray());
+                        outputStream.write("\n".toByteArray())
+                        outputStream.write(COMMENT_START.toByteArray())
+                        outputStream.write("\n".toByteArray())
+                        outputStream.write(COMMENT_START.toByteArray())
+                        outputStream.write(VERSION_TAG.toByteArray())
+                        var manufacturer: String = Build.MANUFACTURER
+                        var model: String = Build.MODEL
+                        var fileVersion: String = "${BuildConfig.VERSION_CODE}" + " Platform: " +
+                                "${Build.VERSION.RELEASE}" + " " + "Manufacturer: "+
+                                "${manufacturer}" + " " + "Model: " + "${model}"
+
+                        outputStream.write(fileVersion.toByteArray())
+                        outputStream.write("\n".toByteArray())
+                        outputStream.write(COMMENT_START.toByteArray())
+                        outputStream.write("\n".toByteArray())
+                        WatchActivityHandler.getFilePaths().forEach { file ->
+
+                            val reader = BufferedReader(FileReader(file))
+
+                            outputStream.write("\n".toByteArray())
+                            outputStream.write("${file.name}\n".toByteArray())
+
+                            var line: String? = reader.readLine()
+                            while (line != null) {
+                                outputStream.write("$line\n".toByteArray())
+                                line = reader.readLine()
+                            }
+
+                            reader.close()
+                        }
+                        outputStream.flush()
+
+                        val cursor = contentResolver.query(mediaUri, null, null, null, null)
+                        cursor?.use { c ->
+                            if (c.moveToFirst()) {
+                                path = c.getString(c.getColumnIndex(MediaStore.Images.Media.DATA))
+                                // Use the file path as needed
+                                Log.d("File path", path)
+                            }
                         }
                     }
+
+                    Toast.makeText(this, "Kirjoitettu!", Toast.LENGTH_SHORT).show()
                 }
+                sendCsvFileToPhone(File(path), connectedNode, this)
                 WatchActivityHandler.clearFilfPaths()
             }
         }
@@ -145,7 +193,6 @@ class SendSurveysActivity : Activity() {
             while (line != null) {
                 line = bufferedReader.readLine()
             }
-
             bufferedReader.close()
         } catch (e: Exception) {
             e.printStackTrace()

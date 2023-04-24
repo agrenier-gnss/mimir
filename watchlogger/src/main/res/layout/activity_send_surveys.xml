@@ -56,12 +56,13 @@
                 android:id="@+id/SendToDrive"
                 android:layout_width="140dp"
                 android:layout_height="50dp"
-                android:background="@drawable/button_background"
                 android:layout_marginBottom="15dp"
+                android:background="@drawable/button_background"
                 android:fontFamily="@font/montserrat_bold"
+                android:text="Drive"
                 android:textAllCaps="false"
                 android:textColor="@color/fontBlack"
-                android:text="Drive" />
+                android:visibility="invisible" />
 
         </LinearLayout>
     </ScrollView>

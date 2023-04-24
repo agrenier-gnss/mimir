@@ -113,6 +113,7 @@ class LoggingActivity : Activity() {
         //When clicked, starts logging
         startLogBtn.setOnClickListener{
 
+            startTime = System.currentTimeMillis()
             val currentTime = LocalDateTime.now()
 
             startLogBtn.visibility = View.GONE

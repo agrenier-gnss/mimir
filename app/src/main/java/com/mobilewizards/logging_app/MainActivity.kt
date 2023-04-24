@@ -2,10 +2,12 @@ package com.mobilewizards.logging_app
 
 import android.annotation.SuppressLint
 import android.Manifest
+import android.content.ContentResolver
+import android.content.ContentUris
 import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.icu.text.SimpleDateFormat
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -16,22 +18,22 @@ import android.view.MenuItem
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.wearable.DataMap
-import com.google.android.gms.wearable.MessageClient
-import com.google.android.gms.wearable.Wearable
 import androidx.core.app.ActivityCompat
-import androidx.core.content.FileProvider
-import androidx.core.net.toFile
 import androidx.core.net.toUri
-import com.google.android.gms.wearable.ChannelClient
+import com.google.android.gms.wearable.*
+import com.opencsv.CSVReader
 import java.io.*
 import java.util.ArrayDeque
 
-import java.nio.channels.Channels
-import java.nio.charset.StandardCharsets
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
+data class GnssMeasurement(
+    val svId: Int,
+    val timeOffsetNanos: Double,
+    val state: Int,
+    val cn0DbHz: Double,
+    val carrierFrequencyHz: Double,
+    val pseudorangeRateMeterPerSecond: Double,
+    val pseudorangeRateUncertaintyMeterPerSecond: Double
+)
 
 class MainActivity : AppCompatActivity() {
 
@@ -163,30 +165,12 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Text sent", Toast.LENGTH_SHORT).show()
         }
 
-        var filenames = ""
-        // Getting the string csv filenames from phone
-        mMessageClient = Wearable.getMessageClient(this)
-        mMessageClient.addListener {
-            val dataMap = DataMap.fromByteArray(it.data)
-            filenames = dataMap.getString("dataFromWatch").toString()
-            Log.d(TAG, "filename from watch $filenames")
-        }
-        // Helper for splitting the csv string and adding to stack
-        val filenamesArray = filenames.split(",").toTypedArray()
-        Log.d(TAG,filenamesArray.size.toString())
-        filenamesArray.forEach { name ->
-            filenameStack.add(name)
-        }
-        Log.d(TAG, filenameStack.size.toString())
-
         val channelClient = Wearable.getChannelClient(applicationContext)
         channelClient.registerChannelCallback(object : ChannelClient.ChannelCallback() {
             override fun onChannelOpened(channel: ChannelClient.Channel) {
-                val filename = filenameStack.pop()
-                Log.d(TAG, filename)
                 channelClient.receiveFile(
                     channel,
-                    ("file:///storage/emulated/0/Download/${filename}.csv").toUri(),
+                    ("file:///storage/emulated/0/Download/temp.csv").toUri(),
                     false
                 ).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -195,7 +179,7 @@ class MainActivity : AppCompatActivity() {
                             // do something with resultString
                         } else {
                             Log.e(TAG, "SE TOIMII")
-                            // handle the case where result is null
+                            parseOutputFile("/storage/emulated/0/Download/temp.csv")
                         }
 
                     } else {
@@ -270,6 +254,22 @@ class MainActivity : AppCompatActivity() {
 
         if (!allPermissionsGranted) {
             ActivityCompat.requestPermissions(this, permissions, 225)
+        }
+    }
+
+    fun parseOutputFile(path: String) {
+
+        val reader = CSVReader(FileReader(path))
+        var first = true
+
+        // Name used to storage the file's name that was transferred from smart watch
+        var watchFileName = ""
+        reader.readAll().forEach{row ->
+            if (first) {
+                watchFileName = row[0].removePrefix("#").trimStart()
+                first = false
+            }
+            // TODO: Handle data parsing and renaming?
         }
     }
 

@@ -26,7 +26,7 @@ class GnssHandler{
         this.context = context.applicationContext
     }
 
-    public fun setUpLogging(){
+    fun setUpLogging(){
         locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         logLocation(locationManager)
         logGNSS(locationManager)
