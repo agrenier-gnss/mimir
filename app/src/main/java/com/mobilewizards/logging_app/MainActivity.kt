@@ -21,8 +21,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.net.toUri
 import com.google.android.gms.wearable.*
-import com.opencsv.CSVReader
 import java.io.*
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.ArrayDeque
 
 data class GnssMeasurement(
@@ -43,6 +44,7 @@ class MainActivity : AppCompatActivity() {
     var filenameStack = ArrayDeque<String>()
     @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         Log.d("phoneLogger", "onCreate called")
         setContentView(R.layout.activity_main)
@@ -168,22 +170,15 @@ class MainActivity : AppCompatActivity() {
         val channelClient = Wearable.getChannelClient(applicationContext)
         channelClient.registerChannelCallback(object : ChannelClient.ChannelCallback() {
             override fun onChannelOpened(channel: ChannelClient.Channel) {
-                channelClient.receiveFile(
-                    channel,
-                    ("file:///storage/emulated/0/Download/temp.csv").toUri(),
-                    false
-                ).addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        if (task.result != null) {
-                            Log.d(TAG, task.result.toString())
-                            // do something with resultString
-                        } else {
-                            Log.e(TAG, "SE TOIMII")
-                            parseOutputFile("/storage/emulated/0/Download/temp.csv")
-                        }
 
+                val receiveTask = channelClient.receiveFile(channel, ("file:///storage/emulated/0/Download/log_watch_received_${
+                    LocalDateTime.now().format(
+                        DateTimeFormatter.ofPattern("yyyyMMdd_HHmmssSSS"))}").toUri(), false)
+                receiveTask.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d("channel", "File successfully stored")
                     } else {
-                        Log.e(TAG, "Epic fail: " + task.isSuccessful)
+                        Log.e(TAG, "Ei toimi")
                     }
                 }
             }
@@ -254,22 +249,6 @@ class MainActivity : AppCompatActivity() {
 
         if (!allPermissionsGranted) {
             ActivityCompat.requestPermissions(this, permissions, 225)
-        }
-    }
-
-    fun parseOutputFile(path: String) {
-
-        val reader = CSVReader(FileReader(path))
-        var first = true
-
-        // Name used to storage the file's name that was transferred from smart watch
-        var watchFileName = ""
-        reader.readAll().forEach{row ->
-            if (first) {
-                watchFileName = row[0].removePrefix("#").trimStart()
-                first = false
-            }
-            // TODO: Handle data parsing and renaming?
         }
     }
 
