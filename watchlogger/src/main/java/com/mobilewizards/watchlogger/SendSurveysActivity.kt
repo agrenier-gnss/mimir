@@ -69,19 +69,23 @@ class SendSurveysActivity : Activity() {
     }
 
     private fun fileSendSuccessful(){
-        if (!fileSendOk){
+        if (fileSendOk != true){
             fileSendOk = true
         }
         WatchActivityHandler.fileSendStatus(fileSendOk)
+        val openSendInfo = Intent(applicationContext, FileSendActivity::class.java)
+        startActivity(openSendInfo)
 
     }
 
     private fun fileSendTerminated(){
-        if (fileSendOk){
+        if (fileSendOk != false){
             fileSendOk = false
         }
 
         WatchActivityHandler.fileSendStatus(fileSendOk)
+        val openSendInfo = Intent(applicationContext, FileSendActivity::class.java)
+        startActivity(openSendInfo)
 
     }
 
@@ -163,12 +167,13 @@ class SendSurveysActivity : Activity() {
                     Toast.makeText(this, "Kirjoitettu!", Toast.LENGTH_SHORT).show()
                 }
                 sendCsvFileToPhone(File(path), connectedNode, this)
+
                 WatchActivityHandler.clearFilfPaths()
             }
         }
 
-        val openSendInfo = Intent(applicationContext, FileSendActivity::class.java)
-        startActivity(openSendInfo)
+        //val openSendInfo = Intent(applicationContext, FileSendActivity::class.java)
+        //startActivity(openSendInfo)
     }
 
     private fun getPhoneNodeId(callback: (ArrayList<String>) -> Unit) {
@@ -208,10 +213,12 @@ class SendSurveysActivity : Activity() {
                 channelClient.sendFile(channel, csvFile.toUri()).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Log.d(TAG, "inSendFile:" + csvFile.toUri().toString())
+                    WatchActivityHandler.fileSendStatus(true)
                     fileSendSuccessful()
                     channelClient.close(channel)
                 } else {
                     Log.e(TAG, "Error with file sending")
+                    WatchActivityHandler.fileSendStatus(false)
                     fileSendTerminated()
                 }
             }

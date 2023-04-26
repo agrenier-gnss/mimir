@@ -2,16 +2,11 @@ package com.mobilewizards.logging_app
 
 import android.annotation.SuppressLint
 import android.Manifest
+import android.content.Intent
 import android.content.ContentResolver
 import android.content.ContentUris
-import android.content.ContentValues
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.icu.text.SimpleDateFormat
-import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
 import android.util.Log
 import android.view.*
 import android.widget.*
@@ -21,18 +16,20 @@ import androidx.appcompat.widget.SwitchCompat
 import com.google.android.gms.wearable.DataMap
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.Wearable
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import com.google.android.material.button.MaterialButton
-import androidx.core.app.ActivityCompat
-import androidx.core.net.toUri
-import com.google.android.gms.wearable.*
 import java.io.*
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import android.icu.text.SimpleDateFormat
 import java.util.ArrayDeque
+import androidx.core.net.toUri
+import com.google.android.gms.wearable.*
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.google.android.material.button.MaterialButton
+import android.provider.MediaStore
+import com.google.android.gms.wearable.ChannelClient
 
-/*data class GnssMeasurement(
+data class GnssMeasurement(
     val svId: Int,
     val timeOffsetNanos: Double,
     val state: Int,
@@ -40,20 +37,17 @@ import java.util.ArrayDeque
     val carrierFrequencyHz: Double,
     val pseudorangeRateMeterPerSecond: Double,
     val pseudorangeRateUncertaintyMeterPerSecond: Double
-) /*
+)
+
 class MainActivity : AppCompatActivity() {
 
-
-    /*private val CSV_FILE_CHANNEL_PATH = MediaStore.Downloads.EXTERNAL_CONTENT_URI
+    private val CSV_FILE_CHANNEL_PATH = MediaStore.Downloads.EXTERNAL_CONTENT_URI
     val TAG = "tagi"
     private lateinit var mMessageClient: MessageClient
     var filenameStack = ArrayDeque<String>()
-    @SuppressLint("SuspiciousIndentation")*/
 
-    private lateinit var mMessageClient: MessageClient
     @SuppressLint("SuspiciousIndentation", "ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         Log.d("phoneLogger", "onCreate called")
         setContentView(R.layout.activity_main)
@@ -124,6 +118,30 @@ class MainActivity : AppCompatActivity() {
                     override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                         sliderValue.text = progress.toString()
                         ActivityHandler.setFrequency(sensorList[i][0].toString(), progress)
+
+                        //Not working correctly, watch does not receive parameters
+                        /*if(sensorList[i][0].toString().equals("IMU")){
+                            //ActivityHandler.IMUFrequency = value
+                            val IMUMap = DataMap().apply{
+                                putInt("imu",progress)
+                            }
+                            sendParameterToWatch(IMUMap)
+
+                        }
+                        else if(sensorList[i][0].toString().equals("Barometer")){
+                           // ActivityHandler.barometerFrequency = value
+                            val barometerMap = DataMap().apply{
+                                putInt("barometer", progress)
+                            }
+                            sendParameterToWatch(barometerMap)
+                        }
+                        else if(sensorList[i][0].toString().equals("Magnetometer")){
+                            //ActivityHandler.magnetometerFrequency = value
+                            val magnetometerMap = DataMap().apply{
+                                putInt("magnetometer", progress)
+                            }
+                            sendParameterToWatch(magnetometerMap)
+                        }*/
                     }
 
                     override fun onStartTrackingTouch(seekBar: SeekBar) {
@@ -143,6 +161,23 @@ class MainActivity : AppCompatActivity() {
 
             // Add the TableLayout to the parent view
             parentView.addView(tableLayout)
+
+            val channelClient = Wearable.getChannelClient(applicationContext)
+            channelClient.registerChannelCallback(object : ChannelClient.ChannelCallback() {
+                override fun onChannelOpened(channel: ChannelClient.Channel) {
+
+                    val receiveTask = channelClient.receiveFile(channel, ("file:///storage/emulated/0/Download/log_watch_received_${
+                        LocalDateTime.now().format(
+                            DateTimeFormatter.ofPattern("yyyyMMdd_HHmmssSSS"))}").toUri(), false)
+                    receiveTask.addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Log.d("channel", "File successfully stored")
+                        } else {
+                            Log.e(TAG, "Ei toimi")
+                        }
+                    }
+                }
+            })
 
         }
 
@@ -182,8 +217,6 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-
-
 
     private fun sendParameterToWatch(data: DataMap){
         val dataBytes = data.toByteArray()

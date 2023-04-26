@@ -1,8 +1,11 @@
 package com.mobilewizards.logging_app
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.android.gms.wearable.DataMap
+import com.google.android.gms.wearable.Wearable
 import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -146,6 +149,8 @@ object ActivityHandler{
 
         if(tag.equals("IMU")){
             IMUFrequency = value
+
+
         }
         else if(tag.equals("Barometer")){
             barometerFrequency = value
@@ -154,6 +159,7 @@ object ActivityHandler{
             magnetometerFrequency = value
         }
     }
+
 
     //counter for keeping time on logging
     var counterThread : CounterThread? = null
