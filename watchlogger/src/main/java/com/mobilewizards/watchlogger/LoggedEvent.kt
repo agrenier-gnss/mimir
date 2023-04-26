@@ -21,7 +21,7 @@ class LoggedEvent : Activity() {
         val logInfoText =  findViewById<TextView>(R.id.logInfotext)
 
         //Tähän aito teksti eventistä
-        logInfoText.text = "23.04.23 time 400 logged events from phone"
+        logInfoText.text = "Would you like to load the survey?"//"23.04.23 time 400 logged events from phone"
 
         val loadSurvey = findViewById<ImageButton>(R.id.loadBtn)
         val doNotLoad = findViewById<ImageButton>(R.id.deleteBtn)
