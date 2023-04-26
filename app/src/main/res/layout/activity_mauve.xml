@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_gray"
+    android:id="@+id/activity_mauve_layout">
+
+    <TextView
+        android:id="@+id/titleName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:ems="10"
+        android:text="Mimir"
+        android:textSize="46sp"
+        android:textColor="@color/mauve"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearance="@style/MyTextAppearance" />/>
+
+    <TextView
+        android:id="@+id/secondaryTitle"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="5"
+        android:text="Sensor logging"
+        android:textColor="@color/white"
+        android:textSize="26sp"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleName"
+        app:shapeAppearance="@style/MyTextAppearance" />/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/loggingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        android:text="Start logging"
+        android:backgroundTint="@color/mauve"
+        android:textColor="@color/black"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearance="@style/MyButtonShapeAppearance" />/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/downloadDataButton"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="36dp"
+        android:drawableLeft="@drawable/ic_mauve_download"
+        android:text="View finished surveys"
+        android:textColor="@color/mauve"
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loggingButton"
+        app:shapeAppearance="@style/MyButtonShapeAppearance"
+        app:strokeColor="@color/mauve" />
+
+    <TextView
+        android:id="@+id/loggingTextView"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearance="@style/MyTextAppearance"/>
+
+    <TextView
+        android:id="@+id/loggingTimeTextView"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/loggingButton"
+        app:shapeAppearance="@style/MyTextAppearance"/>
+    />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,16 +1,24 @@
 package com.mobilewizards.logging_app
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.bluetooth.*
 import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.content.ContentValues
 import android.content.Context
+import android.graphics.Color.green
+import android.icu.text.SimpleDateFormat
 import android.os.Environment
 import android.os.Handler
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.Toast
+import android.view.View
+import androidx.core.content.ContextCompat
+import com.google.android.material.snackbar.Snackbar
+
+private var startTime: Long? = null
 
 class BLEHandler(private val context: Context) {
 
@@ -30,6 +38,11 @@ class BLEHandler(private val context: Context) {
     }
 
     private var bleScanList = mutableListOf<String>()
+
+    fun getBLEValues(): MutableList<String> {
+        return bleScanList
+    }
+
     private fun initializeScanCallback() {
         scanCallback = object : ScanCallback() {
             override fun onScanResult(callbackType: Int, result: ScanResult?) {
@@ -60,17 +73,19 @@ class BLEHandler(private val context: Context) {
     fun setUpLogging() {
         try {
             bluetoothLeScanner?.startScan(scanCallback)
+            startTime = System.currentTimeMillis()
         } catch(e: SecurityException){
             Log.d("Error", "No permission for BLE fetching")
         }
     }
 
+    @SuppressLint("SimpleDateFormat")
     fun stopLogging() {
         try {
             bluetoothLeScanner?.stopScan(scanCallback)
 
             val contentValues = ContentValues().apply {
-                put(MediaStore.Downloads.DISPLAY_NAME, "bluetooth_measurements.csv")
+                put(MediaStore.Downloads.DISPLAY_NAME, "log_bluetooth_${SimpleDateFormat("ddMMyyyy_hhmmssSSS").format(startTime)}.csv")
                 put(MediaStore.Downloads.MIME_TYPE, "text/csv")
                 put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
             }
@@ -87,11 +102,25 @@ class BLEHandler(private val context: Context) {
                     outputStream.flush()
                 }
 
-                Toast.makeText(context, "Bluetooth scan results saved to Downloads folder", Toast.LENGTH_SHORT).show()
+                val view = (context as Activity).findViewById<View>(android.R.id.content)
+                val snackbar = Snackbar.make(view, "Bluetooth scan results saved to Downloads folder", Snackbar.LENGTH_LONG)
+                snackbar.setAction("Close") {
+                    snackbar.dismiss()
+                }
+                snackbar.view.setBackgroundColor(ContextCompat.getColor(context, R.color.green))
+                snackbar.show()
+
             }
 
         } catch(e: SecurityException){
             Log.e("Error", "No permission for BLE fetching")
+            val view = (context as Activity).findViewById<View>(android.R.id.content)
+            val snackbar = Snackbar.make(view, "Error. BLE does not have required permissions.", Snackbar.LENGTH_LONG)
+            snackbar.setAction("Close") {
+                snackbar.dismiss()
+            }
+            snackbar.view.setBackgroundColor(ContextCompat.getColor(context, R.color.red))
+            snackbar.show()
         }
     }
 

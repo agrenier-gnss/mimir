@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your theme here -->
+        <item name="colorPrimary">@color/ultra_violet</item>
+        <item name="colorPrimaryDark">@color/mauve</item>
+        <item name="colorAccent">@color/tropical_indigo</item>
+    </style>
+    <style name="MyButtonShapeAppearance">
+        <item name="cornerSize">20dp</item>
+        <item name="cornerFamily">rounded</item>
+        <item name="paddingStart">16dp</item>
+        <item name="paddingEnd">16dp</item>
+        <item name="android:fontFamily">@font/montserrat_regular</item>
+    </style>
+    <style name="MyTextAppearance">
+        <item name="android:fontFamily">@font/montserrat_regular</item>
+    </style>
+</resources>
