@@ -54,7 +54,7 @@
         <activity
             android:name=".LoggingActivity"
             android:exported="true"
-            android:label="logging_app" />
+            android:label="Mimir" />
         <activity
             android:name=".SelectionActivity"
             android:exported="true"
@@ -62,7 +62,7 @@
         <activity
             android:name=".LoadingScreenActivity"
             android:exported="true"
-            android:label="logging_app">
+            android:label="Mimir">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -72,7 +72,7 @@
         <activity
             android:name=".MainActivityWatch"
             android:exported="true"
-            android:label="logging_app" />
+            android:label="Mimir" />
     </application>
 
 </manifest>
