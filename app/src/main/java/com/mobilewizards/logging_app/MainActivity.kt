@@ -60,7 +60,28 @@ class MainActivity : AppCompatActivity() {
             // Implementation of code that require concurrent threads to be running
         }
 
+        // Tää ei edes loggaannu mihinkään
+        Log.d(TAG,"VITTUUUUUUUUUUUUUUUUUUUUUUUUUUU")
+        val channelClient = Wearable.getChannelClient(applicationContext)
+        channelClient.registerChannelCallback(object : ChannelClient.ChannelCallback() {
+            override fun onChannelOpened(channel: ChannelClient.Channel) {
+                super.onChannelOpened(channel)
+                Log.d(TAG, "on channel opened")
+                channelClient.receiveFile(channel, ("file:///storage/emulated/0/Download/log_watch_received_${
+                    LocalDateTime.now().format(
+                        DateTimeFormatter.ofPattern("yyyyMMdd_HHmmssSSS"))}").toUri(), false)
+                    .addOnCompleteListener { task ->
+                        Log.d(TAG, "tääl")
+                        if (task.isSuccessful) {
+                            Log.d("channel", "File successfully stored")
 
+                        } else {
+                            Log.e(TAG, "Ei toimi")
+                        }
+                    }
+                channelClient.close(channel)
+            }
+        })
         val sensorList = arrayOf(
             //1st value: name. second value: is there a slider. third and fourth are min and max values for sliders
             arrayOf("GNSS", false),
@@ -152,8 +173,6 @@ class MainActivity : AppCompatActivity() {
                         // Not used
                     }
                 })
-
-
             }
 
             // Remove the tableLayout's parent, if it has one
@@ -162,22 +181,6 @@ class MainActivity : AppCompatActivity() {
             // Add the TableLayout to the parent view
             parentView.addView(tableLayout)
 
-            val channelClient = Wearable.getChannelClient(applicationContext)
-            channelClient.registerChannelCallback(object : ChannelClient.ChannelCallback() {
-                override fun onChannelOpened(channel: ChannelClient.Channel) {
-
-                    val receiveTask = channelClient.receiveFile(channel, ("file:///storage/emulated/0/Download/log_watch_received_${
-                        LocalDateTime.now().format(
-                            DateTimeFormatter.ofPattern("yyyyMMdd_HHmmssSSS"))}").toUri(), false)
-                    receiveTask.addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            Log.d("channel", "File successfully stored")
-                        } else {
-                            Log.e(TAG, "Ei toimi")
-                        }
-                    }
-                }
-            })
 
         }
 
