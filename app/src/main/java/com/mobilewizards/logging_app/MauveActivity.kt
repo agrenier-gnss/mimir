@@ -76,7 +76,6 @@ class MauveActivity : AppCompatActivity() {
                     LocalDateTime.now().format(
                         DateTimeFormatter.ofPattern("yyyyMMdd_HHmmssSSS"))}").toUri(), false)
                     .addOnCompleteListener { task ->
-                        // Tässä näyttäis viel olevan jotain häikkää. Sanoo ettei succesfull, mut filu tulee
                         if (task.isSuccessful) {
                             Log.d("channel", "File successfully stored")
                         } else {

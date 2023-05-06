@@ -102,8 +102,6 @@ class SendSurveysActivity : Activity() {
             } else {
                 Log.d(TAG, "nodes found, sending")
 
-                // TODO: Get filepath, and maybe use sendTextToPhone to send the filename/uri to phone
-
                 val contentValues = ContentValues().apply {
                     put(MediaStore.Downloads.DISPLAY_NAME, "log_watch_${SimpleDateFormat("ddMMyyyy_hhmmssSSS").format(startTime)}.csv")
                     put(MediaStore.Downloads.MIME_TYPE, "text/csv")
@@ -196,6 +194,7 @@ class SendSurveysActivity : Activity() {
             val bufferedReader = BufferedReader(FileReader(csvFile))
             var line: String? = bufferedReader.readLine()
             while (line != null) {
+                Log.d(TAG, line.toString())
                 line = bufferedReader.readLine()
             }
             bufferedReader.close()
@@ -220,6 +219,7 @@ class SendSurveysActivity : Activity() {
                     Log.e(TAG, "Error with file sending")
                     WatchActivityHandler.fileSendStatus(false)
                     fileSendTerminated()
+                    channelClient.close(channel)
                 }
             }
         }

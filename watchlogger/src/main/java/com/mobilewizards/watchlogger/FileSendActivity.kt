@@ -35,13 +35,8 @@ class FileSendActivity : Activity() {
             logText.text = "Log successfully sent to device"
 
         } else {
-
             logFailedImage.visibility = View.VISIBLE
             logText.text = "Log upload failed"
-
-
         }
-
     }
-
 }
