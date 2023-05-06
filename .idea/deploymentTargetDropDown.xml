@@ -6,8 +6,8 @@
         <type value="QUICK_BOOT_TARGET" />
         <deviceKey>
           <Key>
-            <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\Users\henea\.android\avd\Pixel_4_API_30_with_Google_Play.avd" />
+            <type value="SERIAL_NUMBER" />
+            <value value="192.168.1.233:46115" />
           </Key>
         </deviceKey>
       </Target>
