@@ -3,151 +3,221 @@ package com.mobilewizards.logging_app
 import android.annotation.SuppressLint
 import android.Manifest
 import android.content.Intent
+import android.content.ContentResolver
+import android.content.ContentUris
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
+import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 import com.google.android.gms.wearable.DataMap
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.Wearable
+import java.io.*
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import android.icu.text.SimpleDateFormat
+import java.util.ArrayDeque
+import androidx.core.net.toUri
+import com.google.android.gms.wearable.*
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.google.android.material.button.MaterialButton
+import android.provider.MediaStore
+import com.google.android.gms.wearable.ChannelClient
+
+data class GnssMeasurement(
+    val svId: Int,
+    val timeOffsetNanos: Double,
+    val state: Int,
+    val cn0DbHz: Double,
+    val carrierFrequencyHz: Double,
+    val pseudorangeRateMeterPerSecond: Double,
+    val pseudorangeRateUncertaintyMeterPerSecond: Double
+)
 
 class MainActivity : AppCompatActivity() {
 
+    private val CSV_FILE_CHANNEL_PATH = MediaStore.Downloads.EXTERNAL_CONTENT_URI
+    val TAG = "tagi"
     private lateinit var mMessageClient: MessageClient
-    @SuppressLint("SuspiciousIndentation")
+    var filenameStack = ArrayDeque<String>()
+
+    @SuppressLint("SuspiciousIndentation", "ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("phoneLogger", "onCreate called")
         setContentView(R.layout.activity_main)
+        supportActionBar?.hide()
 
-        this.checkPermissions()
-
-        val countStartButton = findViewById<Button>(R.id.countStartButton)
-        val countStopButton = findViewById<Button>(R.id.countStopButton)
+        var isInitialLoad = true
 
         // Check if thread is alive to rightfully enable/disable buttons
         if (counterThread?.isAlive == true) {
             // Implementation of code that require concurrent threads to be running
         }
 
-        countStartButton.setOnClickListener {
-            countStartButton.isEnabled = false
-            countStopButton.isEnabled = true
-            counterThread = CounterThread()
-            counterThread?.start()
-        }
 
-        countStopButton.setOnClickListener {
-            countStartButton.isEnabled = true
-            countStopButton.isEnabled = false
-            counterThread?.cancel()
-            counterThread = null
-        }
+        val channelClient = Wearable.getChannelClient(applicationContext)
+        channelClient.registerChannelCallback(object : ChannelClient.ChannelCallback() {
+            override fun onChannelOpened(channel: ChannelClient.Channel) {
+                super.onChannelOpened(channel)
+                Log.d(TAG, "on channel opened")
+                channelClient.receiveFile(channel, ("file:///storage/emulated/0/Download/log_watch_received_${
+                    LocalDateTime.now().format(
+                        DateTimeFormatter.ofPattern("yyyyMMdd_HHmmssSSS"))}").toUri(), false)
+                    .addOnCompleteListener { task ->
+                        Log.d(TAG, "tääl")
+                        if (task.isSuccessful) {
+                            Log.d("channel", "File successfully stored")
 
-        val loggingButton = findViewById<Button>(R.id.startLogButton)
-        val stopLogButton = findViewById<Button>(R.id.stopLogButton)
-        val motionSensors = MotionSensorsHandler(this)
-        val gnss = GnssHandler(this)
-        val IMUSlider = findViewById<SeekBar>(R.id.sliderIMU)
-        val MagnetometerSlider = findViewById<SeekBar>(R.id.sliderMagnetometer)
-        val BarometerSlider = findViewById<SeekBar>(R.id.sliderBarometer)
-        val BLE = BLEHandler(this)
-
-        loggingButton.setOnClickListener{
-            loggingButton.isEnabled = false
-            stopLogButton.isEnabled = true
-            Log.d("start logging", "Start logging")
-            motionSensors.setUpSensors()
-            gnss.setUpLogging()
-            BLE.setUpLogging()
-        }
-
-        stopLogButton.setOnClickListener {
-            loggingButton.isEnabled = true
-            stopLogButton.isEnabled = false
-            motionSensors.stopLogging()
-            gnss.stopLogging(this)
-            BLE.stopLogging()
-        }
-
-        IMUSlider.min = 10
-        IMUSlider.max = 100
-        IMUSlider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                Log.d("IMUSLIDERPROGRESS", IMUSlider.progress.toString())
-                val IMUMap = DataMap().apply{
-                    putInt("imu",IMUSlider.progress)
-                }
-                sendParameterToWatch(IMUMap)
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                        } else {
+                            Log.e(TAG, "Ei toimi")
+                        }
+                    }
+                channelClient.close(channel)
             }
         })
+        val sensorList = arrayOf(
+            //1st value: name. second value: is there a slider. third and fourth are min and max values for sliders
+            arrayOf("GNSS", false),
+            arrayOf("IMU", true, 10, 100),
+            arrayOf("Barometer", true, 1, 10),
+            arrayOf("Magnetometer", true, 1, 10),
+            arrayOf("Bluetooth", false)
+        )
 
-        MagnetometerSlider.min = 1
-        MagnetometerSlider.max = 10
-        MagnetometerSlider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                Log.d("MAGNESLIDERPROGRESS", MagnetometerSlider.progress.toString())
-                val magnetometerMap = DataMap().apply{
-                    putInt("magnetometer",MagnetometerSlider.progress)
-                }
-                sendParameterToWatch(magnetometerMap)
+        val parentView = findViewById<ViewGroup>(R.id.square_layout)
+
+        //create a layout for each sensor in sensorList
+        for(i in sensorList.indices) {
+
+            // Inflate the layout file that contains the TableLayout
+            val tableLayout = layoutInflater.inflate(R.layout.layout_presets, parentView, false).findViewById<TableLayout>(R.id.sensorSquarePreset)
+
+            val row = tableLayout.getChildAt(0) as TableRow
+            val sensorTitleTextView = row.findViewById<TextView>(R.id.sensorTitle)
+            sensorTitleTextView.text = sensorList[i][0].toString()
+
+            var sensorSwitch = row.findViewById<SwitchCompat>(R.id.sensorSwitch)
+            sensorSwitch.isChecked = ActivityHandler.getToggle(sensorList[i][0].toString())
+            sensorSwitch.isEnabled = !ActivityHandler.getIsLogging() // Disable toggling sensor if logging is ongoing
+
+            var sensorStateTextView = row.findViewById<TextView>(R.id.sensorState)
+            setStateTextview(sensorSwitch.isChecked, sensorStateTextView)
+
+            val row2 = tableLayout.getChildAt(1) as TableRow
+            val description = row2.findViewById<TextView>(R.id.description)
+
+            sensorSwitch.setOnCheckedChangeListener { _, isChecked ->
+                setStateTextview(sensorSwitch.isChecked, sensorStateTextView)
+                ActivityHandler.setToggle(sensorList[i][0].toString()) //toggle the status in singleton
             }
 
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            if(sensorList[i][1] == false) {
+                // if frequency is can not be changed
+                description.text = "${sensorList[i][0]} is always sampled at 1 Hz" // Change the description text
+                tableLayout.removeViewAt(2) // Remove the row with the slider.
+            } else {
+                // if frequency can be changed
+                description.text = "Sampling frequency"
+                val row3 = tableLayout.getChildAt(2) as TableRow
+                val slider = row3.findViewById<SeekBar>(R.id.sensorSlider)
+                slider.min = sensorList[i][2].toString().toInt()
+                slider.max = sensorList[i][3].toString().toInt()
+                slider.progress = ActivityHandler.getFrequency(sensorList[i][0].toString())
+                slider.isEnabled = !ActivityHandler.getIsLogging() // Disable changing slider if logging is ongoing
+
+                val sliderValue = row3.findViewById<TextView>(R.id.sliderValue)
+                sliderValue.text = ActivityHandler.getFrequency(sensorList[i][0] as String).toString() //set slider value
+
+                slider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                    override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                        sliderValue.text = progress.toString()
+                        ActivityHandler.setFrequency(sensorList[i][0].toString(), progress)
+
+                        //Not working correctly, watch does not receive parameters
+                        /*if(sensorList[i][0].toString().equals("IMU")){
+                            //ActivityHandler.IMUFrequency = value
+                            val IMUMap = DataMap().apply{
+                                putInt("imu",progress)
+                            }
+                            sendParameterToWatch(IMUMap)
+
+                        }
+                        else if(sensorList[i][0].toString().equals("Barometer")){
+                           // ActivityHandler.barometerFrequency = value
+                            val barometerMap = DataMap().apply{
+                                putInt("barometer", progress)
+                            }
+                            sendParameterToWatch(barometerMap)
+                        }
+                        else if(sensorList[i][0].toString().equals("Magnetometer")){
+                            //ActivityHandler.magnetometerFrequency = value
+                            val magnetometerMap = DataMap().apply{
+                                putInt("magnetometer", progress)
+                            }
+                            sendParameterToWatch(magnetometerMap)
+                        }*/
+                    }
+
+                    override fun onStartTrackingTouch(seekBar: SeekBar) {
+                        // Not used
+                    }
+
+                    override fun onStopTrackingTouch(seekBar: SeekBar) {
+                        // Not used
+                    }
+                })
             }
 
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-            }
-        })
+            // Remove the tableLayout's parent, if it has one
+            (tableLayout.parent as? ViewGroup)?.removeView(tableLayout)
 
-        BarometerSlider.min = 1
-        BarometerSlider.max = 10
-        BarometerSlider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                Log.d("BAROSLIDERPROGRESS", BarometerSlider.progress.toString())
-                val barometerMap = DataMap().apply{
-                    putInt("barometer",BarometerSlider.progress)
-                }
-                sendParameterToWatch(barometerMap)
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-            }
-        })
+            // Add the TableLayout to the parent view
+            parentView.addView(tableLayout)
 
 
-        val etTextToWatch: EditText = findViewById(R.id.etTextToWear)
-        val sendButton: Button = findViewById(R.id.btnSend)
-        val tvTexfFromWatch = findViewById<TextView>(R.id.tv_textFromWatch)
-        mMessageClient = Wearable.getMessageClient(this)
-        sendButton.setOnClickListener {
-            var textToSend = etTextToWatch.text
-            if (textToSend.isEmpty())
-                Toast.makeText(this, "Add text", Toast.LENGTH_SHORT).show()
-            else
-                sendTextToWatch(textToSend.toString())
-                Toast.makeText(this, "Text sent", Toast.LENGTH_SHORT).show()
         }
 
-        mMessageClient.addListener {
-            Log.d("phoneLogger", "it.data " + DataMap.fromByteArray(it.data).toString())
-            val dataMap = DataMap.fromByteArray(it.data)
-            tvTexfFromWatch.text = dataMap.getString("dataFromWatch")
+        var x1 = 0f
+        var y1 = 0f
+        var x2 = 0f
+        var y2 = 0f
+
+        findViewById<View>(R.id.scroll_id).setOnTouchListener { _, touchEvent ->
+            when (touchEvent.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    x1 = touchEvent.x
+                    y1 = touchEvent.y
+                    true
+                }
+                MotionEvent.ACTION_UP -> {
+                    x2 = touchEvent.x
+                    y2 = touchEvent.y
+                    val deltaX = x2 - x1
+                    val deltaY = y2 - y1
+                    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                        // swipe horizontal
+                        if (Math.abs(deltaX) > 100) {
+                            // left or right
+                            if (deltaX < 0) {
+                                // left swipe
+                                val intent = Intent(this, MauveActivity::class.java)
+                                startActivity(intent)
+                                true
+                            }
+                        }
+                    }
+                    false
+                }
+                else -> false
+            }
         }
+
     }
 
     private fun sendParameterToWatch(data: DataMap){
@@ -192,56 +262,11 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    fun checkPermissions() {
-        val permissions = arrayOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.MANAGE_EXTERNAL_STORAGE,
-            Manifest.permission.BLUETOOTH_SCAN
-        )
-
-        var allPermissionsGranted = true
-        for (permission in permissions) {
-            if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-                allPermissionsGranted = false
-                break
-            }
-        }
-
-        if (!allPermissionsGranted) {
-            ActivityCompat.requestPermissions(this, permissions, 225)
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when(requestCode) {
-
-            //location permission
-            225 -> {
-                if ((grantResults.isNotEmpty() &&
-                            grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    // Permission is granted. Continue the action or workflow
-                    // in your app.
-                } else {
-                    // Explain to the user that the feature is unavailable
-                    AlertDialog.Builder(this)
-                        .setTitle("Location permission denied")
-                        .setMessage("Permission is denied.")
-                        .setPositiveButton("OK",null)
-                        .setNegativeButton("Cancel", null)
-                        .show()
-                }
-                return
-            }
-            else -> {
-                // Ignore all other requests.
-            }
+    fun setStateTextview(enabled: Boolean,textview: TextView) {
+        if (enabled) {
+            textview.text = "Enabled"
+        } else {
+            textview.text = "Disabled"
         }
     }
 }

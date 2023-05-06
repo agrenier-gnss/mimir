@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/box_inset_layout_padding"
+    android:background="@color/background"
+    tools:context=".LoadingScreenActivity"
+    tools:deviceIds="wear">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/logo" />
+
+        <TextView
+            android:id="@+id/appNameText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:fontFamily="@font/montserrat_bold"
+            android:textColor="@color/fontLogo"
+            android:layout_marginBottom="5dp"
+            android:text="Mimir" />
+
+        <TextView
+            android:id="@+id/appInfoText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:fontFamily="@font/montserrat_regular"
+            android:textColor="@color/fontLogo"
+            android:layout_marginBottom="5dp"
+            android:text="Sensor Logger" />
+
+    </LinearLayout>
+</androidx.wear.widget.BoxInsetLayout>

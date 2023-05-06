@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="0dp"
+    android:background="@color/background"
+    tools:context=".LoggingActivity"
+    tools:deviceIds="wear">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/nameTxtView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:gravity="center"
+            android:text="Mimir"
+            android:textColor="@color/fontLogo" />
+
+        <Button
+            android:id="@+id/startLogBtn"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:background="@drawable/button_background"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="Start"
+            android:textAllCaps="false"
+            android:textColor="@color/fontBlack" />
+
+        <TextView
+            android:id="@+id/logInfoText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/logTimeText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/stopLogBtn"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/button_background"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="Stop"
+            android:textAllCaps="false"
+            android:textColor="@color/fontBlack" />
+
+        <Button
+            android:id="@+id/reviewBtn"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/button_background"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="Review survey"
+            android:textAllCaps="false"
+            android:textColor="@color/fontBlack" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/inner_frame_layout_padding"
+        app:layout_boxedEdges="all">
+
+    </FrameLayout>
+</androidx.wear.widget.BoxInsetLayout>

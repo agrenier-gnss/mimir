@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:padding="@dimen/box_inset_layout_padding"
+    tools:context=".SettingsActivity"
+    tools:deviceIds="wear">
+
+
+
+
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:id="@+id/activity_settings_layout">
+
+                <TextView
+                    android:id="@+id/MimirText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:textColor="@color/fontLogo"
+                    android:text="Mimir" />
+
+                <TextView
+                    android:id="@+id/dataText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginBottom="15dp"
+                    android:text="Collected data" />
+
+                <Button
+                    android:id="@+id/GnssBtn"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/button_background"
+                    android:layout_marginBottom="15dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:textColor="@color/fontBlack"
+                    android:text="GNSS" />
+
+                <Button
+                    android:id="@+id/ImuBtn"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/button_background"
+                    android:layout_marginBottom="15dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:textColor="@color/fontBlack"
+                    android:text="IMU" />
+
+                <Button
+                    android:id="@+id/EcgBtn"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/button_background"
+                    android:layout_marginBottom="15dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:textColor="@color/fontBlack"
+                    android:text="ECG" />
+
+
+                <TextView
+                    android:id="@+id/FreqText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginBottom="15dp"
+                    android:text="Frequency" />
+
+                <Button
+                    android:id="@+id/FiveSecondsBtn"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/button_background"
+                    android:layout_marginBottom="15dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:textAllCaps="false"
+                    android:textColor="@color/fontBlack"
+                    android:text="5 sec" />
+                <Button
+                    android:id="@+id/FifteenSecondsBtn"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/button_background"
+                    android:layout_marginBottom="15dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:textAllCaps="false"
+                    android:textColor="@color/fontBlack"
+                    android:text="15 sec" />
+                <Button
+                    android:id="@+id/ThirtySecondsBtn"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/button_background"
+                    android:layout_marginBottom="15dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:textAllCaps="false"
+                    android:textColor="@color/fontBlack"
+                    android:text="30 sec" />
+
+                <Button
+                    android:id="@+id/OneMinuteBtn"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/button_background"
+                    android:layout_marginBottom="25dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:textAllCaps="false"
+                    android:textColor="@color/fontBlack"
+                    android:text="1 min" />
+
+                <Button
+                    android:id="@+id/saveSettingsBtn"
+                    android:layout_width="170dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/button_background"
+                    android:layout_marginBottom="50dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:textAllCaps="false"
+                    android:textColor="@color/fontBlack"
+                    android:text="Save settings" />
+
+            </LinearLayout>
+        </ScrollView>
+
+
+</androidx.wear.widget.BoxInsetLayout>

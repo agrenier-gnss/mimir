@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-feature android:name="android.hardware.type.watch" />
+
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BODY_SENSORS" />
-    <uses-feature android:name="android.hardware.type.watch" />
 
     <application
         android:allowBackup="true"
@@ -26,7 +32,35 @@
             android:value="true" />
 
         <activity
-            android:name=".MainActivityWatch"
+            android:name=".FileSendActivity"
+            android:exported="true"
+            android:label="@string/title_activity_file_send"></activity>
+        <activity
+            android:name=".SendSurveysActivity"
+            android:exported="true"
+            android:label="@string/title_activity_send_surveys" />
+        <activity
+            android:name=".PreviousSurveysActivity"
+            android:exported="true"
+            android:label="@string/title_activity_previous_surveys" />
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="true"
+            android:label="@string/title_activity_settings" />
+        <activity
+            android:name=".LoggedEvent"
+            android:exported="true"
+            android:label="@string/title_activity_logged_event" />
+        <activity
+            android:name=".LoggingActivity"
+            android:exported="true"
+            android:label="logging_app" />
+        <activity
+            android:name=".SelectionActivity"
+            android:exported="true"
+            android:label="@string/title_activity_selection" />
+        <activity
+            android:name=".LoadingScreenActivity"
             android:exported="true"
             android:label="logging_app">
             <intent-filter>
@@ -35,6 +69,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".MainActivityWatch"
+            android:exported="true"
+            android:label="logging_app" />
     </application>
 
 </manifest>

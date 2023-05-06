@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="selectedBtnColor">#C2AFF0</color>
+    <color name="btnColor">#CDCDCD</color>
+    <color name="fontBlack">#000000</color>
+    <color name="fontWhite">#FFFF</color>
+    <color name="background">#000000</color>
+    <color name="fontLogo">#C2AFF0</color>
+</resources>
