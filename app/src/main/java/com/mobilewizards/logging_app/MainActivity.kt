@@ -60,8 +60,7 @@ class MainActivity : AppCompatActivity() {
             // Implementation of code that require concurrent threads to be running
         }
 
-        // Tää ei edes loggaannu mihinkään
-        Log.d(TAG,"VITTUUUUUUUUUUUUUUUUUUUUUUUUUUU")
+
         val channelClient = Wearable.getChannelClient(applicationContext)
         channelClient.registerChannelCallback(object : ChannelClient.ChannelCallback() {
             override fun onChannelOpened(channel: ChannelClient.Channel) {
