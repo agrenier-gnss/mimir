@@ -79,7 +79,7 @@ class MauveActivity : AppCompatActivity() {
                         if (task.isSuccessful) {
                             Log.d("channel", "File successfully stored")
                         } else {
-                            Log.e(TAG, "Ei toimi, mauve")
+                            Log.e(TAG, "Ei toimi, mauve"  + task.exception.toString())
                         }
                     }
                 channelClient.close(channel)

@@ -30,6 +30,9 @@
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
         <activity
             android:name=".FileSendActivity"
@@ -69,10 +72,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".MainActivityWatch"
-            android:exported="true"
-            android:label="logging_app" />
     </application>
 
 </manifest>

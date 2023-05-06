@@ -169,9 +169,6 @@ class SendSurveysActivity : Activity() {
                 WatchActivityHandler.clearFilfPaths()
             }
         }
-
-        //val openSendInfo = Intent(applicationContext, FileSendActivity::class.java)
-        //startActivity(openSendInfo)
     }
 
     private fun getPhoneNodeId(callback: (ArrayList<String>) -> Unit) {
@@ -210,17 +207,17 @@ class SendSurveysActivity : Activity() {
                 // Send the CSV file to the phone
                 Log.d(TAG, "file name " + csvFile.name)
                 channelClient.sendFile(channel, csvFile.toUri()).addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d(TAG, "task is succesfull:" + csvFile.toUri().toString())
-                    WatchActivityHandler.fileSendStatus(true)
-                    fileSendSuccessful()
-                    channelClient.close(channel)
-                } else {
-                    Log.e(TAG, "Error with file sending")
-                    WatchActivityHandler.fileSendStatus(false)
-                    fileSendTerminated()
-                    channelClient.close(channel)
-                }
+                    if (task.isSuccessful) {
+                        Log.d(TAG, "task is succesfull:" + csvFile.toUri().toString())
+                        WatchActivityHandler.fileSendStatus(true)
+                        fileSendSuccessful()
+                        channelClient.close(channel)
+                    } else {
+                        Log.e(TAG, "Error with file sending " + task.exception.toString())
+                        WatchActivityHandler.fileSendStatus(false)
+                        fileSendTerminated()
+                        channelClient.close(channel)
+                    }
             }
         }
             override fun onChannelClosed(
