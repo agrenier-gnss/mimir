@@ -13,6 +13,7 @@ import android.hardware.SensorManager
 import android.net.Uri
 import android.os.Environment
 import android.os.Handler
+import android.os.SystemClock
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
@@ -49,6 +50,7 @@ class BLEHandlerWatch(private val context: Context) {
                     val data = scanResult.scanRecord
 
                     val measurementString =
+                        "${scanResult.timestampNanos}," +
                         "$device," +
                                 "$rssi," +
                                 "$data"
@@ -89,7 +91,7 @@ class BLEHandlerWatch(private val context: Context) {
             Log.d("uri", uri.toString())
             uri?.let { mediaUri ->
                 context.contentResolver.openOutputStream(mediaUri)?.use { outputStream ->
-                    outputStream.write("Device,RSSI,Data\n".toByteArray())
+                    outputStream.write("Timestamp,Device,RSSI,Data\n".toByteArray())
                     bleScanList.forEach { measurementString ->
                         outputStream.write("$measurementString\n".toByteArray())
                     }

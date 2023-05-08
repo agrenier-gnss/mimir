@@ -100,6 +100,6 @@ class HealthServicesHandler: SensorEventListener{
     }
 
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
-        TODO("Not yet implemented")
+        return
     }
 }

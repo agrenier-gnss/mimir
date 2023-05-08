@@ -16,11 +16,16 @@ import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.app.ActivityCompat
+import androidx.core.net.toUri
+import com.google.android.gms.wearable.ChannelClient
+import com.google.android.gms.wearable.Wearable
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class MauveActivity : AppCompatActivity() {
-
+    private val TAG = "tagi"
     override fun onResume() {
         super.onResume()
 
@@ -62,6 +67,24 @@ class MauveActivity : AppCompatActivity() {
         setContentView(R.layout.activity_mauve)
         supportActionBar?.hide()
 
+        val channelClient = Wearable.getChannelClient(applicationContext)
+        channelClient.registerChannelCallback(object : ChannelClient.ChannelCallback() {
+            override fun onChannelOpened(channel: ChannelClient.Channel) {
+                super.onChannelOpened(channel)
+                Log.d(TAG, "on channel opened in mauve")
+                channelClient.receiveFile(channel, ("file:///storage/emulated/0/Download/log_watch_received_${
+                    LocalDateTime.now().format(
+                        DateTimeFormatter.ofPattern("yyyyMMdd_HHmmssSSS"))}").toUri(), false)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Log.d("channel", "File successfully stored")
+                        } else {
+                            Log.e(TAG, "Ei toimi, mauve")
+                        }
+                    }
+                channelClient.close(channel)
+            }
+        })
         this.checkPermissions()
 
         val motionSensors = MotionSensorsHandler(this)

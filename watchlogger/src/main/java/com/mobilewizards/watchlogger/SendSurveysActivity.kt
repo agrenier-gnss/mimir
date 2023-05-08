@@ -102,8 +102,6 @@ class SendSurveysActivity : Activity() {
             } else {
                 Log.d(TAG, "nodes found, sending")
 
-                // TODO: Get filepath, and maybe use sendTextToPhone to send the filename/uri to phone
-
                 val contentValues = ContentValues().apply {
                     put(MediaStore.Downloads.DISPLAY_NAME, "log_watch_${SimpleDateFormat("ddMMyyyy_hhmmssSSS").format(startTime)}.csv")
                     put(MediaStore.Downloads.MIME_TYPE, "text/csv")
@@ -190,12 +188,13 @@ class SendSurveysActivity : Activity() {
 
 
     private fun sendCsvFileToPhone(csvFile: File,nodeId: String, context: Context) {
-        Log.d(TAG, "in sendCsvFileToPhone")
+        Log.d(TAG, "in sendCsvFileToPhone " + csvFile.name)
         // Checks if the file is found and read
         try {
             val bufferedReader = BufferedReader(FileReader(csvFile))
             var line: String? = bufferedReader.readLine()
             while (line != null) {
+                Log.d(TAG, line.toString())
                 line = bufferedReader.readLine()
             }
             bufferedReader.close()
@@ -207,12 +206,12 @@ class SendSurveysActivity : Activity() {
         val channelClient = Wearable.getChannelClient(context)
         val callback = object : ChannelClient.ChannelCallback() {
             override fun onChannelOpened(channel: ChannelClient.Channel) {
-                Log.d(TAG, "onChannelOpened")
+                Log.d(TAG, "onChannelOpened " + channel.nodeId)
                 // Send the CSV file to the phone
                 Log.d(TAG, "file name " + csvFile.name)
                 channelClient.sendFile(channel, csvFile.toUri()).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Log.d(TAG, "inSendFile:" + csvFile.toUri().toString())
+                    Log.d(TAG, "task is succesfull:" + csvFile.toUri().toString())
                     WatchActivityHandler.fileSendStatus(true)
                     fileSendSuccessful()
                     channelClient.close(channel)
@@ -220,6 +219,7 @@ class SendSurveysActivity : Activity() {
                     Log.e(TAG, "Error with file sending")
                     WatchActivityHandler.fileSendStatus(false)
                     fileSendTerminated()
+                    channelClient.close(channel)
                 }
             }
         }

@@ -147,23 +147,6 @@ class SettingsActivity : Activity() {
                 WatchActivityHandler.changeFrequency(5)
             }
 
-
-            //
         }
-
-
-        /*fun changeFrequencyStatus(selectedFreqBtn : Button){
-
-            if (selectedFreqBtn == fiveSecBtn ) {
-                saveSettingsBtn.isSelected = !saveSettingsBtn.isSelected
-                fifteenSecBtn.isSelected = !fifteenSecBtn.isSelected
-                minuteBtn.isSelected = !minuteBtn.isSelected
-            }
-
-        }*/
     }
-
-
-
-
 }
