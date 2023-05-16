@@ -19,11 +19,12 @@ import java.util.*
 
 //import androidx.health.services.client.proto.DataProto.HeartRateAlertParams
 
-private const val VERSION_TAG = "Version: "
-private const val COMMENT_START = "# "
 
-
+/*Class to handle GNSS data logging and writing it in CSV-files. Logging works the same way it does
+on phone.*/
+@Suppress("DEPRECATION")
 class WatchGNSSHandler {
+    //All of the needed listeners + LocationManager that registers location listeners.
     private lateinit var locationManager: LocationManager
     private lateinit var gpsLocationListener: LocationListener
     private lateinit var networkLocationListener: LocationListener
@@ -31,6 +32,9 @@ class WatchGNSSHandler {
     private lateinit var gnssNavigationMessageListener: android.location.GnssNavigationMessage.Callback
     protected var context: Context
     private val TAG = "watchLogger"
+
+    //A list that will collect all logged data in CSV-format. When logging stops, this list will be written
+    //in the file.
     private var gnssMeasurementsList = mutableListOf<String>()
 
 
@@ -39,6 +43,7 @@ class WatchGNSSHandler {
         this.context = context.applicationContext
     }
 
+    /* Function that is called in ActivityHandler when logging is started.*/
     fun setUpLogging(){
         locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         logLocation(1000)
@@ -46,12 +51,15 @@ class WatchGNSSHandler {
         logGnssNavigationMessages(1000)
     }
 
+    /*Function that logs location by creating two listeners. One for gps provider and
+    one for network provider, if they are enabled.*/
     private fun logLocation(samplingFrequency: Long) {
         //Locationlistener for Gps
         gpsLocationListener = object : LocationListener{
 
             override fun onLocationChanged(location: Location){
 
+                //Collects data in a string in a wanted format and then added in the data list.
                 val locationStream: String = java.lang.String.format(
                     Locale.US,
                     "Fix,%s,%f,%f,%f,%f,%f,%d",
@@ -93,6 +101,7 @@ class WatchGNSSHandler {
             override fun onProviderEnabled(provider: String) {}
         }
 
+        //Check if user has enabled the location fethcing. If yes, then check providers.
         try {
             if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 locationManager.requestLocationUpdates(
@@ -112,11 +121,14 @@ class WatchGNSSHandler {
         }
     }
 
+    /*Logging of GNSS measurements by creating a listener in this function. Parameter samplingFrequency
+    * is given to make sure data isn't logged too fast. Contains deprecated methods.*/
     private fun logGNSS( samplingFrequency: Long) {
         gnssMeasurementsEventListener = object : android.location.GnssMeasurementsEvent.Callback(){
             var lastMeasurementTime = 0L
             override fun onGnssMeasurementsReceived(event: GnssMeasurementsEvent) {
 
+                //Testing if enough time has passed since the last event.
                 val currentTime = SystemClock.elapsedRealtime()
                 if (currentTime - lastMeasurementTime >= samplingFrequency) {
 
@@ -124,6 +136,7 @@ class WatchGNSSHandler {
 
                     var clock: GnssClock = event.clock
 
+                    //First part of the logged rows.
                     val clockString="Raw,"+"$currentTime," + "${clock.timeNanos}," +
                             "${clock.getTimeNanos()}," +
                             "${if (clock.hasLeapSecond()) clock.leapSecond else ""},"+
@@ -137,27 +150,7 @@ class WatchGNSSHandler {
 
                     for (measurement in event.measurements) {
 
-                        var carrierPhase: Double
-                        var carrierPhaseString: String
-                        var carrierCycle: Int
-                        var carrierCylceString: String
-                        var carrierPhaseUncertainty: Double
-                        var carriePhaseUncertaintyString: String
-
-                        if(measurement.hasCarrierFrequencyHz()){
-                            carrierPhase = measurement.getAccumulatedDeltaRangeMeters() / (2 * kotlin.math.PI * measurement.carrierFrequencyHz)
-                            carrierCycle = (carrierPhase/(2*kotlin.math.PI)).toInt()
-                            carrierPhaseUncertainty = measurement.accumulatedDeltaRangeUncertaintyMeters/(2*kotlin.math.PI*measurement.carrierFrequencyHz)
-                            carrierPhaseString = "${carrierPhase}"
-                            carriePhaseUncertaintyString = "${carrierPhaseUncertainty}"
-                            carrierCylceString = "${carrierCycle}"
-                        }
-                        else{
-                            carrierPhaseString = ""
-                            carriePhaseUncertaintyString = ""
-                            carrierCylceString = ""
-                        }
-
+                        //Second part of the logged rows.
                         val measurementString =
                             "${measurement.getSvid()}," +
                                     "${measurement.getTimeOffsetNanos()}," +
@@ -203,6 +196,7 @@ class WatchGNSSHandler {
 
     }
 
+    /*Logging for GNSS navigation messages.*/
     fun logGnssNavigationMessages(samplingFrequency: Long){
         gnssNavigationMessageListener = object : GnssNavigationMessage.Callback(){
             var lastMeasurementTime = 0L
@@ -211,10 +205,10 @@ class WatchGNSSHandler {
                 val currentTime = SystemClock.elapsedRealtime()
                 if (currentTime - lastMeasurementTime >= samplingFrequency) {
                     var gnssNavigationMessageString = "Nav," +
-                            "${event?.getSvid()}," +
-                            "${event?.getType()}," +
-                            "${event?.getStatus()}," +
-                            "${event?.getMessageId()}," +
+                            "${event?.svid}," +
+                            "${event?.type}," +
+                            "${event?.status}," +
+                            "${event?.messageId}," +
                             "${event?.submessageId},"
 
 
@@ -233,6 +227,7 @@ class WatchGNSSHandler {
         locationManager.registerGnssNavigationMessageCallback(gnssNavigationMessageListener)
     }
 
+    /*Function that stops logging and writes collected data to the CSV-file.*/
     fun stopLogging(context: Context) {
         locationManager.removeUpdates(gpsLocationListener)
         locationManager.removeUpdates(networkLocationListener)
@@ -248,17 +243,19 @@ class WatchGNSSHandler {
         val uri = context.contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
 
         Log.d("uri", uri.toString())
+        
+        //Logging in wanted format. First hard coded comment to the file then data.
         uri?.let { mediaUri ->
             context.contentResolver.openOutputStream(mediaUri)?.use { outputStream ->
-                outputStream.write(COMMENT_START.toByteArray())
+                outputStream.write("# ".toByteArray())
                 outputStream.write("\n".toByteArray())
-                outputStream.write(COMMENT_START.toByteArray());
+                outputStream.write("# ".toByteArray());
                 outputStream.write("Header Description:".toByteArray());
                 outputStream.write("\n".toByteArray())
-                outputStream.write(COMMENT_START.toByteArray())
+                outputStream.write("# ".toByteArray())
                 outputStream.write("\n".toByteArray())
-                outputStream.write(COMMENT_START.toByteArray())
-                outputStream.write(VERSION_TAG.toByteArray())
+                outputStream.write("# ".toByteArray())
+                outputStream.write("Version: ".toByteArray())
                 var manufacturer: String = Build.MANUFACTURER
                 var model: String = Build.MODEL
                 var fileVersion: String = "${BuildConfig.VERSION_CODE}" + " Platform: " +
@@ -267,9 +264,9 @@ class WatchGNSSHandler {
 
                 outputStream.write(fileVersion.toByteArray())
                 outputStream.write("\n".toByteArray())
-                outputStream.write(COMMENT_START.toByteArray())
+                outputStream.write("# ".toByteArray())
                 outputStream.write("\n".toByteArray())
-                outputStream.write(COMMENT_START.toByteArray())
+                outputStream.write("# ".toByteArray())
                 outputStream.write(
                     "Raw,ElapsedRealtimeMillis,TimeNanos,LeapSecond,TimeUncertaintyNanos,FullBiasNanos,".toByteArray()
                             + "BiasNanos,BiasUncertaintyNanos,DriftNanosPerSecond,DriftUncertaintyNanosPerSecond,".toByteArray()
@@ -281,18 +278,18 @@ class WatchGNSSHandler {
                             + "CarrierPhase,CarrierPhaseUncertainty,MultipathIndicator,SnrInDb,".toByteArray()
                             + "ConstellationType,AgcDb".toByteArray())
                 outputStream.write("\n".toByteArray())
-                outputStream.write(COMMENT_START.toByteArray())
+                outputStream.write("# ".toByteArray())
                 outputStream.write("\n".toByteArray())
-                outputStream.write(COMMENT_START.toByteArray())
+                outputStream.write("# ".toByteArray())
                 outputStream.write(
                     "Fix,Provider,Latitude,Longitude,Altitude,Speed,Accuracy,(UTC)TimeInMs".toByteArray())
                 outputStream.write("\n".toByteArray())
-                outputStream.write(COMMENT_START.toByteArray())
+                outputStream.write("# ".toByteArray())
                 outputStream.write("\n".toByteArray())
-                outputStream.write(COMMENT_START.toByteArray())
+                outputStream.write("# ".toByteArray())
                 outputStream.write("Nav,Svid,Type,Status,MessageId,Sub-messageId,Data(Bytes)".toByteArray());
                 outputStream.write("\n".toByteArray())
-                outputStream.write(COMMENT_START.toByteArray())
+                outputStream.write("# ".toByteArray())
                 outputStream.write("\n".toByteArray())
                 gnssMeasurementsList.forEach { measurementString ->
                     outputStream.write("$measurementString\n".toByteArray())
