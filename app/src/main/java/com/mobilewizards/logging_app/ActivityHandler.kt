@@ -160,53 +160,6 @@ object ActivityHandler{
         }
     }
 
-
-    //counter for keeping time on logging
-    var counterThread : CounterThread? = null
-
-    // Check if thread is alive to rightfully enable/disable buttons
-    fun startCounterThread() {
-        if (counterThread?.isAlive == true) {
-            // Implementation of code that require concurrent threads to be running
-        }
-        counterThread = CounterThread()
-        counterThread?.start()
-    }
-
-    fun stopCounterThread() {
-        if (counterThread != null) {
-            counterThread?.cancel()
-            counterThread = null
-        }
-    }
-
-    class MyTimer {
-        private val timer = Timer()
-
-        private var currentTime: LocalTime = LocalTime.MIN
-
-        fun startTimer(callback: () -> Unit) {
-            timer.scheduleAtFixedRate(object : TimerTask() {
-                override fun run() {
-                    updateTime()
-                    callback()
-                }
-            }, 0, 1000) // update every second
-        }
-
-        fun stopTimer() {
-            timer.cancel()
-        }
-
-        fun getCurrentLocalTime(): LocalTime {
-            return currentTime
-        }
-
-        private fun updateTime() {
-            currentTime = currentTime.plusSeconds(1)
-        }
-    }
-
     fun getLogData(tag: String): String {
         if(tag.equals("Time")) {
             val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")

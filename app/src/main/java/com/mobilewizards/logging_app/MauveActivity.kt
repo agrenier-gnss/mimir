@@ -1,7 +1,6 @@
 package com.mobilewizards.logging_app
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
@@ -14,15 +13,12 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.app.ActivityCompat
 import androidx.core.net.toUri
 import com.google.android.gms.wearable.ChannelClient
 import com.google.android.gms.wearable.Wearable
-import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
 
 class MauveActivity : AppCompatActivity() {
     private val TAG = "tagi"
@@ -86,11 +82,6 @@ class MauveActivity : AppCompatActivity() {
             }
         })
         this.checkPermissions()
-
-        val motionSensors = MotionSensorsHandler(this)
-        val gnss = GnssHandler(this)
-        val BLE = BLEHandler(this)
-
 
         var isInitialLoad = true
 

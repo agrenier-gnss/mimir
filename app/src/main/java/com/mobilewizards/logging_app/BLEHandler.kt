@@ -8,10 +8,8 @@ import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.content.ContentValues
 import android.content.Context
-import android.graphics.Color.green
 import android.icu.text.SimpleDateFormat
 import android.os.Environment
-import android.os.Handler
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
@@ -25,7 +23,6 @@ class BLEHandler(private val context: Context) {
     private lateinit var bluetoothAdapter: BluetoothAdapter
     private var bluetoothLeScanner: BluetoothLeScanner? = null
     private lateinit var scanCallback: ScanCallback
-    private val handler = Handler()
 
     init {
         initializeBluetooth()

@@ -1,31 +1,20 @@
 package com.mobilewizards.logging_app
 
 import android.annotation.SuppressLint
-import android.Manifest
 import android.content.Intent
-import android.content.ContentResolver
-import android.content.ContentUris
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.*
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import com.google.android.gms.wearable.DataMap
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.Wearable
-import java.io.*
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import android.icu.text.SimpleDateFormat
 import java.util.ArrayDeque
 import androidx.core.net.toUri
-import com.google.android.gms.wearable.*
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import com.google.android.material.button.MaterialButton
 import android.provider.MediaStore
 import com.google.android.gms.wearable.ChannelClient
 
@@ -52,14 +41,6 @@ class MainActivity : AppCompatActivity() {
         Log.d("phoneLogger", "onCreate called")
         setContentView(R.layout.activity_main)
         supportActionBar?.hide()
-
-        var isInitialLoad = true
-
-        // Check if thread is alive to rightfully enable/disable buttons
-        if (counterThread?.isAlive == true) {
-            // Implementation of code that require concurrent threads to be running
-        }
-
 
         val channelClient = Wearable.getChannelClient(applicationContext)
         channelClient.registerChannelCallback(object : ChannelClient.ChannelCallback() {
