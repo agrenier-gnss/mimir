@@ -22,7 +22,6 @@ class SelectionActivity : Activity() {
         binding = ActivitySelectionBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         this.checkPermissions()
 
         val startSurveyBtn = findViewById<Button>(R.id.startSurveyBtn)
@@ -30,21 +29,19 @@ class SelectionActivity : Activity() {
         val settingsBtn = findViewById<Button>(R.id.settingsBtn)
 
         startSurveyBtn.setOnClickListener{
-
             val openStartSurvey = Intent(applicationContext, LoggingActivity::class.java)
             startActivity(openStartSurvey)
         }
-        prevSurveysBtn.setOnClickListener{
 
+        prevSurveysBtn.setOnClickListener{
             val openPreviousSurv = Intent(applicationContext, PreviousSurveysActivity::class.java)
             startActivity(openPreviousSurv)
         }
-        settingsBtn.setOnClickListener{
 
+        settingsBtn.setOnClickListener{
             val openSettings = Intent(applicationContext, SettingsActivity::class.java)
             startActivity(openSettings)
         }
-
     }
 
     fun checkPermissions() {

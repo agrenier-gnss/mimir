@@ -27,54 +27,17 @@ class LoggingActivity : Activity() {
 
     private lateinit var binding: ActivityLoggingBinding
 
-    private lateinit var mMessageClient: MessageClient
-    private lateinit var mChannelClient: ChannelClient
-    private lateinit var mSensorManager: SensorManager
-    private val CSV_FILE_CHANNEL_PATH = MediaStore.Downloads.EXTERNAL_CONTENT_URI
-    private var barometerFrequency: Int = 1
-    private var magnetometerFrequency: Int = 1
-    private var IMUFrequency: Int = 10
-    private val TAG = "watchLogger"
-
-//    private val testFile = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss"))
-//    private val testDataToFile = listOf<Int>(1,2,3,4,5,6)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityLoggingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         this.checkPermissions()
 
         val ble =  BLEHandlerWatch(this)
         val gnss = WatchGNSSHandler(this)
         val healthServices = HealthServicesHandler(this)
-
-
-
-        // writing into test file
-//        val contentValues = ContentValues().apply {
-//            put(MediaStore.Downloads.DISPLAY_NAME, testFile)
-//            put(MediaStore.Downloads.MIME_TYPE, "text/csv")
-//            put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
-//        }
-//
-//        val uri = this.contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
-//
-//        Log.d("uri", uri.toString())
-//        uri?.let { mediaUri ->
-//            this.contentResolver.openOutputStream(mediaUri)?.use { outputStream ->
-//                outputStream.write("SvId,Time offset in nanos,State,cn0DbHz,carrierFrequencyHz,pseudorangeRateMeterPerSecond,pseudorangeRateUncertaintyMeterPerSecond\n".toByteArray())
-//                testDataToFile.forEach { measurementString ->
-//                    outputStream.write("$measurementString\n".toByteArray())
-//
-//                }
-//                outputStream.flush()
-//            }
-//        }
-
 
         // Fetching file path for sendCsvToPhone function
         var filePath = ""
@@ -87,11 +50,6 @@ class LoggingActivity : Activity() {
             cursor?.close()
             return path ?: ""
         }
-//        uri?.let { getRealPathFromUri(applicationContext.contentResolver, it) }
-//            ?.let { Log.d("uri", it)
-//                filePath = it}
-
-
 
         val startLogBtn = findViewById<Button>(R.id.startLogBtn)
         startLogBtn.visibility = View.VISIBLE
@@ -108,9 +66,7 @@ class LoggingActivity : Activity() {
         val logTimeText =  findViewById<TextView>(R.id.logTimeText)
         logTimeText.visibility = View.GONE
 
-
-
-        //When clicked, starts logging
+        // starts logging
         startLogBtn.setOnClickListener{
 
             startTime = System.currentTimeMillis()
@@ -123,17 +79,13 @@ class LoggingActivity : Activity() {
             logTimeText.visibility = View.VISIBLE
             logTimeText.text = currentTime.toString()
 
-            //tähän tarkistus, mitkä logattavat arvot valittu
-           // healthServices.getHeartRate()
             gnss.setUpLogging()
             ble.setUpLogging()
             healthServices.getHeartRate()
-
         }
 
-        //When clicked, stops logging
+        // stops logging
         stopLogBtn.setOnClickListener{
-
             reviewBtn.visibility = View.VISIBLE
             stopLogBtn.visibility = View.GONE
             logTimeText.visibility = View.GONE
@@ -141,22 +93,16 @@ class LoggingActivity : Activity() {
             gnss.stopLogging(this)
             ble.stopLogging()
             healthServices.stopHeartRate()
-
-            //logText.visibility = View.GONE
         }
 
-        //When clicked, opens LoggedEvent.kt for deciding what to do with the logged events
+        // Opens LoggedEvent.kt for deciding what to do with the logged events
         reviewBtn.setOnClickListener{
-
-//            WatchActivityHandler.setFilePaths(filePath)
-//            Log.d(TAG, "path " +filePath)
             val openLoading = Intent(applicationContext, LoggedEvent::class.java)
             startActivity(openLoading)
         }
 
     }
 
-    //TÄMÄ EI VIELÄ NÄY KÄYTTÄJÄLLE
     fun checkPermissions() {
         val permissions = arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,

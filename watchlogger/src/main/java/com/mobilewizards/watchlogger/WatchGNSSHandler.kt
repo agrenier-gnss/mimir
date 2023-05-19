@@ -17,9 +17,6 @@ import com.mobilewizards.logging_app.BuildConfig
 import java.io.File
 import java.util.*
 
-//import androidx.health.services.client.proto.DataProto.HeartRateAlertParams
-
-
 /*Class to handle GNSS data logging and writing it in CSV-files. Logging works the same way it does
 on phone.*/
 @Suppress("DEPRECATION")
@@ -37,8 +34,6 @@ class WatchGNSSHandler {
     //in the file.
     private var gnssMeasurementsList = mutableListOf<String>()
 
-
-
     constructor(context: Context) : super() {
         this.context = context.applicationContext
     }
@@ -51,14 +46,13 @@ class WatchGNSSHandler {
         logGnssNavigationMessages(1000)
     }
 
-    /*Function that logs location by creating two listeners. One for gps provider and
-    one for network provider, if they are enabled.*/
+    /* Function that logs location by creating two listeners. One for gps provider and
+    one for network provider, if they are enabled. */
     private fun logLocation(samplingFrequency: Long) {
         //Locationlistener for Gps
         gpsLocationListener = object : LocationListener{
 
             override fun onLocationChanged(location: Location){
-
                 //Collects data in a string in a wanted format and then added in the data list.
                 val locationStream: String = java.lang.String.format(
                     Locale.US,
@@ -73,16 +67,13 @@ class WatchGNSSHandler {
                 )
                 gnssMeasurementsList.add(locationStream)
             }
-
             override fun onFlushComplete(requestCode: Int) {}
             override fun onProviderDisabled(provider: String) {}
             override fun onProviderEnabled(provider: String) {}
-
         }
 
         networkLocationListener = object : LocationListener{
             override fun onLocationChanged(location: Location){
-
                 val locationStream: String = java.lang.String.format(
                     Locale.US,
                     "Fix,%s,%f,%f,%f,%f,%f,%d",
@@ -121,7 +112,7 @@ class WatchGNSSHandler {
         }
     }
 
-    /*Logging of GNSS measurements by creating a listener in this function. Parameter samplingFrequency
+    /* Logging of GNSS measurements by creating a listener in this function. Parameter samplingFrequency
     * is given to make sure data isn't logged too fast. Contains deprecated methods.*/
     private fun logGNSS( samplingFrequency: Long) {
         gnssMeasurementsEventListener = object : android.location.GnssMeasurementsEvent.Callback(){
@@ -131,13 +122,13 @@ class WatchGNSSHandler {
                 //Testing if enough time has passed since the last event.
                 val currentTime = SystemClock.elapsedRealtime()
                 if (currentTime - lastMeasurementTime >= samplingFrequency) {
-
                     val measurementsList = mutableListOf<String>()
-
                     var clock: GnssClock = event.clock
 
                     //First part of the logged rows.
-                    val clockString="Raw,"+"$currentTime," + "${clock.timeNanos}," +
+                    val clockString = "Raw,"+
+                            "$currentTime," +
+                            "${clock.timeNanos}," +
                             "${clock.getTimeNanos()}," +
                             "${if (clock.hasLeapSecond()) clock.leapSecond else ""},"+
                             "${if(clock.hasTimeUncertaintyNanos()) clock.getTimeUncertaintyNanos() else ""},"+
@@ -152,30 +143,28 @@ class WatchGNSSHandler {
 
                         //Second part of the logged rows.
                         val measurementString =
-                            "${measurement.getSvid()}," +
-                                    "${measurement.getTimeOffsetNanos()}," +
-                                    "${measurement.getState()}," +
-                                    "${measurement.getReceivedSvTimeNanos()}," +
-                                    "${measurement.getReceivedSvTimeUncertaintyNanos()}," +
-                                    "${measurement.getCn0DbHz()}," +
-                                    "${measurement.getPseudorangeRateMetersPerSecond()}," +
-                                    "${measurement.getPseudorangeRateUncertaintyMetersPerSecond()}," +
-                                    "${measurement.getAccumulatedDeltaRangeState()}," +
-                                    "${measurement.getAccumulatedDeltaRangeMeters()}," +
-                                    "${measurement.getAccumulatedDeltaRangeUncertaintyMeters()}," +
-                                    "${if(measurement.hasCarrierFrequencyHz()) measurement.getCarrierFrequencyHz() else ""}," +
-                                    "${if(measurement.hasCarrierCycles()) measurement.carrierCycles else ""},"+
-                                    "${if(measurement.hasCarrierPhase()) measurement.carrierPhase else ""}," +
-                                    "${if(measurement.hasCarrierPhaseUncertainty()) measurement.carrierPhaseUncertainty else ""}," +
-                                    "${measurement.getMultipathIndicator()}," +
-                                    "${if(measurement.hasSnrInDb()) measurement.getSnrInDb() else ""}," +
-                                    "${measurement.getConstellationType()}," +
-                                    "${if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && measurement.hasAutomaticGainControlLevelDb())
-                                        measurement.getAutomaticGainControlLevelDb() else ""}"
+                                "${measurement.getSvid()}," +
+                                "${measurement.getTimeOffsetNanos()}," +
+                                "${measurement.getState()}," +
+                                "${measurement.getReceivedSvTimeNanos()}," +
+                                "${measurement.getReceivedSvTimeUncertaintyNanos()}," +
+                                "${measurement.getCn0DbHz()}," +
+                                "${measurement.getPseudorangeRateMetersPerSecond()}," +
+                                "${measurement.getPseudorangeRateUncertaintyMetersPerSecond()}," +
+                                "${measurement.getAccumulatedDeltaRangeState()}," +
+                                "${measurement.getAccumulatedDeltaRangeMeters()}," +
+                                "${measurement.getAccumulatedDeltaRangeUncertaintyMeters()}," +
+                                "${if(measurement.hasCarrierFrequencyHz()) measurement.getCarrierFrequencyHz() else ""}," +
+                                "${if(measurement.hasCarrierCycles()) measurement.carrierCycles else ""},"+
+                                "${if(measurement.hasCarrierPhase()) measurement.carrierPhase else ""}," +
+                                "${if(measurement.hasCarrierPhaseUncertainty()) measurement.carrierPhaseUncertainty else ""}," +
+                                "${measurement.getMultipathIndicator()}," +
+                                "${if(measurement.hasSnrInDb()) measurement.getSnrInDb() else ""}," +
+                                "${measurement.getConstellationType()}," +
+                                "${if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && measurement.hasAutomaticGainControlLevelDb())
+                                    measurement.getAutomaticGainControlLevelDb() else ""}"
 
                         val eventString = clockString + measurementString
-
-
 
                         measurementsList.add(eventString)
                         Log.d("GNSS Measurement", measurementString)
@@ -196,7 +185,7 @@ class WatchGNSSHandler {
 
     }
 
-    /*Logging for GNSS navigation messages.*/
+    /* Logging for GNSS navigation messages. */
     fun logGnssNavigationMessages(samplingFrequency: Long){
         gnssNavigationMessageListener = object : GnssNavigationMessage.Callback(){
             var lastMeasurementTime = 0L
@@ -211,7 +200,6 @@ class WatchGNSSHandler {
                             "${event?.messageId}," +
                             "${event?.submessageId},"
 
-
                     val data: ByteArray? = event?.getData()
                     if (data != null) {
                         for (word in data) {
@@ -221,13 +209,11 @@ class WatchGNSSHandler {
                     gnssMeasurementsList.add(gnssNavigationMessageString)
                 }
             }
-
         }
-
         locationManager.registerGnssNavigationMessageCallback(gnssNavigationMessageListener)
     }
 
-    /*Function that stops logging and writes collected data to the CSV-file.*/
+    /* Function that stops logging and writes collected data to the CSV-file. */
     fun stopLogging(context: Context) {
         locationManager.removeUpdates(gpsLocationListener)
         locationManager.removeUpdates(networkLocationListener)
@@ -296,8 +282,6 @@ class WatchGNSSHandler {
                 }
                 outputStream.flush()
             }
-
-//            Toast.makeText(context, "GNSS Measurements saved to Downloads folder", Toast.LENGTH_SHORT).show()
         }
 
         var filePath = ""

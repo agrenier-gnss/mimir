@@ -27,7 +27,6 @@ class BLEHandlerWatch(private val context: Context) {
     private val handler = Handler()
     private val TAG = "watchLogger"
 
-
     init {
         initializeBluetooth()
         initializeScanCallback()
@@ -35,8 +34,6 @@ class BLEHandlerWatch(private val context: Context) {
     private fun initializeBluetooth() {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         bluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
-
-
     }
 
     private var bleScanList = mutableListOf<String>()
@@ -97,7 +94,6 @@ class BLEHandlerWatch(private val context: Context) {
                     }
                     outputStream.flush()
                 }
-//                Toast.makeText(context, "Bluetooth scan results saved to Downloads folder", Toast.LENGTH_SHORT).show()
             }
 
             var filePath = ""

@@ -13,6 +13,5 @@ class PreviousSurveysActivity : Activity() {
 
         binding = ActivityPreviousSurveysBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
     }
 }

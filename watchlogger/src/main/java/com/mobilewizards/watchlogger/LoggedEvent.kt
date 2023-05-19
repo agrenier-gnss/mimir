@@ -11,7 +11,6 @@ import com.mobilewizards.logging_app.databinding.ActivityLoggedEventBinding
 class LoggedEvent : Activity() {
 
     private lateinit var binding: ActivityLoggedEventBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -20,12 +19,11 @@ class LoggedEvent : Activity() {
 
         val logInfoText =  findViewById<TextView>(R.id.logInfotext)
 
-        //Tähän aito teksti eventistä
+        // TODO: Better text form survey
         logInfoText.text = "Would you like to load the survey?"//"23.04.23 time 400 logged events from phone"
 
         val loadSurvey = findViewById<ImageButton>(R.id.loadBtn)
         val doNotLoad = findViewById<ImageButton>(R.id.deleteBtn)
-
 
         loadSurvey.setOnClickListener{
             val openLoadTo = Intent(applicationContext, SendSurveysActivity::class.java)
@@ -33,7 +31,6 @@ class LoggedEvent : Activity() {
         }
 
         doNotLoad.setOnClickListener{
-
             val goBack = Intent(applicationContext, LoggingActivity::class.java)
             startActivity(goBack)
         }

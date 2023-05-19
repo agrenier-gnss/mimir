@@ -25,7 +25,6 @@ class HealthServicesHandler: SensorEventListener{
     private lateinit var mHeartRateSensor: Sensor
     private lateinit var mSensorManager: SensorManager
     private lateinit var context: Context
-
     private val heartRateMeasurementList = mutableListOf<String>()
 
     constructor(context: Context) {
@@ -54,7 +53,6 @@ class HealthServicesHandler: SensorEventListener{
 
         val uri = context.contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
 
-        Log.d("uri", uri.toString())
         uri?.let { mediaUri ->
             context.contentResolver.openOutputStream(mediaUri)?.use { outputStream ->
                 outputStream.write("heart_rate,time\n".toByteArray())
@@ -64,7 +62,6 @@ class HealthServicesHandler: SensorEventListener{
                 outputStream.flush()
             }
 
-//            Toast.makeText(context, "Heart rate scan results saved to Downloads folder", Toast.LENGTH_SHORT).show()
             var filePath = ""
             fun getRealPathFromUri(contentResolver: ContentResolver, uri: Uri): String {
                 val projection = arrayOf(MediaStore.Images.Media.DATA)
@@ -76,7 +73,7 @@ class HealthServicesHandler: SensorEventListener{
                 return path ?: ""
             }
             uri?.let { getRealPathFromUri(context.contentResolver, it) }
-                ?.let { Log.d("uri", it)
+                ?.let {
                     filePath = it}
             WatchActivityHandler.setFilePaths(File(filePath))
         }
@@ -87,7 +84,6 @@ class HealthServicesHandler: SensorEventListener{
         for (measurement in sensorEvent?.values!!) {
             val measurement = measurement
             val time = LocalDateTime.now()
-
             val measurementString =
                 "$measurement," +
                 "$time"
@@ -95,7 +91,6 @@ class HealthServicesHandler: SensorEventListener{
             measurementsList.add(measurementString)
             Log.d("Heart rate  Measurement", measurementString)
         }
-
         heartRateMeasurementList.addAll(measurementsList)
     }
 

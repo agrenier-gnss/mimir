@@ -19,16 +19,12 @@ class FileSendActivity : Activity() {
         setContentView(binding.root)
 
         var fileSuccessful = WatchActivityHandler.checkFileSend()
-
         val logText =  findViewById<TextView>(R.id.logInfoText)
-       // logText.visibility = View.GONE
-
         val logOkImage =  findViewById<ImageView>(R.id.imageOk)
         logOkImage.visibility = View.GONE
 
         val logFailedImage =  findViewById<ImageView>(R.id.imageFailed)
         logFailedImage.visibility = View.GONE
-
 
         if (fileSuccessful){
             logOkImage.visibility = View.VISIBLE

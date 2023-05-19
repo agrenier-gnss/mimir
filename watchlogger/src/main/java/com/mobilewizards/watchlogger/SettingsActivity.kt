@@ -12,8 +12,6 @@ import com.mobilewizards.logging_app.databinding.ActivitySettingsBinding
 
 
 class SettingsActivity : Activity() {
-
-   // private lateinit var layout: LinearLayout
     private lateinit var binding: ActivitySettingsBinding
 
     @SuppressLint("ClickableViewAccessibility")
@@ -36,43 +34,22 @@ class SettingsActivity : Activity() {
         val fifteenSecBtn = findViewById<Button>(R.id.FifteenSecondsBtn)
         val thirtySecBtn = findViewById<Button>(R.id.ThirtySecondsBtn)
         val minuteBtn = findViewById<Button>(R.id.OneMinuteBtn)
-
-        //Tähän valittu frequency (isSelected jotenkin)
-
-
         val saveSettingsBtn = findViewById<Button>(R.id.saveSettingsBtn)
 
-
         gnssBtn.setOnClickListener{
-
             gnssBtn.isSelected = !gnssBtn.isSelected
-
-           /* if (WatchActivityHandler.getGnssStatus()){
-                gnssClicked = false
-               */
-
-           // WatchActivityHandler.changeGnssStatus(gnssBtn.isSelected)
-
         }
 
         imuBtn.setOnClickListener{
-
             imuBtn.isSelected = !imuBtn.isSelected
-
-            //WatchActivityHandler.changeImuStatus(imuBtn.isSelected)
-            //
         }
         ecgBtn.setOnClickListener{
-
             ecgBtn.isSelected = !ecgBtn.isSelected
-            //WatchActivityHandler.changeEcgStatus(ecgBtn.isSelected)
-            //
         }
 
         fiveSecBtn.setOnClickListener{
             fiveSecBtn.isSelected = !fiveSecBtn.isSelected
-
-            //taajuus oikeaksi arvoksi, nyt väärä.
+            // TODO: Chagne frequency to correct
             if (fiveSecBtn.isSelected){
                // changeFrequencyStatus(fiveSecBtn)
                 fifteenSecBtn.isSelected = false
@@ -80,25 +57,22 @@ class SettingsActivity : Activity() {
                 minuteBtn.isSelected = false
                // WatchActivityHandler.changeFrequency(5)
             }
-
         }
 
         fifteenSecBtn.setOnClickListener{
             fifteenSecBtn.isSelected = !fifteenSecBtn.isSelected
-
-            //taajuus oikeaksi arvoksi, nyt väärä.
+            // TODO: Chagne frequency to correct
             if (fifteenSecBtn.isSelected){
                 fiveSecBtn.isSelected = false
                 thirtySecBtn.isSelected = false
                 minuteBtn.isSelected = false
               //  WatchActivityHandler.changeFrequency(15)
             }
-
         }
 
         thirtySecBtn.setOnClickListener{
             thirtySecBtn.isSelected = !thirtySecBtn.isSelected
-            //taajuus oikeaksi arvoksi, nyt väärä.
+            // TODO: Chagne frequency to correct
             if (thirtySecBtn.isSelected){
                 fiveSecBtn.isSelected = false
                 fifteenSecBtn.isSelected = false
@@ -108,45 +82,38 @@ class SettingsActivity : Activity() {
         }
 
         minuteBtn.setOnClickListener{
-
             minuteBtn.isSelected = !minuteBtn.isSelected
-            //taajuus oikeaksi arvoksi, nyt väärä.
+            // TODO: Chagne frequency to correct
             if (minuteBtn.isSelected){
                 fiveSecBtn.isSelected = false
                 fifteenSecBtn.isSelected = false
                 thirtySecBtn.isSelected = false
                 //WatchActivityHandler.changeFrequency(60)
             }
-            //
         }
 
         saveSettingsBtn.setOnClickListener{
-
             saveSettingsBtn.isSelected = !saveSettingsBtn.isSelected
-
             WatchActivityHandler.changeImuStatus(imuBtn.isSelected)
             WatchActivityHandler.changeGnssStatus(gnssBtn.isSelected)
             WatchActivityHandler.changeEcgStatus(ecgBtn.isSelected)
 
-            //taajuudet oikeiksi arvoiksi, nyt vääriä.
+            // TODO: Chagne frequency to correct
             if (fiveSecBtn.isSelected){
-
                 WatchActivityHandler.changeFrequency(5)
             }
             else if (fifteenSecBtn.isSelected){
                   WatchActivityHandler.changeFrequency(15)
-
-            } else if (thirtySecBtn.isSelected){
+            }
+            else if (thirtySecBtn.isSelected){
                  WatchActivityHandler.changeFrequency(30)
-
-            } else  if (minuteBtn.isSelected){
+            }
+            else  if (minuteBtn.isSelected){
                 WatchActivityHandler.changeFrequency(60)
-
             } else {
                 //Default value
                 WatchActivityHandler.changeFrequency(5)
             }
-
         }
     }
 }

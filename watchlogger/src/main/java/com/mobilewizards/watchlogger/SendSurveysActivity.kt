@@ -13,19 +13,14 @@ import android.provider.MediaStore
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
-import androidx.core.net.toFile
 import androidx.core.net.toUri
 import com.google.android.gms.wearable.ChannelClient
-import com.google.android.gms.wearable.DataMap
-import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.Wearable
 import com.mobilewizards.logging_app.databinding.ActivitySendSurveysBinding
 import com.mobilewizards.watchlogger.WatchActivityHandler
 import java.io.BufferedReader
-import java.io.BufferedWriter
 import java.io.File
 import java.io.FileReader
-import java.io.FileWriter
 
 var startTime: Long? = null
 
@@ -38,7 +33,6 @@ class SendSurveysActivity : Activity() {
     private val TAG = "watchLogger"
     private val CSV_FILE_CHANNEL_PATH = MediaStore.Downloads.EXTERNAL_CONTENT_URI
     private var filePaths = mutableListOf<File>()
-
     private var fileSendOk : Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +40,6 @@ class SendSurveysActivity : Activity() {
 
         binding = ActivitySendSurveysBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
 
         val toPhoneBtn = findViewById<Button>(R.id.SendToPhoneBtn)
         val toDriveBtn = findViewById<Button>(R.id.SendToDrive)
@@ -60,12 +53,8 @@ class SendSurveysActivity : Activity() {
         }
 
         toDriveBtn.setOnClickListener{
-
             //
         }
-
-
-
     }
 
     private fun fileSendSuccessful(){
@@ -75,7 +64,6 @@ class SendSurveysActivity : Activity() {
         WatchActivityHandler.fileSendStatus(fileSendOk)
         val openSendInfo = Intent(applicationContext, FileSendActivity::class.java)
         startActivity(openSendInfo)
-
     }
 
     private fun fileSendTerminated(){
@@ -86,7 +74,6 @@ class SendSurveysActivity : Activity() {
         WatchActivityHandler.fileSendStatus(fileSendOk)
         val openSendInfo = Intent(applicationContext, FileSendActivity::class.java)
         startActivity(openSendInfo)
-
     }
 
     @SuppressLint("Range", "SimpleDateFormat")
@@ -109,7 +96,6 @@ class SendSurveysActivity : Activity() {
                 }
 
                 val uri = this.contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
-
                 var path = ""
                 uri?.let { mediaUri ->
                     this.contentResolver.openOutputStream(mediaUri)?.use { outputStream ->
@@ -147,7 +133,6 @@ class SendSurveysActivity : Activity() {
                                 outputStream.write("$line\n".toByteArray())
                                 line = reader.readLine()
                             }
-
                             reader.close()
                         }
                         outputStream.flush()
@@ -161,11 +146,9 @@ class SendSurveysActivity : Activity() {
                             }
                         }
                     }
-
-                    Toast.makeText(this, "Kirjoitettu!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "File written", Toast.LENGTH_SHORT).show()
                 }
                 sendCsvFileToPhone(File(path), connectedNode, this)
-
                 WatchActivityHandler.clearFilfPaths()
             }
         }
@@ -178,11 +161,9 @@ class SendSurveysActivity : Activity() {
                 Log.d(TAG, "connected node in getPhoneId " + node.id.toString())
                 nodeIds.add(node.id.toString())
             }
-            Log.d(TAG, "in getPhonenodeids size " + nodeIds.size.toString())
             callback(nodeIds)
         }
     }
-
 
     private fun sendCsvFileToPhone(csvFile: File,nodeId: String, context: Context) {
         Log.d(TAG, "in sendCsvFileToPhone " + csvFile.name)
@@ -205,7 +186,6 @@ class SendSurveysActivity : Activity() {
             override fun onChannelOpened(channel: ChannelClient.Channel) {
                 Log.d(TAG, "onChannelOpened " + channel.nodeId)
                 // Send the CSV file to the phone
-                Log.d(TAG, "file name " + csvFile.name)
                 channelClient.sendFile(channel, csvFile.toUri()).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         Log.d(TAG, "task is succesfull:" + csvFile.toUri().toString())
@@ -218,8 +198,9 @@ class SendSurveysActivity : Activity() {
                         fileSendTerminated()
                         channelClient.close(channel)
                     }
+                }
             }
-        }
+
             override fun onChannelClosed(
                 channel: ChannelClient.Channel,
                 closeReason: Int,

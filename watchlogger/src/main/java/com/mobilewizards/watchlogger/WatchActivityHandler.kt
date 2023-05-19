@@ -3,7 +3,6 @@ package com.mobilewizards.watchlogger
 import android.util.Log
 import java.io.File
 
-//Tänne talletettavia tietoja, esim asetukset ja filepath?
 object WatchActivityHandler {
 
     // Variable to save the files for sending
