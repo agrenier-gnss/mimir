@@ -36,7 +36,7 @@
                 android:textSize="30sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="parent"
-                app:shapeAppearance="@style/MyTextAppearance" />
+                app:shapeAppearance="@style/TextAppearance" />
 
             <TextView
                 android:id="@+id/sensorState"
@@ -50,7 +50,7 @@
                 android:textSize="16sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="parent"
-                app:shapeAppearance="@style/MyTextAppearance" />
+                app:shapeAppearance="@style/TextAppearance" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/sensorSwitch"
@@ -85,7 +85,7 @@
                 android:textSize="12sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="parent"
-                app:shapeAppearance="@style/MyTextAppearance" />
+                app:shapeAppearance="@style/TextAppearance" />
 
         </TableRow>
 
@@ -107,7 +107,7 @@
                 android:textSize="12sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="parent"
-                app:shapeAppearance="@style/MyTextAppearance" />
+                app:shapeAppearance="@style/TextAppearance" />
 
             <SeekBar
                 android:id="@+id/sensorSlider"
@@ -143,7 +143,7 @@
             android:textSize="24sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="parent"
-            app:shapeAppearance="@style/MyTextAppearance"
+            app:shapeAppearance="@style/TextAppearance"
             />
 
         <TextView
@@ -156,7 +156,7 @@
             android:textColor="@color/lighter_gray"
             android:textSize="14sp"
             app:layout_constraintTop_toBottomOf="parent"
-            app:shapeAppearance="@style/MyTextAppearance"/>
+            app:shapeAppearance="@style/TextAppearance"/>
 
         <TextView
             android:id="@+id/loggedEvents"
@@ -168,7 +168,7 @@
             android:textSize="14sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="parent"
-            app:shapeAppearance="@style/MyTextAppearance"/>
+            app:shapeAppearance="@style/TextAppearance"/>
 
         <TableRow
             android:id="@+id/surveySquareRow"
@@ -186,7 +186,7 @@
                 android:textSize="14sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="parent"
-                app:shapeAppearance="@style/MyTextAppearance"/>
+                app:shapeAppearance="@style/TextAppearance"/>
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/decline_button"
@@ -222,7 +222,7 @@
             android:textSize="14sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="parent"
-            app:shapeAppearance="@style/MyTextAppearance"
+            app:shapeAppearance="@style/TextAppearance"
             />
 
         <TextView
@@ -235,7 +235,7 @@
             android:textColor="@color/white"
             android:textSize="32sp"
             app:layout_constraintTop_toBottomOf="parent"
-            app:shapeAppearance="@style/MyTextAppearance" />
+            app:shapeAppearance="@style/TextAppearance" />
 
         <TextView
             android:id="@+id/logEventDescription"
@@ -248,7 +248,7 @@
             android:textSize="14sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="parent"
-            app:shapeAppearance="@style/MyTextAppearance"/>
+            app:shapeAppearance="@style/TextAppearance"/>
 
     </LinearLayout>
 

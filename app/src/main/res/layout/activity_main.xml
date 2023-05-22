@@ -39,7 +39,7 @@
                 />
 
             <TextView
-                android:id="@+id/SensorLogging"
+                android:id="@+id/sensor_logging"
                 android:layout_width="220dp"
                 android:layout_height="50dp"
                 android:ems="10"
@@ -48,11 +48,11 @@
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/logo"
-                app:layout_constraintTop_toBottomOf="@+id/MimirName"
-                app:shapeAppearance="@style/MyTextAppearance"/>
+                app:layout_constraintTop_toBottomOf="@+id/mimir_name"
+                app:shapeAppearance="@style/TextAppearance"/>
 
             <TextView
-                android:id="@+id/MimirName"
+                android:id="@+id/mimir_name"
                 android:layout_width="100dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="60dp"
@@ -62,7 +62,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/logo"
                 app:layout_constraintTop_toTopOf="parent"
-                app:shapeAppearance="@style/MyTextAppearance"/>
+                app:shapeAppearance="@style/TextAppearance"/>
 
             <TextView
                 android:id="@+id/settings"
@@ -75,7 +75,7 @@
                 android:textColor="@color/white"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/logo"
-                app:shapeAppearance="@style/MyTextAppearance" />
+                app:shapeAppearance="@style/TextAppearance" />
 
             <LinearLayout
                 android:id="@+id/square_layout"

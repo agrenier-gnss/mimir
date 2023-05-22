@@ -25,10 +25,10 @@ class MauveActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        val loggingButton = findViewById<Button>(R.id.loggingButton)
-        val dataButton = findViewById<Button>(R.id.downloadDataButton)
-        val loggingText = findViewById<TextView>(R.id.loggingTextView)
-        val timeText = findViewById<TextView>(R.id.loggingTimeTextView)
+        val loggingButton = findViewById<Button>(R.id.logging_button)
+        val dataButton = findViewById<Button>(R.id.download_data_button)
+        val loggingText = findViewById<TextView>(R.id.logging_text_view)
+        val timeText = findViewById<TextView>(R.id.logging_time_text_view)
 
         // Prevent logging button from going to unintended locations
         if(ActivityHandler.getIsLogging()) {
@@ -85,10 +85,10 @@ class MauveActivity : AppCompatActivity() {
 
         var isInitialLoad = true
 
-        val loggingButton = findViewById<Button>(R.id.loggingButton)
-        val dataButton = findViewById<Button>(R.id.downloadDataButton)
-        val loggingText = findViewById<TextView>(R.id.loggingTextView)
-        val timeText = findViewById<TextView>(R.id.loggingTimeTextView)
+        val loggingButton = findViewById<Button>(R.id.logging_button)
+        val dataButton = findViewById<Button>(R.id.download_data_button)
+        val loggingText = findViewById<TextView>(R.id.logging_text_view)
+        val timeText = findViewById<TextView>(R.id.logging_time_text_view)
 
         //if logging button is toggled in other activities, it is also toggled in here.
 
@@ -112,7 +112,7 @@ class MauveActivity : AppCompatActivity() {
 
             if(isPressed) {
                 // Start logging
-                findViewById<Button>(R.id.loggingButton).text = "Stop logging"
+                findViewById<Button>(R.id.logging_button).text = "Stop logging"
                 dataButton.visibility = View.GONE
                 loggingButton.animate()
                     .translationYBy(250f)
@@ -126,7 +126,7 @@ class MauveActivity : AppCompatActivity() {
 
             } else {
                 // Stop logging
-                findViewById<Button>(R.id.loggingButton).text = "Start logging"
+                findViewById<Button>(R.id.logging_button).text = "Start logging"
                 loggingText.text = ""
                 timeText.text = ""
                 loggingButton.animate()

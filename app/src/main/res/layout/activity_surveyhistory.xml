@@ -21,7 +21,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/previous_survey_title_text"
                 android:layout_width="241sp"
                 android:layout_height="40sp"
                 android:layout_marginLeft="13dp"

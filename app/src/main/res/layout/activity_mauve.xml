@@ -8,7 +8,7 @@
     android:id="@+id/activity_mauve_layout">
 
     <TextView
-        android:id="@+id/titleName"
+        android:id="@+id/title_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
@@ -20,10 +20,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearance="@style/MyTextAppearance" />/>
+        app:shapeAppearance="@style/TextAppearance" />/>
 
     <TextView
-        android:id="@+id/secondaryTitle"
+        android:id="@+id/secondary_title"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -34,11 +34,11 @@
         android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleName"
-        app:shapeAppearance="@style/MyTextAppearance" />/>
+        app:layout_constraintTop_toBottomOf="@+id/title_name"
+        app:shapeAppearance="@style/TextAppearance" />/>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/loggingButton"
+        android:id="@+id/logging_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:checked="false"
@@ -50,10 +50,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearance="@style/MyButtonShapeAppearance" />/>
+        app:shapeAppearance="@style/ButtonShapeAppearance" />/>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/downloadDataButton"
+        android:id="@+id/download_data_button"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="250dp"
         android:layout_height="50dp"
@@ -64,12 +64,12 @@
         android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loggingButton"
-        app:shapeAppearance="@style/MyButtonShapeAppearance"
+        app:layout_constraintTop_toBottomOf="@+id/logging_button"
+        app:shapeAppearance="@style/ButtonShapeAppearance"
         app:strokeColor="@color/mauve" />
 
     <TextView
-        android:id="@+id/loggingTextView"
+        android:id="@+id/logging_text_view"
         android:textColor="@color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -78,18 +78,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearance="@style/MyTextAppearance"/>
+        app:shapeAppearance="@style/TextAppearance"/>
 
     <TextView
-        android:id="@+id/loggingTimeTextView"
+        android:id="@+id/logging_time_text_view"
         android:textColor="@color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/loggingButton"
-        app:shapeAppearance="@style/MyTextAppearance"/>
+        app:layout_constraintTop_toBottomOf="@id/logging_button"
+        app:shapeAppearance="@style/TextAppearance"/>
     />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
