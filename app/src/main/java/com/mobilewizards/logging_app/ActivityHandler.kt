@@ -1,19 +1,13 @@
 package com.mobilewizards.logging_app
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.android.gms.wearable.DataMap
-import com.google.android.gms.wearable.Wearable
 import java.text.SimpleDateFormat
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 //this class handles logging data and log events all from one class
 object ActivityHandler{
-
 
     private var isLogging: Boolean = false
 
@@ -43,8 +37,9 @@ object ActivityHandler{
     // Survey start time
     private var surveyStartTime: String = "Time not set"
 
-    //keeps track of the button state and synchronises them between activities
+    // Keeps track of logging_button state
     private val buttonState = MutableLiveData<Boolean>(false)
+
     fun getButtonState(): LiveData<Boolean> {
         return buttonState
     }
@@ -60,27 +55,31 @@ object ActivityHandler{
         }
     }
 
-    fun getIsLogging(): Boolean{
+    fun isLogging(): Boolean{
         return isLogging
     }
 
-    //Functions to both logging and stopping it.
     fun startLogging(context: Context){
+
         val motionSensors = MotionSensorsHandler(context)
-        val gnss= GnssHandler(context)
+        val gnss = GnssHandler(context)
         val ble =  BLEHandler(context)
+
         gnssSensor.add(gnss)
         imuSensor.add(motionSensors)
         bleSensor.add(ble)
+
         if(IMUToggle || getToggle("Magnetometer") || getToggle("Barometer"))
             {motionSensors.setUpSensors(IMUFrequency, magnetometerFrequency, barometerFrequency)}
         if (GNSSToggle) {gnss.setUpLogging()}
         if(BLEToggle){ble.setUpLogging()}
+
         isLogging = true
         setSurveyStartTime()
     }
 
     fun stopLogging(context: Context){
+
         if (GNSSToggle) {
             gnssSensor[0].stopLogging(context)}
         if(IMUToggle || getToggle("Magnetometer") || getToggle("Barometer")){
@@ -89,12 +88,14 @@ object ActivityHandler{
         if(BLEToggle){
             bleSensor[0].stopLogging()
         }
+
         gnssSensor.clear()
         imuSensor.clear()
         bleSensor.clear()
         isLogging = false
     }
 
+    // Get info on whether the sensor will be logged or not
     fun getToggle(tag: String): Boolean{
         if(tag.equals("GNSS")){
             return GNSSToggle
@@ -114,6 +115,7 @@ object ActivityHandler{
         return false
     }
 
+    // Toggle sensor status between true and false whether it will be logged or not
     fun setToggle(tag: String){
         if(tag.equals("GNSS")){
              GNSSToggle = !GNSSToggle
@@ -161,9 +163,7 @@ object ActivityHandler{
     }
 
     fun getLogData(tag: String): String {
-        if(tag.equals("Time")) {
-            val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
-        } else if(tag.equals("GNSS")) {
+        if(tag.equals("GNSS")) {
             return GNSSLogs.toString()
         } else if(tag.equals("IMU")){
             return IMULogs.toString()

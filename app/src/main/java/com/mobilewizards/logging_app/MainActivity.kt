@@ -11,12 +11,8 @@ import androidx.appcompat.widget.SwitchCompat
 import com.google.android.gms.wearable.DataMap
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.Wearable
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.ArrayDeque
-import androidx.core.net.toUri
 import android.provider.MediaStore
-import com.google.android.gms.wearable.ChannelClient
 
 data class GnssMeasurement(
     val svId: Int,
@@ -66,7 +62,7 @@ class MainActivity : AppCompatActivity() {
 
             var sensorSwitch = row.findViewById<SwitchCompat>(R.id.sensorSwitch)
             sensorSwitch.isChecked = ActivityHandler.getToggle(sensorList[i][0].toString())
-            sensorSwitch.isEnabled = !ActivityHandler.getIsLogging() // Disable toggling sensor if logging is ongoing
+            sensorSwitch.isEnabled = !ActivityHandler.isLogging() // Disable toggling sensor if logging is ongoing
 
             var sensorStateTextView = row.findViewById<TextView>(R.id.sensorState)
             setStateTextview(sensorSwitch.isChecked, sensorStateTextView)
@@ -91,7 +87,7 @@ class MainActivity : AppCompatActivity() {
                 slider.min = sensorList[i][2].toString().toInt()
                 slider.max = sensorList[i][3].toString().toInt()
                 slider.progress = ActivityHandler.getFrequency(sensorList[i][0].toString())
-                slider.isEnabled = !ActivityHandler.getIsLogging() // Disable changing slider if logging is ongoing
+                slider.isEnabled = !ActivityHandler.isLogging() // Disable changing slider if logging is ongoing
 
                 val sliderValue = row3.findViewById<TextView>(R.id.sliderValue)
                 sliderValue.text = ActivityHandler.getFrequency(sensorList[i][0] as String).toString() //set slider value

@@ -32,7 +32,7 @@ class MauveActivity : AppCompatActivity() {
         val timeText = findViewById<TextView>(R.id.logging_time_text_view)
 
         // Prevent logging button from going to unintended locations
-        if(ActivityHandler.getIsLogging()) {
+        if(ActivityHandler.isLogging()) {
 
             dataButton.visibility = View.GONE
             loggingButton.text = "Stop logging"

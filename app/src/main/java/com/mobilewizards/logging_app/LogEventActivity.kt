@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -63,20 +62,20 @@ class LogEventActivity : AppCompatActivity() {
             timer.scheduleAtFixedRate(object : TimerTask() {
                 override fun run() {
                     // This code will run every second
-                    if (activityList[i] == "Magnetometer" && ActivityHandler.getIsLogging()) {
+                    if (activityList[i] == "Magnetometer" && ActivityHandler.isLogging()) {
                         datapoint.text = ActivityHandler.imuSensor[0].getMagnetometerValues().size.toString()
                     }
-                    if(activityList[i] == "Bluetooth" && ActivityHandler.getIsLogging()) {
+                    if(activityList[i] == "Bluetooth" && ActivityHandler.isLogging()) {
                         //todo: not logging anything
                         datapoint.text = ActivityHandler.bleSensor[0].getBLEValues().size.toString()
                     }
-                    if(activityList[i] == "GNSS" && ActivityHandler.getIsLogging()) {
+                    if(activityList[i] == "GNSS" && ActivityHandler.isLogging()) {
                         datapoint.text = ActivityHandler.gnssSensor[0].getGNSSValues().size.toString()
                     }
-                    if(activityList[i] == "Barometer" && ActivityHandler.getIsLogging()) {
+                    if(activityList[i] == "Barometer" && ActivityHandler.isLogging()) {
                         datapoint.text = ActivityHandler.imuSensor[0].getBarometerValues().size.toString()
                     }
-                    if(activityList[i] == "IMU" && ActivityHandler.getIsLogging()) {
+                    if(activityList[i] == "IMU" && ActivityHandler.isLogging()) {
                         var sum = 0
                         for(j in ActivityHandler.imuSensor[0].getIMUValues()) {
                             sum += j.size
