@@ -124,6 +124,7 @@ class SendSurveysActivity : Activity() {
                             val reader = BufferedReader(FileReader(file))
 
                             outputStream.write("\n".toByteArray())
+                            outputStream.write(COMMENT_START.toByteArray())
                             outputStream.write("${file.name}\n".toByteArray())
 
                             var line: String? = reader.readLine()
@@ -147,7 +148,6 @@ class SendSurveysActivity : Activity() {
                     Toast.makeText(this, "File written", Toast.LENGTH_SHORT).show()
                 }
                 sendCsvFileToPhone(File(path), connectedNode, this)
-                WatchActivityHandler.clearFilfPaths()
             }
         }
     }

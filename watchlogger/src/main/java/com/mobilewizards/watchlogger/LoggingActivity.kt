@@ -81,6 +81,8 @@ class LoggingActivity : Activity() {
 
             startTime = System.currentTimeMillis()
 
+            WatchActivityHandler.clearFilfPaths()
+
             IMU.setUpSensors(10,1,1)
             gnss.setUpLogging()
             ble.setUpLogging()
