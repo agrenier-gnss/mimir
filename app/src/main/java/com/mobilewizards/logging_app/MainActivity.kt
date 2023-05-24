@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
 
 
         val sensorList = arrayOf(
-            //1st value: name. second value: is there a slider. third and fourth are min and max values for sliders
+            // 1st value: name. 2nd value: is there a slider. 3rd and 4th are min and max values for slider
             arrayOf("GNSS", false),
             arrayOf("IMU", true, 10, 100),
             arrayOf("Barometer", true, 1, 10),
@@ -75,51 +75,28 @@ class MainActivity : AppCompatActivity() {
                 ActivityHandler.setToggle(sensorList[i][0].toString()) //toggle the status in singleton
             }
 
+            // Create the layout for each sensor
             if(sensorList[i][1] == false) {
-                // if frequency is can not be changed
+                // Goes here if frequency is can not be changed
                 description.text = "${sensorList[i][0]} is always sampled at 1 Hz" // Change the description text
                 tableLayout.removeViewAt(2) // Remove the row with the slider.
             } else {
-                // if frequency can be changed
+                // Goes here if frequency can be changed
                 description.text = "Sampling frequency"
                 val row3 = tableLayout.getChildAt(2) as TableRow
                 val slider = row3.findViewById<SeekBar>(R.id.sensorSlider)
                 slider.min = sensorList[i][2].toString().toInt()
                 slider.max = sensorList[i][3].toString().toInt()
-                slider.progress = ActivityHandler.getFrequency(sensorList[i][0].toString())
+                slider.progress = ActivityHandler.getFrequency(sensorList[i][0].toString()) //set slider value to slider
                 slider.isEnabled = !ActivityHandler.isLogging() // Disable changing slider if logging is ongoing
 
                 val sliderValue = row3.findViewById<TextView>(R.id.sliderValue)
-                sliderValue.text = ActivityHandler.getFrequency(sensorList[i][0] as String).toString() //set slider value
+                sliderValue.text = ActivityHandler.getFrequency(sensorList[i][0] as String).toString() //set slider value to a text view
 
                 slider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                         sliderValue.text = progress.toString()
                         ActivityHandler.setFrequency(sensorList[i][0].toString(), progress)
-
-                        //Not working correctly, watch does not receive parameters
-                        /*if(sensorList[i][0].toString().equals("IMU")){
-                            //ActivityHandler.IMUFrequency = value
-                            val IMUMap = DataMap().apply{
-                                putInt("imu",progress)
-                            }
-                            sendParameterToWatch(IMUMap)
-
-                        }
-                        else if(sensorList[i][0].toString().equals("Barometer")){
-                           // ActivityHandler.barometerFrequency = value
-                            val barometerMap = DataMap().apply{
-                                putInt("barometer", progress)
-                            }
-                            sendParameterToWatch(barometerMap)
-                        }
-                        else if(sensorList[i][0].toString().equals("Magnetometer")){
-                            //ActivityHandler.magnetometerFrequency = value
-                            val magnetometerMap = DataMap().apply{
-                                putInt("magnetometer", progress)
-                            }
-                            sendParameterToWatch(magnetometerMap)
-                        }*/
                     }
 
                     override fun onStartTrackingTouch(seekBar: SeekBar) {
@@ -141,11 +118,11 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+        // Switch views by swiping
         var x1 = 0f
         var y1 = 0f
         var x2 = 0f
         var y2 = 0f
-
         findViewById<View>(R.id.scroll_id).setOnTouchListener { _, touchEvent ->
             when (touchEvent.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -161,7 +138,6 @@ class MainActivity : AppCompatActivity() {
                     if (Math.abs(deltaX) > Math.abs(deltaY)) {
                         // swipe horizontal
                         if (Math.abs(deltaX) > 100) {
-                            // left or right
                             if (deltaX < 0) {
                                 // left swipe
                                 val intent = Intent(this, MauveActivity::class.java)

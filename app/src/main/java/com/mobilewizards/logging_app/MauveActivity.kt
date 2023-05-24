@@ -140,12 +140,11 @@ class MauveActivity : AppCompatActivity() {
             }
         }
 
-        //change to another activity by sweeping
+        // Switch views by swiping
         var x1 = 0f
         var y1 = 0f
         var x2 = 0f
         var y2 = 0f
-
         findViewById<View>(R.id.activity_mauve_layout).setOnTouchListener { _, touchEvent ->
             when (touchEvent.action) {
                 MotionEvent.ACTION_DOWN -> {

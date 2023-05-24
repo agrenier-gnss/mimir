@@ -30,11 +30,11 @@ class SurveyHistoryActivity : AppCompatActivity() {
         //create a layout for each survey that has been made
         populateView(parentView)
 
+        // Switch views by swiping
         var x1 = 0f
         var y1 = 0f
         var x2 = 0f
         var y2 = 0f
-
         findViewById<View>(R.id.scroll_id).setOnTouchListener { _, touchEvent ->
             when (touchEvent.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -50,7 +50,6 @@ class SurveyHistoryActivity : AppCompatActivity() {
                     if (Math.abs(deltaX) > Math.abs(deltaY)) {
                         // swipe horizontal
                         if (Math.abs(deltaX) > 100) {
-                            // left or right
                             if (deltaX > 0) {
                                 // left swipe
                                 val intent = Intent(this, MauveActivity::class.java)

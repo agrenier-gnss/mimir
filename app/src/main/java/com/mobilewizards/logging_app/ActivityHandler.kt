@@ -37,7 +37,7 @@ object ActivityHandler{
     // Survey start time
     private var surveyStartTime: String = "Time not set"
 
-    // Keeps track of logging_button state
+    // Keeps track of logging_button state in MauveActivity
     private val buttonState = MutableLiveData<Boolean>(false)
 
     fun getButtonState(): LiveData<Boolean> {
