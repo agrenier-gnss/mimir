@@ -5,17 +5,13 @@ import android.app.Activity
 import android.content.ContentResolver
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.hardware.SensorManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.core.app.ActivityCompat
-import com.google.android.gms.wearable.ChannelClient
-import com.google.android.gms.wearable.MessageClient
 import com.mobilewizards.logging_app.databinding.ActivityLoggingBinding
 import com.mobilewizards.watchlogger.*
 import java.time.LocalDateTime
@@ -25,6 +21,9 @@ var startTime: Long? = null
 class LoggingActivity : Activity() {
 
     private lateinit var binding: ActivityLoggingBinding
+    var imuFrequency: Int = 10
+    var magnetometerFrequency: Int = 1
+    var barometerFrequency: Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,10 +33,10 @@ class LoggingActivity : Activity() {
 
         this.checkPermissions()
 
-        val ble =  BLEHandlerWatch(this)
-        val IMU = IMUHandlerWatch(this)
+        val ble =  WatchBLEHandler(this)
+        val imu = WatchMotionSensorsHandler(this)
         val gnss = WatchGNSSHandler(this)
-        val healthServices = HealthServicesHandler(this)
+        val ecg = HealthServicesHandler(this)
 
         // Fetching file path for sendCsvToPhone function
         var filePath = ""
@@ -83,10 +82,21 @@ class LoggingActivity : Activity() {
 
             WatchActivityHandler.clearFilfPaths()
 
-            IMU.setUpSensors(10,1,1)
+            if (WatchActivityHandler.getImuStatus()) {
+                imu.setUpSensors(
+                    imuFrequency,magnetometerFrequency,barometerFrequency
+                )
+            }
+
+            if (WatchActivityHandler.getGnssStatus()) {
             gnss.setUpLogging()
+            }
+
             ble.setUpLogging()
-            healthServices.getHeartRate()
+
+            if (WatchActivityHandler.getEcgStatus()) {
+            ecg.getHeartRate()
+            }
         }
 
         // stops logging
@@ -95,10 +105,19 @@ class LoggingActivity : Activity() {
             stopLogBtn.visibility = View.GONE
             logTimeText.visibility = View.GONE
             logText.text = "Survey ended"
-            IMU.stopLogging()
-            gnss.stopLogging(this)
+            if (imu.isLogging) {
+                imu.stopLogging()
+            }
+
+            if (gnss.isLogging) {
+                gnss.stopLogging(this)
+            }
+
             ble.stopLogging()
-            healthServices.stopHeartRate()
+
+            if (ecg.isLogging) {
+                ecg.stopHeartRate()
+            }
         }
 
         // Opens LoggedEvent.kt for deciding what to do with the logged events

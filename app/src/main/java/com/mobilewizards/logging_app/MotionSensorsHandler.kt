@@ -492,19 +492,19 @@ class MotionSensorsHandler: SensorEventListener{
                 outputStream.write("\n".toByteArray())
 
                 accelerometerValues.forEach { measurementString ->
-                    outputStream.write("${measurementString.timestamp},${measurementString.sideTilt},${measurementString.upDownTilt},${measurementString.verticalTilt}\n".toByteArray())
+                    outputStream.write("accelerometerValues,${measurementString.timestamp},${measurementString.sideTilt},${measurementString.upDownTilt},${measurementString.verticalTilt}\n".toByteArray())
                 }
                 unCalibratedAccelerometer.forEach { measurementString ->
-                    outputStream.write("${measurementString.timestamp},${measurementString.sideX},${measurementString.upDownY},${measurementString.verticalZ},${measurementString.sideXB},${measurementString.upDownYB},${measurementString.verticalZB}\n".toByteArray())
+                    outputStream.write("unCalibratedAccelerometer,${measurementString.timestamp},${measurementString.sideX},${measurementString.upDownY},${measurementString.verticalZ},${measurementString.sideXB},${measurementString.upDownYB},${measurementString.verticalZB}\n".toByteArray())
                 }
                 gravityValues.forEach { measurementString ->
-                    outputStream.write("${measurementString.timestamp},${measurementString.gravityX},${measurementString.gravityY},${measurementString.gravityZ}\n".toByteArray())
+                    outputStream.write("gravityValues,${measurementString.timestamp},${measurementString.gravityX},${measurementString.gravityY},${measurementString.gravityZ}\n".toByteArray())
                 }
                 gyroscopeValues.forEach { measurementString ->
-                    outputStream.write("${measurementString.timestamp},${measurementString.rotX},${measurementString.rotY},${measurementString.rotZ}\n".toByteArray())
+                    outputStream.write("gyroscopeValues,${measurementString.timestamp},${measurementString.rotX},${measurementString.rotY},${measurementString.rotZ}\n".toByteArray())
                 }
                 unCalibratedGyroscopeValues.forEach { measurementString ->
-                    outputStream.write("${measurementString.timestamp},${measurementString.noDriftX},${measurementString.noDriftY},${measurementString.noDriftZ},${measurementString.driftX},${measurementString.driftY},${measurementString.driftZ}\n".toByteArray())
+                    outputStream.write("unCalibratedGyroscopeValues,${measurementString.timestamp},${measurementString.noDriftX},${measurementString.noDriftY},${measurementString.noDriftZ},${measurementString.driftX},${measurementString.driftY},${measurementString.driftZ}\n".toByteArray())
                 }
                 outputStream.write("StepCount,$stepCount\n".toByteArray())
 

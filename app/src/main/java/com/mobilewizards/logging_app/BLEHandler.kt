@@ -9,6 +9,7 @@ import android.bluetooth.le.ScanResult
 import android.content.ContentValues
 import android.content.Context
 import android.icu.text.SimpleDateFormat
+import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
@@ -93,7 +94,29 @@ class BLEHandler(private val context: Context) {
             Log.d("uri", uri.toString())
             uri?.let { mediaUri ->
                 context.contentResolver.openOutputStream(mediaUri)?.use { outputStream ->
+                    outputStream.write("# ".toByteArray())
+                    outputStream.write("\n".toByteArray())
+                    outputStream.write("# ".toByteArray())
+                    outputStream.write("Header Description:".toByteArray());
+                    outputStream.write("\n".toByteArray())
+                    outputStream.write("# ".toByteArray())
+                    outputStream.write("\n".toByteArray())
+                    outputStream.write("# ".toByteArray())
+                    outputStream.write("Version: ".toByteArray())
+                    var manufacturer: String = Build.MANUFACTURER
+                    var model: String = Build.MODEL
+                    var fileVersion: String = "${BuildConfig.VERSION_CODE}" + " Platform: " +
+                            "${Build.VERSION.RELEASE}" + " " + "Manufacturer: "+
+                            "${manufacturer}" + " " + "Model: " + "${model}"
+
+                    outputStream.write(fileVersion.toByteArray())
+                    outputStream.write("\n".toByteArray())
+                    outputStream.write("# ".toByteArray())
+                    outputStream.write("\n".toByteArray())
+                    outputStream.write("# ".toByteArray())
                     outputStream.write("Timestamp,Device,RSSI,Data\n".toByteArray())
+                    outputStream.write("# ".toByteArray())
+                    outputStream.write("\n".toByteArray())
                     bleScanList.forEach { measurementString ->
                         outputStream.write("$measurementString\n".toByteArray())
                     }

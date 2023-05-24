@@ -268,14 +268,14 @@ class GnssHandler{
         //Logging in wanted format. First hard coded comment to the file then data.
         uri?.let { mediaUri ->
             context.contentResolver.openOutputStream(mediaUri)?.use { outputStream ->
-                outputStream.write("#".toByteArray())
+                outputStream.write("# ".toByteArray())
                 outputStream.write("\n".toByteArray())
-                outputStream.write("#".toByteArray());
+                outputStream.write("# ".toByteArray());
                 outputStream.write("Header Description:".toByteArray());
                 outputStream.write("\n".toByteArray())
-                outputStream.write("#".toByteArray())
+                outputStream.write("# ".toByteArray())
                 outputStream.write("\n".toByteArray())
-                outputStream.write("#".toByteArray())
+                outputStream.write("# ".toByteArray())
                 outputStream.write("Version: ".toByteArray())
                 var manufacturer: String = Build.MANUFACTURER
                 var model: String = Build.MODEL
@@ -285,9 +285,9 @@ class GnssHandler{
 
                 outputStream.write(fileVersion.toByteArray())
                 outputStream.write("\n".toByteArray())
-                outputStream.write("#".toByteArray())
+                outputStream.write("# ".toByteArray())
                 outputStream.write("\n".toByteArray())
-                outputStream.write("#".toByteArray())
+                outputStream.write("# ".toByteArray())
                 outputStream.write(
                     "Raw,ElapsedRealtimeMillis,TimeNanos,LeapSecond,TimeUncertaintyNanos,FullBiasNanos,".toByteArray()
                             + "BiasNanos,BiasUncertaintyNanos,DriftNanosPerSecond,DriftUncertaintyNanosPerSecond,".toByteArray()
@@ -299,18 +299,18 @@ class GnssHandler{
                             + "CarrierPhase,CarrierPhaseUncertainty,MultipathIndicator,SnrInDb,".toByteArray()
                             + "ConstellationType,AgcDb".toByteArray())
                 outputStream.write("\n".toByteArray())
-                outputStream.write("#".toByteArray())
+                outputStream.write("# ".toByteArray())
                 outputStream.write("\n".toByteArray())
-                outputStream.write("#".toByteArray())
+                outputStream.write("# ".toByteArray())
                 outputStream.write(
                     "Fix,Provider,Latitude,Longitude,Altitude,Speed,Accuracy,(UTC)TimeInMs".toByteArray())
                 outputStream.write("\n".toByteArray())
-                outputStream.write("#".toByteArray())
+                outputStream.write("# ".toByteArray())
                 outputStream.write("\n".toByteArray())
-                outputStream.write("#".toByteArray())
+                outputStream.write("# ".toByteArray())
                 outputStream.write("Nav,Svid,Type,Status,MessageId,Sub-messageId,Data(Bytes)".toByteArray());
                 outputStream.write("\n".toByteArray())
-                outputStream.write("#".toByteArray())
+                outputStream.write("# ".toByteArray())
                 outputStream.write("\n".toByteArray())
 
                 gnssMeasurementsList.forEach { measurementString ->

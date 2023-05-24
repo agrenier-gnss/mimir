@@ -1,6 +1,5 @@
 package com.mobilewizards.watchlogger
 
-import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanCallback
@@ -8,22 +7,17 @@ import android.bluetooth.le.ScanResult
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
-import android.hardware.Sensor
-import android.hardware.SensorManager
 import android.icu.text.SimpleDateFormat
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
-import android.os.Handler
-import android.os.SystemClock
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.Toast
 import com.mobilewizards.logging_app.BuildConfig
 import com.mobilewizards.logging_app.startTime
 import java.io.File
 
-class BLEHandlerWatch(private val context: Context) {
+class WatchBLEHandler(private val context: Context) {
 
     private lateinit var bluetoothAdapter: BluetoothAdapter
     private var bluetoothLeScanner: BluetoothLeScanner? = null

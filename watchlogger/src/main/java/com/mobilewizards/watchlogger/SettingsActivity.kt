@@ -7,6 +7,7 @@ import android.app.Activity
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.Button
+import com.google.android.material.snackbar.Snackbar
 import com.mobilewizards.watchlogger.WatchActivityHandler
 import com.mobilewizards.logging_app.databinding.ActivitySettingsBinding
 
@@ -100,20 +101,21 @@ class SettingsActivity : Activity() {
 
             // TODO: Chagne frequency to correct
             if (fiveSecBtn.isSelected){
-                WatchActivityHandler.changeFrequency(5)
+                WatchActivityHandler.changeFrequency(5000)
             }
             else if (fifteenSecBtn.isSelected){
-                  WatchActivityHandler.changeFrequency(15)
+                  WatchActivityHandler.changeFrequency(15000)
             }
             else if (thirtySecBtn.isSelected){
-                 WatchActivityHandler.changeFrequency(30)
+                 WatchActivityHandler.changeFrequency(30000)
             }
             else  if (minuteBtn.isSelected){
-                WatchActivityHandler.changeFrequency(60)
+                WatchActivityHandler.changeFrequency(60000)
             } else {
                 //Default value
-                WatchActivityHandler.changeFrequency(5)
+                WatchActivityHandler.changeFrequency(5000)
             }
+            finish()
         }
     }
 }

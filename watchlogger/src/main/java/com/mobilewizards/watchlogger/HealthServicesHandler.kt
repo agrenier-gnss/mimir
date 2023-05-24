@@ -30,6 +30,7 @@ class HealthServicesHandler: SensorEventListener{
     private lateinit var mSensorManager: SensorManager
     private lateinit var context: Context
     private val heartRateMeasurementList = mutableListOf<String>()
+    var isLogging = false
 
     constructor(context: Context) {
         this.context = context.applicationContext
@@ -44,10 +45,14 @@ class HealthServicesHandler: SensorEventListener{
         } else {
             mSensorManager.registerListener(this, mHeartRateSensor, SensorManager.SENSOR_DELAY_FASTEST)
         }
+
+        isLogging = true
     }
 
     fun stopHeartRate() {
         mSensorManager.unregisterListener(this)
+
+        isLogging = false
 
         val contentValues = ContentValues().apply {
             put(MediaStore.Downloads.DISPLAY_NAME, "watch_heart_rate_measurements_${

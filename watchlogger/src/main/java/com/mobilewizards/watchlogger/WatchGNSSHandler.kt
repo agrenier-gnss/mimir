@@ -31,6 +31,7 @@ class WatchGNSSHandler {
     private lateinit var gnssNavigationMessageListener: android.location.GnssNavigationMessage.Callback
     protected var context: Context
     private val TAG = "watchLogger"
+    var isLogging = false
 
     //A list that will collect all logged data in CSV-format. When logging stops, this list will be written
     //in the file.
@@ -43,9 +44,11 @@ class WatchGNSSHandler {
     /* Function that is called in ActivityHandler when logging is started.*/
     fun setUpLogging(){
         locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        logLocation(1000)
-        logGNSS(1000)
-        logGnssNavigationMessages(1000)
+        logLocation(WatchActivityHandler.getFrequency().toLong())
+        logGNSS(WatchActivityHandler.getFrequency().toLong())
+        logGnssNavigationMessages(WatchActivityHandler.getFrequency().toLong())
+
+        isLogging = true
     }
 
     /* Function that logs location by creating two listeners. One for gps provider and
@@ -221,6 +224,8 @@ class WatchGNSSHandler {
         locationManager.removeUpdates(networkLocationListener)
         locationManager.unregisterGnssMeasurementsCallback(gnssMeasurementsEventListener)
         locationManager.unregisterGnssNavigationMessageCallback(gnssNavigationMessageListener)
+
+        isLogging = false
 
         val contentValues = ContentValues().apply {
             put(MediaStore.Downloads.DISPLAY_NAME, "watch_gnss_measurements_${

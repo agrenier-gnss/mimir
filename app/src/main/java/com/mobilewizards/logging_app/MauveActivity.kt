@@ -1,6 +1,7 @@
 package com.mobilewizards.logging_app
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
@@ -58,6 +59,7 @@ class MauveActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mauve)
@@ -69,7 +71,7 @@ class MauveActivity : AppCompatActivity() {
 
                 val receiveTask = channelClient.receiveFile(channel, ("file:///storage/emulated/0/Download/log_watch_received_${
                     LocalDateTime.now().format(
-                        DateTimeFormatter.ofPattern("yyyyMMdd_HHmmssSSS"))}").toUri(), false)
+                        DateTimeFormatter.ofPattern("yyyyMMdd_HHmmssSSS"))}.csv").toUri(), false)
                 receiveTask.addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         Log.d("channel", "File successfully stored")

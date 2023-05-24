@@ -80,13 +80,13 @@ private var barometerValues = mutableListOf<Pair<Long,Float>>()
 private const val VERSION_TAG = "Version: "
 private const val COMMENT_START = "# "
 
-// Inside your activity or service
-class IMUHandlerWatch(context: Context): SensorEventListener {
+class WatchMotionSensorsHandler(context: Context): SensorEventListener {
 
     protected var context = context.applicationContext
 
-    // Obtain a reference to the sensor manager
     val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+
+    var isLogging = false
 
     fun setUpSensors(imuFrequency: Int, magnetometerFrequency: Int, barometerFrequency: Int) {
 
@@ -144,6 +144,8 @@ class IMUHandlerWatch(context: Context): SensorEventListener {
                 barometer = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE)
                 sensorManager.registerListener(this, barometer, barometerFrequency)
             }
+
+        isLogging = true
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
@@ -636,6 +638,8 @@ class IMUHandlerWatch(context: Context): SensorEventListener {
 
         try {
             sensorManager.unregisterListener(this)
+
+            isLogging = false
 
             writeIMU()
             writeMagnetometer()

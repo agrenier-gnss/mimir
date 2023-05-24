@@ -12,7 +12,7 @@ object WatchActivityHandler {
     var collectGnns : Boolean = true
     var collectImu : Boolean = true
     var collectEcg : Boolean = true
-    var selectedFrequency = 5
+    var selectedFrequency : Int = 5
 
     fun setFilePaths (filePath: File){
         Log.d(TAG, "adding file")
