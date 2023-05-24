@@ -17,11 +17,10 @@ import androidx.core.app.ActivityCompat
 import com.google.android.gms.wearable.ChannelClient
 import com.google.android.gms.wearable.MessageClient
 import com.mobilewizards.logging_app.databinding.ActivityLoggingBinding
-import com.mobilewizards.watchlogger.BLEHandlerWatch
-import com.mobilewizards.watchlogger.HealthServicesHandler
-import com.mobilewizards.watchlogger.WatchGNSSHandler
-import com.mobilewizards.watchlogger.WatchActivityHandler
+import com.mobilewizards.watchlogger.*
 import java.time.LocalDateTime
+
+var startTime: Long? = null
 
 class LoggingActivity : Activity() {
 
@@ -36,6 +35,7 @@ class LoggingActivity : Activity() {
         this.checkPermissions()
 
         val ble =  BLEHandlerWatch(this)
+        val IMU = IMUHandlerWatch(this)
         val gnss = WatchGNSSHandler(this)
         val healthServices = HealthServicesHandler(this)
 
@@ -79,6 +79,9 @@ class LoggingActivity : Activity() {
             logTimeText.visibility = View.VISIBLE
             logTimeText.text = currentTime.toString()
 
+            startTime = System.currentTimeMillis()
+
+            IMU.setUpSensors(10,1,1)
             gnss.setUpLogging()
             ble.setUpLogging()
             healthServices.getHeartRate()
@@ -90,6 +93,7 @@ class LoggingActivity : Activity() {
             stopLogBtn.visibility = View.GONE
             logTimeText.visibility = View.GONE
             logText.text = "Survey ended"
+            IMU.stopLogging()
             gnss.stopLogging(this)
             ble.stopLogging()
             healthServices.stopHeartRate()

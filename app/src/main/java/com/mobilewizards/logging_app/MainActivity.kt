@@ -42,26 +42,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         supportActionBar?.hide()
 
-        val channelClient = Wearable.getChannelClient(applicationContext)
-        channelClient.registerChannelCallback(object : ChannelClient.ChannelCallback() {
-            override fun onChannelOpened(channel: ChannelClient.Channel) {
-                super.onChannelOpened(channel)
-                Log.d(TAG, "on channel opened")
-                channelClient.receiveFile(channel, ("file:///storage/emulated/0/Download/log_watch_received_${
-                    LocalDateTime.now().format(
-                        DateTimeFormatter.ofPattern("yyyyMMdd_HHmmssSSS"))}").toUri(), false)
-                    .addOnCompleteListener { task ->
-                        Log.d(TAG, "tääl")
-                        if (task.isSuccessful) {
-                            Log.d("channel", "File successfully stored")
 
-                        } else {
-                            Log.e(TAG, "Ei toimi")
-                        }
-                    }
-                channelClient.close(channel)
-            }
-        })
         val sensorList = arrayOf(
             //1st value: name. second value: is there a slider. third and fourth are min and max values for sliders
             arrayOf("GNSS", false),

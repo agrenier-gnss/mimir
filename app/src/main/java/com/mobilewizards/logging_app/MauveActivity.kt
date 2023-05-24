@@ -66,19 +66,17 @@ class MauveActivity : AppCompatActivity() {
         val channelClient = Wearable.getChannelClient(applicationContext)
         channelClient.registerChannelCallback(object : ChannelClient.ChannelCallback() {
             override fun onChannelOpened(channel: ChannelClient.Channel) {
-                super.onChannelOpened(channel)
-                Log.d(TAG, "on channel opened in mauve")
-                channelClient.receiveFile(channel, ("file:///storage/emulated/0/Download/log_watch_received_${
+
+                val receiveTask = channelClient.receiveFile(channel, ("file:///storage/emulated/0/Download/log_watch_received_${
                     LocalDateTime.now().format(
                         DateTimeFormatter.ofPattern("yyyyMMdd_HHmmssSSS"))}").toUri(), false)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            Log.d("channel", "File successfully stored")
-                        } else {
-                            Log.e(TAG, "Ei toimi, mauve"  + task.exception.toString())
-                        }
+                receiveTask.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d("channel", "File successfully stored")
+                    } else {
+                        Log.e(TAG, "Ei toimi")
                     }
-                channelClient.close(channel)
+                }
             }
         })
         this.checkPermissions()

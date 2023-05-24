@@ -5,6 +5,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorManager
+import android.icu.text.SimpleDateFormat
 import android.location.*
 import android.net.Uri
 import android.os.Build
@@ -14,6 +15,7 @@ import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import com.mobilewizards.logging_app.BuildConfig
+import com.mobilewizards.logging_app.startTime
 import java.io.File
 import java.util.*
 
@@ -221,7 +223,10 @@ class WatchGNSSHandler {
         locationManager.unregisterGnssNavigationMessageCallback(gnssNavigationMessageListener)
 
         val contentValues = ContentValues().apply {
-            put(MediaStore.Downloads.DISPLAY_NAME, "watch_gnss_measurements")
+            put(MediaStore.Downloads.DISPLAY_NAME, "watch_gnss_measurements_${
+                SimpleDateFormat("ddMMyyyy_hhmmssSSS").format(
+                    startTime
+                )}.csv")
             put(MediaStore.Downloads.MIME_TYPE, "text/csv")
             put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
         }
@@ -235,7 +240,7 @@ class WatchGNSSHandler {
             context.contentResolver.openOutputStream(mediaUri)?.use { outputStream ->
                 outputStream.write("# ".toByteArray())
                 outputStream.write("\n".toByteArray())
-                outputStream.write("# ".toByteArray());
+                outputStream.write("# ".toByteArray())
                 outputStream.write("Header Description:".toByteArray());
                 outputStream.write("\n".toByteArray())
                 outputStream.write("# ".toByteArray())

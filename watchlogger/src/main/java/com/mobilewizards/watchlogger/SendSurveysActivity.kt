@@ -22,8 +22,6 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
 
-var startTime: Long? = null
-
 private const val VERSION_TAG = "Version: "
 private const val COMMENT_START = "# "
 

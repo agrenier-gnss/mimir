@@ -10,13 +10,17 @@ import android.content.ContentValues
 import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorManager
+import android.icu.text.SimpleDateFormat
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
 import android.os.Handler
 import android.os.SystemClock
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
+import com.mobilewizards.logging_app.BuildConfig
+import com.mobilewizards.logging_app.startTime
 import java.io.File
 
 class BLEHandlerWatch(private val context: Context) {
@@ -24,7 +28,6 @@ class BLEHandlerWatch(private val context: Context) {
     private lateinit var bluetoothAdapter: BluetoothAdapter
     private var bluetoothLeScanner: BluetoothLeScanner? = null
     private lateinit var scanCallback: ScanCallback
-    private val handler = Handler()
     private val TAG = "watchLogger"
 
     init {
@@ -78,7 +81,10 @@ class BLEHandlerWatch(private val context: Context) {
             bluetoothLeScanner?.stopScan(scanCallback)
 
             val contentValues = ContentValues().apply {
-                put(MediaStore.Downloads.DISPLAY_NAME, "watch_bluetooth_measurements ")
+                put(MediaStore.Downloads.DISPLAY_NAME, "watch_bluetooth_measurements_${
+                    SimpleDateFormat("ddMMyyyy_hhmmssSSS").format(
+                        startTime
+                    )}.csv")
                 put(MediaStore.Downloads.MIME_TYPE, "text/csv")
                 put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
             }
@@ -88,7 +94,29 @@ class BLEHandlerWatch(private val context: Context) {
             Log.d("uri", uri.toString())
             uri?.let { mediaUri ->
                 context.contentResolver.openOutputStream(mediaUri)?.use { outputStream ->
+                    outputStream.write("# ".toByteArray())
+                    outputStream.write("\n".toByteArray())
+                    outputStream.write("# ".toByteArray())
+                    outputStream.write("Header Description:".toByteArray());
+                    outputStream.write("\n".toByteArray())
+                    outputStream.write("# ".toByteArray())
+                    outputStream.write("\n".toByteArray())
+                    outputStream.write("# ".toByteArray())
+                    outputStream.write("Version: ".toByteArray())
+                    var manufacturer: String = Build.MANUFACTURER
+                    var model: String = Build.MODEL
+                    var fileVersion: String = "${BuildConfig.VERSION_CODE}" + " Platform: " +
+                            "${Build.VERSION.RELEASE}" + " " + "Manufacturer: "+
+                            "${manufacturer}" + " " + "Model: " + "${model}"
+
+                    outputStream.write(fileVersion.toByteArray())
+                    outputStream.write("\n".toByteArray())
+                    outputStream.write("# ".toByteArray())
+                    outputStream.write("\n".toByteArray())
+                    outputStream.write("# ".toByteArray())
                     outputStream.write("Timestamp,Device,RSSI,Data\n".toByteArray())
+                    outputStream.write("# ".toByteArray())
+                    outputStream.write("\n".toByteArray())
                     bleScanList.forEach { measurementString ->
                         outputStream.write("$measurementString\n".toByteArray())
                     }
@@ -110,7 +138,7 @@ class BLEHandlerWatch(private val context: Context) {
                 ?.let { Log.d("uri", it)
                     filePath = it}
             WatchActivityHandler.setFilePaths(File(filePath))
-            Log.d(TAG, "gnss file path $filePath")
+            Log.d(TAG, "ble file path $filePath")
 
         } catch(e: SecurityException){
             Log.e("Error", "No permission for BLE fetching")
