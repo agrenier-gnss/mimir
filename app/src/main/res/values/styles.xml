@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <!-- Customize your theme here -->
-        <item name="colorPrimary">@color/ultra_violet</item>
-        <item name="colorPrimaryDark">@color/mauve</item>
-        <item name="colorAccent">@color/tropical_indigo</item>
-    </style>
+
     <style name="ButtonShapeAppearance">
         <item name="cornerSize">20dp</item>
         <item name="cornerFamily">rounded</item>

@@ -17,8 +17,6 @@ class SetupActivity : AppCompatActivity() {
                 flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
             }
             startActivity(mainIntent)
-//            val mainIntent = Intent(applicationContext, MainActivity::class.java)
-//            startActivity(mainIntent)
             finish()
         }
     }

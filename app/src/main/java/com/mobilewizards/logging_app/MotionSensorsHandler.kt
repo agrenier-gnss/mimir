@@ -100,7 +100,7 @@ class MotionSensorsHandler: SensorEventListener{
     }
 
     fun getIMUValues(): List<MutableList<out Any>> {
-        return listOf<MutableList<out Any>>(accelerometerValues,unCalibratedAccelerometer,gravityValues,gyroscopeValues,unCalibratedGyroscopeValues)
+        return listOf(accelerometerValues,unCalibratedAccelerometer,gravityValues,gyroscopeValues,unCalibratedGyroscopeValues)
     }
 
     fun getMagnetometerValues(): MutableList<MagnetometerValues> {
@@ -562,7 +562,7 @@ class MotionSensorsHandler: SensorEventListener{
         } catch(e: Exception){
             Log.e("Error", "An error occurred while saving magnetometer results")
             val view = (context as Activity).findViewById<View>(android.R.id.content)
-            val snackbar = Snackbar.make(view, "Error. An error occurred while saving magnetometer results-", Snackbar.LENGTH_LONG)
+            val snackbar = Snackbar.make(view, "Error. An error occurred while saving magnetometer results", Snackbar.LENGTH_LONG)
             snackbar.setAction("Close") {
                 snackbar.dismiss()
             }
@@ -619,7 +619,7 @@ class MotionSensorsHandler: SensorEventListener{
         } catch(e: Exception){
             Log.e("Error", "An error occurred while saving barometer results")
             val view = (context as Activity).findViewById<View>(android.R.id.content)
-            val snackbar = Snackbar.make(view, "Error. An error occurred while saving barometer results-", Snackbar.LENGTH_LONG)
+            val snackbar = Snackbar.make(view, "Error. An error occurred while saving barometer results", Snackbar.LENGTH_LONG)
             snackbar.setAction("Close") {
                 snackbar.dismiss()
             }
@@ -648,7 +648,7 @@ class MotionSensorsHandler: SensorEventListener{
         } catch(e: Exception){
             Log.e("Error", "An error occurred while saving motion sensors results")
             val view = (context as Activity).findViewById<View>(android.R.id.content)
-            val snackbar = Snackbar.make(view, "Error. An error occurred while saving motion sensors results-", Snackbar.LENGTH_LONG)
+            val snackbar = Snackbar.make(view, "Error. An error occurred while saving motion sensors results", Snackbar.LENGTH_LONG)
             snackbar.setAction("Close") {
                 snackbar.dismiss()
             }

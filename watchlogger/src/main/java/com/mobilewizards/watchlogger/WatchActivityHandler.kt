@@ -15,7 +15,7 @@ object WatchActivityHandler {
     var selectedFrequency : Int = 5
 
     fun setFilePaths (filePath: File){
-        Log.d(TAG, "adding file")
+        Log.d(TAG, "Adding file")
         filepaths.add(filePath)
     }
 

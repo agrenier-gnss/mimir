@@ -2,12 +2,9 @@ package com.mobilewizards.logging_app
 
 import android.Manifest
 import android.app.Activity
-import android.content.ContentResolver
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -37,18 +34,6 @@ class LoggingActivity : Activity() {
         val imu = WatchMotionSensorsHandler(this)
         val gnss = WatchGNSSHandler(this)
         val ecg = HealthServicesHandler(this)
-
-        // Fetching file path for sendCsvToPhone function
-        var filePath = ""
-        fun getRealPathFromUri(contentResolver: ContentResolver, uri: Uri): String {
-            val projection = arrayOf(MediaStore.Images.Media.DATA)
-            val cursor = contentResolver.query(uri, projection, null, null, null)
-            val columnIndex = cursor?.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-            cursor?.moveToFirst()
-            val path = columnIndex?.let { cursor?.getString(it) }
-            cursor?.close()
-            return path ?: ""
-        }
 
         val startLogBtn = findViewById<Button>(R.id.startLogBtn)
         startLogBtn.visibility = View.VISIBLE

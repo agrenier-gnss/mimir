@@ -22,7 +22,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class MauveActivity : AppCompatActivity() {
-    private val TAG = "tagi"
+
     override fun onResume() {
         super.onResume()
 
@@ -76,7 +76,7 @@ class MauveActivity : AppCompatActivity() {
                     if (task.isSuccessful) {
                         Log.d("channel", "File successfully stored")
                     } else {
-                        Log.e(TAG, "Ei toimi")
+                        Log.e("channel", "File receival/saving failed: ${task.exception}")
                     }
                 }
             }

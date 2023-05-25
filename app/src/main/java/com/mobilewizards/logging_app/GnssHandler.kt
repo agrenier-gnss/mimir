@@ -20,7 +20,7 @@ import java.util.*
 private lateinit var locationManager: LocationManager
 private lateinit var gpsLocationListener: LocationListener
 private lateinit var networkLocationListener: LocationListener
-private lateinit var gnssMeasurementsEventListener: android.location.GnssMeasurementsEvent.Callback
+private lateinit var gnssMeasurementsEventListener: GnssMeasurementsEvent.Callback
 private lateinit var gnssNavigationMessageListener: android.location.GnssNavigationMessage.Callback
 
 private var startTime: Long? = null
@@ -135,7 +135,7 @@ class GnssHandler{
     /*Logging of GNSS measurements by creating a listener in this function. Parameter samplingFrequency
     * is given to make sure data isn't logged too fast. Contains deprecated methods.*/
     private fun logGNSS( samplingFrequency: Long) {
-        gnssMeasurementsEventListener = object : android.location.GnssMeasurementsEvent.Callback(){
+        gnssMeasurementsEventListener = object : GnssMeasurementsEvent.Callback(){
             var lastMeasurementTime = 0L
             override fun onGnssMeasurementsReceived(event: GnssMeasurementsEvent) {
 
@@ -185,8 +185,6 @@ class GnssHandler{
                                         measurement.getAutomaticGainControlLevelDb() else ""}"
 
                         val eventString = clockString + measurementString
-
-
 
                         measurementsList.add(eventString)
                         Log.d("GNSS Measurement", measurementString)

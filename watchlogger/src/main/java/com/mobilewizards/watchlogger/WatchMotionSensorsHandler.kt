@@ -655,7 +655,7 @@ class WatchMotionSensorsHandler(context: Context): SensorEventListener {
             snackbar.show()
         }
     }
-    // TODO: Implement this when we know accuracy parameters
+    // TODO: Implement this when need for accuracy changes
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
         return
     }

@@ -7,9 +7,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Button
 import androidx.core.app.ActivityCompat
-import androidx.wear.widget.WearableLinearLayoutManager
-import androidx.wear.widget.WearableRecyclerView
-//import android.support.widget.RecyclerView
 import com.mobilewizards.logging_app.databinding.ActivitySelectionBinding
 
 class SelectionActivity : Activity() {

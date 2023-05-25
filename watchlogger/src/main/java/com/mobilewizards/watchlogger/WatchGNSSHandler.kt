@@ -3,8 +3,6 @@ package com.mobilewizards.watchlogger
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
-import android.hardware.Sensor
-import android.hardware.SensorManager
 import android.icu.text.SimpleDateFormat
 import android.location.*
 import android.net.Uri
@@ -13,7 +11,6 @@ import android.os.Environment
 import android.os.SystemClock
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.Toast
 import com.mobilewizards.logging_app.BuildConfig
 import com.mobilewizards.logging_app.startTime
 import java.io.File

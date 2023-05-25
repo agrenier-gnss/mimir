@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.TextView
-import com.mobilewizards.logging_app.LoggingActivity
 import com.mobilewizards.logging_app.databinding.ActivityLoggedEventBinding
 
 class LoggedEvent : Activity() {

@@ -8,28 +8,8 @@ import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
-import com.google.android.gms.wearable.DataMap
-import com.google.android.gms.wearable.MessageClient
-import com.google.android.gms.wearable.Wearable
-import java.util.ArrayDeque
-import android.provider.MediaStore
-
-data class GnssMeasurement(
-    val svId: Int,
-    val timeOffsetNanos: Double,
-    val state: Int,
-    val cn0DbHz: Double,
-    val carrierFrequencyHz: Double,
-    val pseudorangeRateMeterPerSecond: Double,
-    val pseudorangeRateUncertaintyMeterPerSecond: Double
-)
 
 class MainActivity : AppCompatActivity() {
-
-    private val CSV_FILE_CHANNEL_PATH = MediaStore.Downloads.EXTERNAL_CONTENT_URI
-    val TAG = "tagi"
-    private lateinit var mMessageClient: MessageClient
-    var filenameStack = ArrayDeque<String>()
 
     @SuppressLint("SuspiciousIndentation", "ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -154,32 +134,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun sendParameterToWatch(data: DataMap){
-        val dataBytes = data.toByteArray()
-
-        Wearable.getNodeClient(this).connectedNodes.addOnSuccessListener { nodes ->
-            for (node in nodes) {
-                Log.d("data_tag", node.id)
-                mMessageClient.sendMessage(node.id, "/message", dataBytes)
-                Log.d("data_tag", "msg sent")
-            }
-        }
-    }
-
-    private fun sendTextToWatch(text: String) {
-        val dataMap = DataMap().apply {
-            putString("data", text)
-        }
-        val dataByteArray = dataMap.toByteArray()
-
-        Wearable.getNodeClient(this).connectedNodes.addOnSuccessListener { nodes ->
-            for (node in nodes) {
-                Log.d("data_tag", node.id)
-                mMessageClient.sendMessage(node.id, "/message", dataByteArray)
-                Log.d("data_tag", "msg sent")
-            }
-        }
-    }
     // Creates main_menu.xml
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.toolbar_menu, menu)

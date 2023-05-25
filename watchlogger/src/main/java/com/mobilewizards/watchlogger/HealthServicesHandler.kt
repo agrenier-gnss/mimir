@@ -41,7 +41,7 @@ class HealthServicesHandler: SensorEventListener{
         mHeartRateSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE)
 
         if (mHeartRateSensor == null) {
-            Log.d("watchLogger", "heart rate is null")
+            Log.d("ECG", "heart rate is null")
         } else {
             mSensorManager.registerListener(this, mHeartRateSensor, SensorManager.SENSOR_DELAY_FASTEST)
         }
@@ -123,7 +123,7 @@ class HealthServicesHandler: SensorEventListener{
                 "$time"
 
             measurementsList.add(measurementString)
-            Log.d("Heart rate  Measurement", measurementString)
+            Log.d("ECG", measurementString)
         }
         heartRateMeasurementList.addAll(measurementsList)
     }

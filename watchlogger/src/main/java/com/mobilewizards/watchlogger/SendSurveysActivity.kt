@@ -145,7 +145,6 @@ class SendSurveysActivity : Activity() {
                             }
                         }
                     }
-                    Toast.makeText(this, "File written", Toast.LENGTH_SHORT).show()
                 }
                 sendCsvFileToPhone(File(path), connectedNode, this)
             }
@@ -156,8 +155,8 @@ class SendSurveysActivity : Activity() {
         var nodeIds = ArrayList<String>()
         Wearable.getNodeClient(this).connectedNodes.addOnSuccessListener { nodes ->
             for (node in nodes) {
-                Log.d(TAG, "connected node in getPhoneId " + node.id.toString())
-                nodeIds.add(node.id.toString())
+                Log.d(TAG, "connected node in getPhoneId " + node.id)
+                nodeIds.add(node.id)
             }
             callback(nodeIds)
         }
@@ -186,7 +185,6 @@ class SendSurveysActivity : Activity() {
                 // Send the CSV file to the phone
                 channelClient.sendFile(channel, csvFile.toUri()).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        Log.d(TAG, "task is succesfull:" + csvFile.toUri().toString())
                         WatchActivityHandler.fileSendStatus(true)
                         fileSendSuccessful()
                         channelClient.close(channel)

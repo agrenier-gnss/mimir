@@ -30,7 +30,6 @@ class SettingsActivity : Activity() {
         imuBtn.isSelected = WatchActivityHandler.getImuStatus()
         ecgBtn.isSelected = WatchActivityHandler.getEcgStatus()
 
-
         val fiveSecBtn = findViewById<Button>(R.id.FiveSecondsBtn)
         val fifteenSecBtn = findViewById<Button>(R.id.FifteenSecondsBtn)
         val thirtySecBtn = findViewById<Button>(R.id.ThirtySecondsBtn)
@@ -50,46 +49,41 @@ class SettingsActivity : Activity() {
 
         fiveSecBtn.setOnClickListener{
             fiveSecBtn.isSelected = !fiveSecBtn.isSelected
-            // TODO: Chagne frequency to correct
+            // TODO: Change frequency to correct
             if (fiveSecBtn.isSelected){
-               // changeFrequencyStatus(fiveSecBtn)
                 fifteenSecBtn.isSelected = false
                 thirtySecBtn.isSelected = false
                 minuteBtn.isSelected = false
-               // WatchActivityHandler.changeFrequency(5)
             }
         }
 
         fifteenSecBtn.setOnClickListener{
             fifteenSecBtn.isSelected = !fifteenSecBtn.isSelected
-            // TODO: Chagne frequency to correct
+            // TODO: Change frequency to correct
             if (fifteenSecBtn.isSelected){
                 fiveSecBtn.isSelected = false
                 thirtySecBtn.isSelected = false
                 minuteBtn.isSelected = false
-              //  WatchActivityHandler.changeFrequency(15)
             }
         }
 
         thirtySecBtn.setOnClickListener{
             thirtySecBtn.isSelected = !thirtySecBtn.isSelected
-            // TODO: Chagne frequency to correct
+            // TODO: Change frequency to correct
             if (thirtySecBtn.isSelected){
                 fiveSecBtn.isSelected = false
                 fifteenSecBtn.isSelected = false
                 minuteBtn.isSelected = false
-               // WatchActivityHandler.changeFrequency(30)
             }
         }
 
         minuteBtn.setOnClickListener{
             minuteBtn.isSelected = !minuteBtn.isSelected
-            // TODO: Chagne frequency to correct
+            // TODO: Change frequency to correct
             if (minuteBtn.isSelected){
                 fiveSecBtn.isSelected = false
                 fifteenSecBtn.isSelected = false
                 thirtySecBtn.isSelected = false
-                //WatchActivityHandler.changeFrequency(60)
             }
         }
 
@@ -99,7 +93,7 @@ class SettingsActivity : Activity() {
             WatchActivityHandler.changeGnssStatus(gnssBtn.isSelected)
             WatchActivityHandler.changeEcgStatus(ecgBtn.isSelected)
 
-            // TODO: Chagne frequency to correct
+            // TODO: Change frequency to correct
             if (fiveSecBtn.isSelected){
                 WatchActivityHandler.changeFrequency(5000)
             }
