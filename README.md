@@ -1,3 +1,3 @@
-# mobile_wizards
+# Mimir
 
-This app is for logging various data
+Mimir is an open-source app designed to logged various sensors data in smart devices (smartphones, smartwatches), with a more specific focus on GNSS measurements.
