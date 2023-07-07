@@ -1,17 +1,23 @@
 package com.mobilewizards.logging_app
 
 import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorManager
+import android.hardware.SensorManager.SENSOR_DELAY_NORMAL
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.mimir.sensors.SensorType
 import java.text.SimpleDateFormat
 import java.util.*
+
+import com.mimir.sensors.SensorsHandler
 
 //this class handles logging data and log events all from one class
 object ActivityHandler{
 
     private var isLogging: Boolean = false
 
-    private var IMUFrequency: Int = 10
+    private var IMUFrequency: Int = 1
     private var barometerFrequency: Int = 1
     private var magnetometerFrequency: Int = 1
 
@@ -26,6 +32,8 @@ object ActivityHandler{
     var gnssSensor = mutableListOf<GnssHandler>()
     var imuSensor = mutableListOf<MotionSensorsHandler>()
     var bleSensor = mutableListOf<BLEHandler>()
+
+    lateinit var sensorsHandler : SensorsHandler
 
     // Amount of logged events
     private var IMULogs: Int = 0
@@ -61,38 +69,72 @@ object ActivityHandler{
 
     fun startLogging(context: Context){
 
-        val motionSensors = MotionSensorsHandler(context)
-        val gnss = GnssHandler(context)
-        val ble =  BLEHandler(context)
-
-        gnssSensor.add(gnss)
-        imuSensor.add(motionSensors)
-        bleSensor.add(ble)
-
-        if(IMUToggle || getToggle("Magnetometer") || getToggle("Barometer"))
-            {motionSensors.setUpSensors(IMUFrequency, magnetometerFrequency, barometerFrequency)}
-        if (GNSSToggle) {gnss.setUpLogging()}
-        if(BLEToggle){ble.setUpLogging()}
-
+//        val motionSensors = MotionSensorsHandler(context)
+//        val gnss = GnssHandler(context)
+//        val ble =  BLEHandler(context)
+//
+//        gnssSensor.add(gnss)
+//        imuSensor.add(motionSensors)
+//        bleSensor.add(ble)
+//
+//        if(IMUToggle || getToggle("Magnetometer") || getToggle("Barometer")){
+//            motionSensors.setUpSensors(IMUFrequency, magnetometerFrequency, barometerFrequency)}
+//        if (GNSSToggle) {gnss.setUpLogging()}
+//        if(BLEToggle){ble.setUpLogging()}
+//
         isLogging = true
         setSurveyStartTime()
+
+        // Register sensors
+        sensorsHandler = SensorsHandler(context)
+
+        // Motion sensors
+        if(getToggle("IMU")) {
+            sensorsHandler.addSensor(SensorType.TYPE_ACCELEROMETER, (1/IMUFrequency * 1e6).toInt())
+            sensorsHandler.addSensor(SensorType.TYPE_GYROSCOPE, (1/IMUFrequency * 1e6).toInt())
+            //sensorsHandler.addSensor(Sensor.TYPE_ACCELEROMETER_UNCALIBRATED, "ACC_UNCAL",(1/IMUFrequency * 1e6).toInt())
+            //sensorsHandler.addSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED, "GYRO_UNCAL", (1/IMUFrequency * 1e6).toInt())
+        }
+        if(getToggle("Magnetometer")) {
+            sensorsHandler.addSensor(SensorType.TYPE_MAGNETIC_FIELD, (1/magnetometerFrequency * 1e6).toInt())
+            //sensorsHandler.addSensor(Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED, "MAG_UNCAL", 1000 * 1000)
+        }
+        if(getToggle("Barometer")){
+            sensorsHandler.addSensor(SensorType.TYPE_PRESSURE, (1/barometerFrequency * 1e6).toInt())
+        }
+
+        // GNSS Sensor
+        if(getToggle("GNSS")){
+            sensorsHandler.addSensor(SensorType.TYPE_GNSS_LOCATION)
+            sensorsHandler.addSensor(SensorType.TYPE_GNSS_MEASUREMENTS)
+            sensorsHandler.addSensor(SensorType.TYPE_GNSS_MESSAGES)
+        }
+
+        // BLE Sensor
+//        if(getToggle("Bluetooth")){
+//            sensorsHandler.addSensor(SensorType.TYPE_BLUETOOTH)
+//        }
+
+        sensorsHandler.startLogging()
     }
 
     fun stopLogging(context: Context){
 
-        if (GNSSToggle) {
-            gnssSensor[0].stopLogging(context)}
-        if(IMUToggle || getToggle("Magnetometer") || getToggle("Barometer")){
-            imuSensor[0].stopLogging()
-        }
-        if(BLEToggle){
-            bleSensor[0].stopLogging()
-        }
-
-        gnssSensor.clear()
-        imuSensor.clear()
-        bleSensor.clear()
+//        if (GNSSToggle) {
+//            gnssSensor[0].stopLogging(context)}
+//        if(IMUToggle || getToggle("Magnetometer") || getToggle("Barometer")){
+//            imuSensor[0].stopLogging()
+//        }
+//        if(BLEToggle){
+//            bleSensor[0].stopLogging()
+//        }
+//
+//        gnssSensor.clear()
+//        imuSensor.clear()
+//        bleSensor.clear()
         isLogging = false
+
+        sensorsHandler.stopLogging()
     }
 
     // Get info on whether the sensor will be logged or not
