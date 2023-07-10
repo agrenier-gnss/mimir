@@ -15,6 +15,7 @@ enum class SensorType(val value: Int){
     TYPE_GYROSCOPE_UNCALIBRATED(16),
     TYPE_MAGNETIC_FIELD_UNCALIBRATED(14),
     TYPE_PRESSURE(6),
+    TYPE_HEART_RATE(21),
 
     // GNSS
     TYPE_GNSS_LOCATION(100),
@@ -23,4 +24,5 @@ enum class SensorType(val value: Int){
 
     // BLE
     TYPE_BLUETOOTH(200)
+
 }

@@ -33,18 +33,18 @@ class SensorsHandler(val context: Context) {
             SensorType.TYPE_ACCELEROMETER ->
                 mSensors.add(MotionSensor(this.context, fileHandler, _type, "ACC", _samplingFrequency, mSensorsResults))
             SensorType.TYPE_GYROSCOPE ->
-                mSensors.add(MotionSensor(this.context, fileHandler, _type, "GYRO", _samplingFrequency, mSensorsResults))
+                mSensors.add(MotionSensor(this.context, fileHandler, _type, "GYR", _samplingFrequency, mSensorsResults))
             SensorType.TYPE_MAGNETIC_FIELD ->
                 mSensors.add(MotionSensor(this.context, fileHandler, _type, "MAG", _samplingFrequency, mSensorsResults))
             SensorType.TYPE_ACCELEROMETER_UNCALIBRATED ->
                 mSensors.add(UncalibratedMotionSensor(this.context, fileHandler, _type, "ACC_UNCAL", _samplingFrequency, mSensorsResults))
             SensorType.TYPE_GYROSCOPE_UNCALIBRATED ->
-                mSensors.add(UncalibratedMotionSensor(this.context, fileHandler, _type, "GYRO_UNCAL", _samplingFrequency, mSensorsResults))
+                mSensors.add(UncalibratedMotionSensor(this.context, fileHandler, _type, "GYR_UNCAL", _samplingFrequency, mSensorsResults))
             SensorType.TYPE_MAGNETIC_FIELD_UNCALIBRATED ->
                 mSensors.add(UncalibratedMotionSensor(this.context, fileHandler, _type, "MAG_UNCAL", _samplingFrequency, mSensorsResults))
 
             SensorType.TYPE_PRESSURE ->
-                mSensors.add(EnvironmentSensor(this.context, fileHandler, _type, "PRESSURE", _samplingFrequency, mSensorsResults))
+                mSensors.add(EnvironmentSensor(this.context, fileHandler, _type, "PSR", _samplingFrequency, mSensorsResults))
 
             SensorType.TYPE_GNSS_LOCATION ->
                 mSensors.add(GnssLocationSensor(this.context, fileHandler, mSensorsResults))
@@ -55,6 +55,9 @@ class SensorsHandler(val context: Context) {
 
             SensorType.TYPE_BLUETOOTH ->
                 mSensors.add(BluetoothSensor(this.context, fileHandler, mSensorsResults))
+
+            SensorType.TYPE_HEART_RATE ->
+                mSensors.add(HeartRateSensor(this.context, fileHandler, _type, "ECG", _samplingFrequency, mSensorsResults))
 
             else -> {Log.w("SensorsHandler", "Sensor type $_type not supported.")}
         }

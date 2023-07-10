@@ -799,7 +799,64 @@ class BluetoothSensor(
             scan.dataStatus,
             scan.scanRecord?.bytes.contentToString())
     }
+}
 
+// =================================================================================================
+
+class HeartRateSensor(
+    context: Context,
+    _fileHandler: FileHandler,
+    _type: SensorType,
+    _typeTag: String,
+    _samplingFrequency: Int,
+    _mvalues: MutableList<Any>)
+    : CustomSensor(context, _fileHandler, _type, _typeTag, 1000, _mvalues) {
+
+    // ---------------------------------------------------------------------------------------------
+
+    override fun logSensor(event: SensorEvent) {
+        super.logSensor(event)
+
+        // Log the values
+        mvalues.add(event)
+        //Log.d(typeTag, event.toString())
+
+        fileHandler.obtainMessage().also { msg ->
+            msg.obj = getLogLine(event)
+            fileHandler.sendMessage(msg)
+        }
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    fun getLogLine(event : SensorEvent): String {
+        return String.format(
+            Locale.US,
+            "$typeTag,%s,%s,%s,%s",
+            System.currentTimeMillis(),
+            event.timestamp,
+            event.values[0],
+            event.accuracy)
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    override fun getHeader(): String {
+        var str : String =  super.getHeader()
+
+        str += String.format("# ${typeTag},utcTimeMillis,elapsedRealtime_nanosecond,")
+        when(type){
+            SensorType.TYPE_PRESSURE
+            -> str += String.format(
+                "%s,%s",
+                "rate_beatPerSecond",
+                "accuracy")
+            else -> Log.e("Sensors", "Invalid value.")
+        }
+        str += "\n#"
+
+        return str
+    }
 }
 
 

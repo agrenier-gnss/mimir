@@ -130,6 +130,9 @@ class LoggingActivity : Activity() {
             sensorsHandler.addSensor(SensorType.TYPE_GNSS_MESSAGES)
         }
 
+        // Heart
+        sensorsHandler.addSensor(SensorType.TYPE_HEART_RATE)
+
         sensorsHandler.startLogging()
     }
 
