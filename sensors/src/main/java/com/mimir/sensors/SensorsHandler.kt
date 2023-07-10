@@ -19,6 +19,7 @@ class SensorsHandler(val context: Context) {
     private var handlerThread: HandlerThread
 
     init {
+        // Setup file
         handlerThread = HandlerThread("").apply {
             start()
             fileHandler = FileHandler(context, looper)

@@ -48,9 +48,13 @@ object ActivityHandler{
     // Keeps track of logging_button state in MauveActivity
     private val buttonState = MutableLiveData<Boolean>(false)
 
+    // ---------------------------------------------------------------------------------------------
+
     fun getButtonState(): LiveData<Boolean> {
         return buttonState
     }
+
+    // ---------------------------------------------------------------------------------------------
 
     fun toggleButton(context: Context) {
         buttonState.value = !(buttonState.value ?: false)
@@ -63,9 +67,13 @@ object ActivityHandler{
         }
     }
 
+    // ---------------------------------------------------------------------------------------------
+
     fun isLogging(): Boolean{
         return isLogging
     }
+
+    // ---------------------------------------------------------------------------------------------
 
     fun startLogging(context: Context){
 
@@ -111,12 +119,15 @@ object ActivityHandler{
         }
 
         // BLE Sensor
+        // TODO review BLE logging
 //        if(getToggle("Bluetooth")){
 //            sensorsHandler.addSensor(SensorType.TYPE_BLUETOOTH)
 //        }
 
         sensorsHandler.startLogging()
     }
+
+    // ---------------------------------------------------------------------------------------------
 
     fun stopLogging(context: Context){
 
@@ -137,25 +148,25 @@ object ActivityHandler{
         sensorsHandler.stopLogging()
     }
 
+    // ---------------------------------------------------------------------------------------------
+
     // Get info on whether the sensor will be logged or not
-    fun getToggle(tag: String): Boolean{
-        if(tag.equals("GNSS")){
-            return GNSSToggle
+    fun getToggle(type: String): Boolean{
+        when(type)
+        {
+            "IMU",
+                -> return IMUToggle
+           "Magnetometer"
+                -> return magnetometerToggle
+            "Barometer"
+                -> return barometerToggle
+            "GNSS"
+                -> return GNSSToggle
+            else -> return false
         }
-        else if(tag.equals("IMU")){
-            return IMUToggle
-        }
-        else if(tag.equals("Barometer")){
-            return barometerToggle
-        }
-        else if(tag.equals("Magnetometer")){
-            return magnetometerToggle
-        }
-        else if(tag.equals("Bluetooth")){
-            return BLEToggle
-        }
-        return false
     }
+
+    // ---------------------------------------------------------------------------------------------
 
     // Toggle sensor status between true and false whether it will be logged or not
     fun setToggle(tag: String){
@@ -176,6 +187,8 @@ object ActivityHandler{
         }
     }
 
+    // ---------------------------------------------------------------------------------------------
+
     fun getFrequency(tag: String): Int{
         if(tag.equals("IMU")){
             return IMUFrequency
@@ -189,12 +202,12 @@ object ActivityHandler{
         return 0
     }
 
+    // ---------------------------------------------------------------------------------------------
+
     fun setFrequency(tag: String, value: Int){
 
         if(tag.equals("IMU")){
             IMUFrequency = value
-
-
         }
         else if(tag.equals("Barometer")){
             barometerFrequency = value
@@ -203,6 +216,8 @@ object ActivityHandler{
             magnetometerFrequency = value
         }
     }
+
+    // ---------------------------------------------------------------------------------------------
 
     fun getLogData(tag: String): String {
         if(tag.equals("GNSS")) {
@@ -219,13 +234,20 @@ object ActivityHandler{
         return 0.toString()
     }
 
+    // ---------------------------------------------------------------------------------------------
+
     fun setSurveyStartTime() {
         val currentTime = Calendar.getInstance().time
         val dateFormat = SimpleDateFormat("HH:mm")
         surveyStartTime = dateFormat.format(currentTime)
     }
 
+    // ---------------------------------------------------------------------------------------------
+
     fun getSurveyStartTime(): String {
         return surveyStartTime
     }
+
+    // ---------------------------------------------------------------------------------------------
+
 }

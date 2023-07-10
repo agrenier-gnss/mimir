@@ -21,7 +21,11 @@ import com.google.android.gms.wearable.Wearable
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+// =================================================================================================
+
 class MauveActivity : AppCompatActivity() {
+
+    // ---------------------------------------------------------------------------------------------
 
     override fun onResume() {
         super.onResume()
@@ -59,12 +63,15 @@ class MauveActivity : AppCompatActivity() {
         }
     }
 
+    // ---------------------------------------------------------------------------------------------
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mauve)
         supportActionBar?.hide()
 
+        // Create communication with the watch
         val channelClient = Wearable.getChannelClient(applicationContext)
         channelClient.registerChannelCallback(object : ChannelClient.ChannelCallback() {
             override fun onChannelOpened(channel: ChannelClient.Channel) {
@@ -91,7 +98,6 @@ class MauveActivity : AppCompatActivity() {
         val timeText = findViewById<TextView>(R.id.logging_time_text_view)
 
         //if logging button is toggled in other activities, it is also toggled in here.
-
         loggingButton.setOnClickListener {
             ActivityHandler.toggleButton(this)
         }
@@ -182,6 +188,8 @@ class MauveActivity : AppCompatActivity() {
         }
     }
 
+    // ---------------------------------------------------------------------------------------------
+
     private fun checkPermissions() {
         val permissions = arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -204,6 +212,8 @@ class MauveActivity : AppCompatActivity() {
             ActivityCompat.requestPermissions(this, permissions, 225)
         }
     }
+
+    // ---------------------------------------------------------------------------------------------
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -234,4 +244,8 @@ class MauveActivity : AppCompatActivity() {
             }
         }
     }
+
+    // ---------------------------------------------------------------------------------------------
 }
+
+// =================================================================================================

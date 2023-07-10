@@ -107,7 +107,7 @@ class SettingsActivity : Activity() {
                 WatchActivityHandler.changeFrequency(60000)
             } else {
                 //Default value
-                WatchActivityHandler.changeFrequency(5000)
+                WatchActivityHandler.changeFrequency(1000)
             }
             finish()
         }

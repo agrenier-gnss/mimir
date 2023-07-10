@@ -3,10 +3,7 @@ package com.mimir.sensors
 import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
-import android.os.Environment
-import android.os.Handler
-import android.os.Looper
-import android.os.Message
+import android.os.*
 import android.provider.MediaStore
 import java.io.BufferedWriter
 import java.io.File
@@ -41,6 +38,24 @@ class FileHandler (context: Context, looper: Looper): Handler(looper) {
         }
         val uri = context.contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues) as Uri
         mOutputStream = context.contentResolver.openOutputStream(uri) as OutputStream
+
+        // Write basic header
+        writeToFile(getHeader())
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    fun getHeader() : String{
+
+        var str = ""
+
+        str += "#\n"
+        str += "# Header Description:\n"
+        str += "#\n"
+        str += "# Version: " + "1.0" + " Platform: " + Build.MANUFACTURER + " Model: " + Build.MODEL + "\n"
+        str += "#"
+
+        return str
     }
 
     // ---------------------------------------------------------------------------------------------

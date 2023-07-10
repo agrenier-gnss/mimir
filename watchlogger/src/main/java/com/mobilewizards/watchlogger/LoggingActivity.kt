@@ -2,6 +2,7 @@ package com.mobilewizards.logging_app
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -9,18 +10,35 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.core.app.ActivityCompat
+import com.mimir.sensors.SensorType
 import com.mobilewizards.logging_app.databinding.ActivityLoggingBinding
 import com.mobilewizards.watchlogger.*
 import java.time.LocalDateTime
 
+import com.mimir.sensors.SensorsHandler
+import org.w3c.dom.Text
+
 var startTime: Long? = null
+
+// =================================================================================================
 
 class LoggingActivity : Activity() {
 
     private lateinit var binding: ActivityLoggingBinding
-    var imuFrequency: Int = 10
+    var IMUFrequency: Int = 10
     var magnetometerFrequency: Int = 1
     var barometerFrequency: Int = 1
+
+    lateinit var sensorsHandler : SensorsHandler
+    private var isLogging: Boolean = false
+
+    private lateinit var startLogBtn : Button
+    private lateinit var stopLogBtn  : Button
+    private lateinit var reviewBtn   : Button
+    private lateinit var logText     : TextView
+    private lateinit var logTimeText : TextView
+
+    // ---------------------------------------------------------------------------------------------
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,79 +48,31 @@ class LoggingActivity : Activity() {
 
         this.checkPermissions()
 
-        val ble =  WatchBLEHandler(this)
-        val imu = WatchMotionSensorsHandler(this)
-        val gnss = WatchGNSSHandler(this)
-        val ecg = HealthServicesHandler(this)
+//        val ble =  WatchBLEHandler(this)
+//        val imu = WatchMotionSensorsHandler(this)
+//        val gnss = WatchGNSSHandler(this)
+//        val ecg = HealthServicesHandler(this)
 
-        val startLogBtn = findViewById<Button>(R.id.startLogBtn)
+        // Set views
+        startLogBtn = findViewById(R.id.startLogBtn)
+        stopLogBtn  = findViewById(R.id.stopLogBtn)
+        reviewBtn   = findViewById(R.id.reviewBtn)
+        logText     = findViewById(R.id.logInfoText)
+        logTimeText = findViewById(R.id.logTimeText)
         startLogBtn.visibility = View.VISIBLE
-
-        val stopLogBtn = findViewById<Button>(R.id.stopLogBtn)
         stopLogBtn.visibility = View.GONE
-
-        val reviewBtn = findViewById<Button>(R.id.reviewBtn)
         reviewBtn.visibility = View.GONE
-
-        val logText =  findViewById<TextView>(R.id.logInfoText)
         logText.visibility = View.GONE
-
-        val logTimeText =  findViewById<TextView>(R.id.logTimeText)
         logTimeText.visibility = View.GONE
 
         // starts logging
         startLogBtn.setOnClickListener{
-
-            startTime = System.currentTimeMillis()
-            val currentTime = LocalDateTime.now()
-
-            startLogBtn.visibility = View.GONE
-            stopLogBtn.visibility = View.VISIBLE
-            logText.visibility = View.VISIBLE
-            logText.text = "Surveying..."
-            logTimeText.visibility = View.VISIBLE
-            logTimeText.text = currentTime.toString()
-
-            startTime = System.currentTimeMillis()
-
-            WatchActivityHandler.clearFilfPaths()
-
-            if (WatchActivityHandler.getImuStatus()) {
-                imu.setUpSensors(
-                    imuFrequency,magnetometerFrequency,barometerFrequency
-                )
-            }
-
-            if (WatchActivityHandler.getGnssStatus()) {
-            gnss.setUpLogging()
-            }
-
-            ble.setUpLogging()
-
-            if (WatchActivityHandler.getEcgStatus()) {
-            ecg.getHeartRate()
-            }
+            startLogging(this)
         }
 
         // stops logging
         stopLogBtn.setOnClickListener{
-            reviewBtn.visibility = View.VISIBLE
-            stopLogBtn.visibility = View.GONE
-            logTimeText.visibility = View.GONE
-            logText.text = "Survey ended"
-            if (imu.isLogging) {
-                imu.stopLogging()
-            }
-
-            if (gnss.isLogging) {
-                gnss.stopLogging(this)
-            }
-
-            ble.stopLogging()
-
-            if (ecg.isLogging) {
-                ecg.stopHeartRate()
-            }
+            stopLogging(this)
         }
 
         // Opens LoggedEvent.kt for deciding what to do with the logged events
@@ -110,8 +80,73 @@ class LoggingActivity : Activity() {
             val openLoading = Intent(applicationContext, LoggedEvent::class.java)
             startActivity(openLoading)
         }
-
     }
+
+    // ---------------------------------------------------------------------------------------------
+
+    fun startLogging(context: Context){
+
+        isLogging = true
+
+        // Set interface
+        startTime = System.currentTimeMillis()
+        val currentTime = LocalDateTime.now()
+
+        startLogBtn.visibility = View.GONE
+        stopLogBtn.visibility = View.VISIBLE
+        logText.visibility = View.VISIBLE
+        logText.text = "Surveying..."
+        logTimeText.visibility = View.VISIBLE
+        logTimeText.text = currentTime.toString()
+
+        startTime = System.currentTimeMillis()
+
+        WatchActivityHandler.clearFilfPaths()
+
+        // Register sensors
+        sensorsHandler = SensorsHandler(context)
+
+        // Motion sensors
+        if(WatchActivityHandler.getImuStatus()) {
+            sensorsHandler.addSensor(SensorType.TYPE_ACCELEROMETER, (1/IMUFrequency * 1e6).toInt())
+            sensorsHandler.addSensor(SensorType.TYPE_GYROSCOPE, (1/IMUFrequency * 1e6).toInt())
+            //sensorsHandler.addSensor(Sensor.TYPE_ACCELEROMETER_UNCALIBRATED, "ACC_UNCAL",(1/IMUFrequency * 1e6).toInt())
+            //sensorsHandler.addSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED, "GYRO_UNCAL", (1/IMUFrequency * 1e6).toInt())
+        }
+        if(WatchActivityHandler.getImuStatus()) {
+            // TODO make specific status for magnetometer
+            sensorsHandler.addSensor(SensorType.TYPE_MAGNETIC_FIELD, (1/magnetometerFrequency * 1e6).toInt())
+            //sensorsHandler.addSensor(Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED, "MAG_UNCAL", 1000 * 1000)
+        }
+        if(WatchActivityHandler.getImuStatus()){
+            // TODO make specific status for barometer
+            sensorsHandler.addSensor(SensorType.TYPE_PRESSURE, (1/barometerFrequency * 1e6).toInt())
+        }
+
+        // GNSS Sensor
+        if(WatchActivityHandler.getGnssStatus()){
+            sensorsHandler.addSensor(SensorType.TYPE_GNSS_LOCATION)
+            sensorsHandler.addSensor(SensorType.TYPE_GNSS_MEASUREMENTS)
+            sensorsHandler.addSensor(SensorType.TYPE_GNSS_MESSAGES)
+        }
+
+        sensorsHandler.startLogging()
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    fun stopLogging(context: Context){
+
+        reviewBtn.visibility = View.VISIBLE
+        stopLogBtn.visibility = View.GONE
+        logTimeText.visibility = View.GONE
+        logText.text = "Survey ended"
+
+        isLogging = false
+        sensorsHandler.stopLogging()
+    }
+
+    // ---------------------------------------------------------------------------------------------
 
     fun checkPermissions() {
         val permissions = arrayOf(
@@ -135,5 +170,7 @@ class LoggingActivity : Activity() {
             ActivityCompat.requestPermissions(this, permissions, 225)
         }
     }
+
+    // ---------------------------------------------------------------------------------------------
 
 }

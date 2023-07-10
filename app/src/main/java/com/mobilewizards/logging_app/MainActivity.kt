@@ -22,9 +22,9 @@ class MainActivity : AppCompatActivity() {
         val sensorList = arrayOf(
             // 1st value: name. 2nd value: is there a slider. 3rd and 4th are min and max values for slider
             arrayOf("GNSS", false),
-            arrayOf("IMU", true, 10, 100),
-            arrayOf("Barometer", true, 1, 10),
-            arrayOf("Magnetometer", true, 1, 10),
+            arrayOf("IMU", true, 1, 100),
+            arrayOf("Barometer", true, 1, 100),
+            arrayOf("Magnetometer", true, 1, 100),
             arrayOf("Bluetooth", false)
         )
 

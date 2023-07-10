@@ -68,16 +68,22 @@ abstract class CustomSensor(
 
     open fun registerSensor(){
 
-        this.isRegistered = true
         sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
         if (sensorManager.getDefaultSensor(type.value) != null) {
             sensor = sensorManager.getDefaultSensor(type.value)
             sensorManager.registerListener(this, sensor, sampling)
+            this.isRegistered = true
             Log.i("Sensor", "$typeTag sensor registered")
         }
         else {
             Log.i("Sensor", "Does not have sensor for %s".format(typeTag))
+        }
+
+        // Create file header
+        fileHandler.obtainMessage().also { msg ->
+            msg.obj = getHeader()
+            fileHandler.sendMessage(msg)
         }
     }
 
@@ -92,6 +98,20 @@ abstract class CustomSensor(
 
     open fun getLogLine() : String{
         return ""
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    open fun getHeader() : String{
+        var str : String
+
+        if(isRegistered){
+            str = "# Sensor $typeTag enabled\n"
+        } else{
+            str = "# Sensor $typeTag disabled"
+        }
+
+        return str
     }
 }
 
@@ -125,16 +145,50 @@ class MotionSensor(
     // ---------------------------------------------------------------------------------------------
 
     fun getLogLine(event : SensorEvent): String {
-        var string = super.getLogLine()
+        return String.format(
+            Locale.US,
+            "$typeTag,%s,%s,%s,%s,%s,%s",
+            System.currentTimeMillis(),
+            event.timestamp,
+            event.values[0],
+            event.values[1],
+            event.values[2],
+            event.accuracy)
+    }
 
-        string += "$typeTag,"
-        string += "${event.timestamp},"
-        string += "${event.values[0]},"
-        string += "${event.values[1]},"
-        string += "${event.values[2]},"
-        string += "${event.accuracy}"
+    // ---------------------------------------------------------------------------------------------
 
-        return string
+    override fun getHeader(): String {
+        var str : String =  super.getHeader()
+
+        str += String.format("# ${typeTag},utcTimeMillis,elapsedRealtime_nanosecond,")
+        when(type){
+            SensorType.TYPE_ACCELEROMETER
+            -> str += String.format(
+                "%s,%s,%s,%s",
+                "x_meterPerSecond2",
+                "y_meterPerSecond2",
+                "z_meterPerSecond2",
+                "accuracy")
+            SensorType.TYPE_GYROSCOPE
+            ->  str += String.format(
+                "%s,%s,%s,%s",
+                "x_radPerSecond",
+                "y_radPerSecond",
+                "z_radPerSecond",
+                "accuracy")
+            SensorType.TYPE_MAGNETIC_FIELD
+            ->  str += String.format(
+                "%s,%s,%s,%s",
+                "x_microTesla",
+                "y_microTesla",
+                "z_microTesla",
+                "accuracy")
+            else -> Log.e("Sensors", "Invalid value.")
+        }
+        str += "\n#"
+
+        return str
     }
 }
 
@@ -167,19 +221,62 @@ class UncalibratedMotionSensor(
     // ---------------------------------------------------------------------------------------------
 
     fun getLogLine(event : SensorEvent): String {
-        var string = super.getLogLine()
+        return String.format(
+            Locale.US,
+            "$typeTag,%s,%s,%s,%s,%s,%s,%s,%s,%s",
+            System.currentTimeMillis(),
+            event.timestamp,
+            event.values[0],
+            event.values[1],
+            event.values[2],
+            event.values[3],
+            event.values[4],
+            event.values[5],
+            event.accuracy)
+    }
 
-        string += "$typeTag,"
-        string += "${event.timestamp},"
-        string += "${event.values[0]},"
-        string += "${event.values[1]},"
-        string += "${event.values[2]},"
-        string += "${event.values[3]},"
-        string += "${event.values[4]},"
-        string += "${event.values[5]},"
-        string += "${event.accuracy}"
+    // ---------------------------------------------------------------------------------------------
 
-        return string
+    override fun getHeader(): String {
+        var str : String =  super.getHeader()
+
+        str += String.format("# ${typeTag},utcTimeMillis,elapsedRealtime_nanosecond,")
+        when(type){
+            SensorType.TYPE_ACCELEROMETER_UNCALIBRATED
+            -> str += String.format(
+                "%s,%s,%s,%s,%s,%s,%s",
+                "x_uncalibrated_meterPerSecond2",
+                "y_uncalibrated_meterPerSecond2",
+                "z_uncalibrated_meterPerSecond2",
+                "x_bias_meterPerSecond2",
+                "y_bias_meterPerSecond2",
+                "z_bias_meterPerSecond2",
+                "accuracy")
+            SensorType.TYPE_GYROSCOPE_UNCALIBRATED
+            ->  str += String.format(
+                "%s,%s,%s,%s,%s,%s,%s",
+                "x_uncalibrated_radPerSecond",
+                "y_uncalibrated_radPerSecond",
+                "z_uncalibrated_radPerSecond",
+                "x_bias_radPerSecond",
+                "y_bias_radPerSecond",
+                "z_bias_radPerSecond",
+                "accuracy")
+            SensorType.TYPE_MAGNETIC_FIELD_UNCALIBRATED
+            ->  str += String.format(
+                "%s,%s,%s,%s,%s,%s,%s",
+                "x_uncalibrated_microTesla",
+                "y_uncalibrated_microTesla",
+                "z_uncalibrated_microTesla",
+                "x_bias_microTesla",
+                "y_bias_microTesla",
+                "z_bias_microTesla",
+                "accuracy")
+            else -> Log.e("Sensors", "Invalid value.")
+        }
+        str += "\n#"
+
+        return str
     }
 }
 
@@ -212,14 +309,32 @@ class EnvironmentSensor(
     // ---------------------------------------------------------------------------------------------
 
     fun getLogLine(event : SensorEvent): String {
-        var string = super.getLogLine()
+        return String.format(
+            Locale.US,
+            "$typeTag,%s,%s,%s,%s",
+            System.currentTimeMillis(),
+            event.timestamp,
+            event.values[0],
+            event.accuracy)
+    }
 
-        string += "$typeTag,"
-        string += "${event.timestamp},"
-        string += "${event.values[0]},"
-        string += "${event.accuracy}"
+    // ---------------------------------------------------------------------------------------------
 
-        return string
+    override fun getHeader(): String {
+        var str : String =  super.getHeader()
+
+        str += String.format("# ${typeTag},utcTimeMillis,elapsedRealtime_nanosecond,")
+        when(type){
+            SensorType.TYPE_PRESSURE
+            -> str += String.format(
+                "%s,%s",
+                "pressure_hPa",
+                "accuracy")
+            else -> Log.e("Sensors", "Invalid value.")
+        }
+        str += "\n#"
+
+        return str
     }
 }
 
@@ -258,9 +373,16 @@ class GnssLocationSensor(
                 mLocationListener,
                 null
             );
+            this.isRegistered = true
             Log.i("Sensor", "GNSS Location sensor registered")
         } catch (e: SecurityException) {
             e.printStackTrace()
+        }
+
+        // Create file header
+        fileHandler.obtainMessage().also { msg ->
+            msg.obj = getHeader()
+            fileHandler.sendMessage(msg)
         }
     }
 
@@ -288,23 +410,50 @@ class GnssLocationSensor(
 
     private fun getLogLine(location: Location): String {
 
+        // Based on GNSS logger app logging
+
         return String.format(
             Locale.US,
-            "$typeTag,%s,%.8f,%.8f,%.3f,%.3f,%f,%d,%d,%f,%f,%f,%f,%f",
+            "$typeTag,%s,%.8f,%.8f,%.3f,%.3f,%.3f,%f,%d,%f,%f,%d,%f,%f",
             location.provider,
             location.latitude,
             location.longitude,
             location.altitude,
             location.speed,
             location.accuracy,
-            location.time,
-            location.elapsedRealtimeNanos,
-            location.elapsedRealtimeUncertaintyNanos,
             location.bearing,
-            location.bearingAccuracyDegrees,
+            location.time,
             location.speedAccuracyMetersPerSecond,
-            location.verticalAccuracyMeters
-        )
+            location.bearingAccuracyDegrees,
+            location.elapsedRealtimeNanos,
+            location.verticalAccuracyMeters,
+            location.elapsedRealtimeUncertaintyNanos)
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    override fun getHeader(): String {
+
+        var str : String =  super.getHeader()
+
+        str += String.format(
+            "# $typeTag,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
+            "Provider",
+            "Latitude_decimalDegree",
+            "Longitude_decimalDegree",
+            "Altitude_meter",
+            "Speed_meterPerSecond",
+            "Accuracy_meter",
+            "Bearing_degree",
+            "UnixTime_millisecond",
+            "SpeedAccuracy_meterPerSecond",
+            "BearingAccuracy_degree",
+            "ElapsedRealtime_nanosecond",
+            "VerticalAccuracy_meter",
+            "ElapsedRealtimeUncertainty_nanosecond")
+        str += "\n#"
+
+        return str
     }
 }
 
@@ -338,10 +487,17 @@ class GnssMeasurementSensor(
             mGnssMeasurementsEventCallback.let {
                 mLocationManager.registerGnssMeasurementsCallback(context.mainExecutor, it)
             }
+            this.isRegistered = true
             Log.i("Sensor", "GNSS Measurement sensor registered")
         }
         catch (e: SecurityException) {
             e.printStackTrace()
+        }
+
+        // Create file header
+        fileHandler.obtainMessage().also { msg ->
+            msg.obj = getHeader()
+            fileHandler.sendMessage(msg)
         }
     }
 
@@ -372,8 +528,8 @@ class GnssMeasurementSensor(
     private fun getLogLine(gnssClock: GnssClock, measurement : GnssMeasurement): String {
         return String.format(
             Locale.US,
-            "$typeTag,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
-            SystemClock.currentGnssTimeClock().millis(),
+            "$typeTag,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
+            System.currentTimeMillis(),
             gnssClock.timeNanos,
             if (gnssClock.hasLeapSecond()) gnssClock.leapSecond else "",
             if (gnssClock.hasTimeUncertaintyNanos()) gnssClock.timeUncertaintyNanos else "",
@@ -401,7 +557,62 @@ class GnssMeasurementSensor(
             measurement.multipathIndicator,
             if (measurement.hasSnrInDb()) measurement.snrInDb else "",
             measurement.constellationType,
-            if (measurement.hasAutomaticGainControlLevelDb()) measurement.automaticGainControlLevelDb else "")
+            if (measurement.hasAutomaticGainControlLevelDb()) measurement.automaticGainControlLevelDb else "",
+            if (measurement.hasFullInterSignalBiasNanos()) measurement.fullInterSignalBiasNanos else "",
+            if (measurement.hasFullInterSignalBiasUncertaintyNanos()) measurement.fullInterSignalBiasUncertaintyNanos else "",
+            if (measurement.hasSatelliteInterSignalBiasNanos()) measurement.satelliteInterSignalBiasNanos else "",
+            if (measurement.hasSatelliteInterSignalBiasUncertaintyNanos()) measurement.satelliteInterSignalBiasUncertaintyNanos else "",
+            if (measurement.hasCodeType()) measurement.codeType else "",
+            gnssClock.elapsedRealtimeNanos
+        )
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    override fun getHeader(): String {
+        var str : String =  super.getHeader()
+
+        str += String.format(
+            "# $typeTag,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
+            "utcTimeMillis",
+            "TimeNanos",
+            "LeapSecond",
+            "TimeUncertaintyNanos",
+            "FullBiasNanos",
+            "BiasNanos",
+            "BiasUncertaintyNanos",
+            "DriftNanosPerSecond",
+            "DriftUncertaintyNanosPerSecond",
+            "HardwareClockDiscontinuityCount",
+            "Svid",
+            "TimeOffsetNanos",
+            "State",
+            "ReceivedSvTimeNanos",
+            "ReceivedSvTimeUncertaintyNanos",
+            "Cn0DbHz",
+            "PseudorangeRateMetersPerSecond",
+            "PseudorangeRateUncertaintyMetersPerSecond",
+            "AccumulatedDeltaRangeState",
+            "AccumulatedDeltaRangeMeters",
+            "AccumulatedDeltaRangeUncertaintyMeters",
+            "CarrierFrequencyHz",
+            "CarrierCycles",
+            "CarrierPhase",
+            "CarrierPhaseUncertainty",
+            "MultipathIndicator",
+            "SnrInDb",
+            "ConstellationType",
+            "AgcDb",
+            "BasebandCn0DbHz",
+            "FullInterSignalBiasNanos",
+            "FullInterSignalBiasUncertaintyNanos",
+            "SatelliteInterSignalBiasNanos",
+            "SatelliteInterSignalBiasUncertaintyNanos",
+            "CodeType",
+            "ChipsetElapsedRealtimeNanos")
+        str += "\n#"
+
+        return str
     }
 }
 
@@ -436,10 +647,17 @@ class GnssNavigationMessageSensor(
             mGnssNavigationMessageCallback.let {
                 mLocationManager.registerGnssNavigationMessageCallback(context.mainExecutor, it)
             }
+            this.isRegistered = true
             Log.i("Sensor", "GNSS Navigation Message sensor registered")
         }
         catch (e: SecurityException) {
             e.printStackTrace()
+        }
+
+        // Create file header
+        fileHandler.obtainMessage().also { msg ->
+            msg.obj = getHeader()
+            fileHandler.sendMessage(msg)
         }
     }
 
@@ -470,13 +688,33 @@ class GnssNavigationMessageSensor(
         return String.format(
             Locale.US,
             "$typeTag,%s,%s,%s,%s,%s,%s,%s",
-            SystemClock.currentGnssTimeClock().millis(),
+            System.currentTimeMillis(),
             event.svid,
             event.type,
             event.status,
             event.messageId,
             event.submessageId,
             event.data)
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    override fun getHeader(): String {
+
+        var str : String =  super.getHeader()
+
+        str += String.format(
+            "# $typeTag,%s,%s,%s,%s,%s,%s,%s",
+            "utcTimeMillis",
+            "Svid",
+            "Type",
+            "Status",
+            "MessageId",
+            "Sub-messageId",
+            "Data(Bytes)")
+        str += "\n#"
+
+        return str
     }
 }
 
