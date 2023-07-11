@@ -38,6 +38,7 @@ abstract class CustomSensor(
 
     lateinit var sensor : Sensor
     lateinit var sensorManager : SensorManager
+    lateinit var sensorSummary : String
 
     protected val fileHandler = _fileHandler
 
@@ -73,6 +74,7 @@ abstract class CustomSensor(
         if (sensorManager.getDefaultSensor(type.value) != null) {
             sensor = sensorManager.getDefaultSensor(type.value)
             sensorManager.registerListener(this, sensor, sampling)
+            sensorSummary = sensor.toString()
             this.isRegistered = true
             Log.i("Sensor", "$typeTag sensor registered")
         }
@@ -103,12 +105,12 @@ abstract class CustomSensor(
     // ---------------------------------------------------------------------------------------------
 
     open fun getHeader() : String{
-        var str : String
+        val str : String
 
-        if(isRegistered){
-            str = "# Sensor $typeTag enabled\n"
-        } else{
+        if(!isRegistered){
             str = "# Sensor $typeTag disabled"
+        } else{
+            str = "# Sensor $typeTag enabled, $sensorSummary\n"
         }
 
         return str
@@ -184,7 +186,7 @@ class MotionSensor(
                 "y_microTesla",
                 "z_microTesla",
                 "accuracy")
-            else -> Log.e("Sensors", "Invalid value.")
+            else -> Log.e("Sensors", "Invalid value $type")
         }
         str += "\n#"
 
@@ -272,7 +274,7 @@ class UncalibratedMotionSensor(
                 "y_bias_microTesla",
                 "z_bias_microTesla",
                 "accuracy")
-            else -> Log.e("Sensors", "Invalid value.")
+            else -> Log.e("Sensors", "Invalid value $type")
         }
         str += "\n#"
 
@@ -330,7 +332,7 @@ class EnvironmentSensor(
                 "%s,%s",
                 "pressure_hPa",
                 "accuracy")
-            else -> Log.e("Sensors", "Invalid value.")
+            else -> Log.e("Sensors", "Invalid value $type")
         }
         str += "\n#"
 
@@ -373,6 +375,7 @@ class GnssLocationSensor(
                 mLocationListener,
                 null
             );
+            sensorSummary = "{Receiver: ${mLocationManager.gnssHardwareModelName}}"
             this.isRegistered = true
             Log.i("Sensor", "GNSS Location sensor registered")
         } catch (e: SecurityException) {
@@ -487,6 +490,7 @@ class GnssMeasurementSensor(
             mGnssMeasurementsEventCallback.let {
                 mLocationManager.registerGnssMeasurementsCallback(context.mainExecutor, it)
             }
+            sensorSummary = "{Receiver: ${mLocationManager.gnssHardwareModelName}}"
             this.isRegistered = true
             Log.i("Sensor", "GNSS Measurement sensor registered")
         }
@@ -647,6 +651,7 @@ class GnssNavigationMessageSensor(
             mGnssNavigationMessageCallback.let {
                 mLocationManager.registerGnssNavigationMessageCallback(context.mainExecutor, it)
             }
+            sensorSummary = "{Receiver: ${mLocationManager.gnssHardwareModelName}}"
             this.isRegistered = true
             Log.i("Sensor", "GNSS Navigation Message sensor registered")
         }
@@ -678,7 +683,7 @@ class GnssNavigationMessageSensor(
         fileHandler.obtainMessage().also { msg ->
             msg.obj = getLogLine(event)
             fileHandler.sendMessage(msg)
-            Log.d(typeTag, msg.obj.toString())
+            //Log.d(typeTag, msg.obj.toString())
         }
     }
 
@@ -694,7 +699,7 @@ class GnssNavigationMessageSensor(
             event.status,
             event.messageId,
             event.submessageId,
-            event.data)
+            event.data.joinToString(separator = ","))
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -846,12 +851,12 @@ class HeartRateSensor(
 
         str += String.format("# ${typeTag},utcTimeMillis,elapsedRealtime_nanosecond,")
         when(type){
-            SensorType.TYPE_PRESSURE
+            SensorType.TYPE_HEART_RATE
             -> str += String.format(
                 "%s,%s",
                 "rate_beatPerSecond",
                 "accuracy")
-            else -> Log.e("Sensors", "Invalid value.")
+            else -> Log.e("Sensors", "Invalid value $type")
         }
         str += "\n#"
 
@@ -859,7 +864,98 @@ class HeartRateSensor(
     }
 }
 
+// =================================================================================================
 
+class SpecificSensor(
+    context: Context,
+    _fileHandler: FileHandler,
+    _name: String,
+    _type: SensorType,
+    _typeTag: String,
+    _samplingFrequency: Int,
+    _mvalues: MutableList<Any>)
+    : CustomSensor(context, _fileHandler, _type, _typeTag, _samplingFrequency, _mvalues){
+
+    private val name : String = _name
+
+    // ---------------------------------------------------------------------------------------------
+
+    override fun registerSensor() {
+
+        sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        val deviceSensors: List<Sensor> = sensorManager.getSensorList(Sensor.TYPE_ALL)
+
+        // Loop through the devices sensors to find the right one
+        // TODO Maybe there is a better way to request a specific sensor by name?
+        deviceSensors.forEach  {
+            if (it.name == name) {
+                sensor = it
+                sensorManager.registerListener(this, sensor, sampling)
+                this.isRegistered = true
+            }
+        }
+
+        if(this.isRegistered){
+            sensorSummary = sensor.toString()
+            Log.i("Sensor", "$typeTag sensor registered")
+
+            // Create file header
+            fileHandler.obtainMessage().also { msg ->
+                msg.obj = getHeader()
+                fileHandler.sendMessage(msg)
+            }
+        }
+        else {
+            Log.i("Sensor", "Does not have sensor for %s".format(typeTag))
+        }
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    override fun logSensor(event: SensorEvent) {
+        super.logSensor(event)
+
+        // Log the values
+        mvalues.add(event)
+        // Log.d(typeTag, event.toString())
+
+        fileHandler.obtainMessage().also { msg ->
+            msg.obj = getLogLine(event)
+            fileHandler.sendMessage(msg)
+        }
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    fun getLogLine(event : SensorEvent): String {
+        return String.format(
+            Locale.US,
+            "$typeTag,%s,%s,%s,%s",
+            System.currentTimeMillis(),
+            event.timestamp,
+            event.accuracy,
+            event.values.joinToString(separator = ","))
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    override fun getHeader(): String {
+        var str : String =  super.getHeader()
+
+        str += String.format("# ${typeTag},utcTimeMillis,elapsedRealtime_nanosecond,")
+        when(type){
+            SensorType.TYPE_SPECIFIC_ECG
+            -> str += String.format(
+                "%s,%s",
+                "accuracy",
+                "values")
+            else -> Log.e("Sensors", "Invalid value $type")
+        }
+        str += "\n#"
+
+        return str
+    }
+}
 
 
 

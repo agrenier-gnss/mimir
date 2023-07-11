@@ -5,8 +5,10 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.hardware.SensorManager
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import androidx.core.app.ActivityCompat
@@ -28,6 +30,7 @@ class LoggingActivity : Activity() {
     var IMUFrequency: Int = 10
     var magnetometerFrequency: Int = 1
     var barometerFrequency: Int = 1
+    var healthSensorFrequency: Int = 1
 
     lateinit var sensorsHandler : SensorsHandler
     private var isLogging: Boolean = false
@@ -45,6 +48,8 @@ class LoggingActivity : Activity() {
 
         binding = ActivityLoggingBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        //window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         this.checkPermissions()
 
@@ -108,19 +113,19 @@ class LoggingActivity : Activity() {
 
         // Motion sensors
         if(WatchActivityHandler.getImuStatus()) {
-            sensorsHandler.addSensor(SensorType.TYPE_ACCELEROMETER, (1/IMUFrequency * 1e6).toInt())
-            sensorsHandler.addSensor(SensorType.TYPE_GYROSCOPE, (1/IMUFrequency * 1e6).toInt())
+            sensorsHandler.addSensor(SensorType.TYPE_ACCELEROMETER, (1.0/IMUFrequency * 1e6).toInt())
+            sensorsHandler.addSensor(SensorType.TYPE_GYROSCOPE, (1.0/IMUFrequency * 1e6).toInt())
             //sensorsHandler.addSensor(Sensor.TYPE_ACCELEROMETER_UNCALIBRATED, "ACC_UNCAL",(1/IMUFrequency * 1e6).toInt())
             //sensorsHandler.addSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED, "GYRO_UNCAL", (1/IMUFrequency * 1e6).toInt())
         }
         if(WatchActivityHandler.getImuStatus()) {
             // TODO make specific status for magnetometer
-            sensorsHandler.addSensor(SensorType.TYPE_MAGNETIC_FIELD, (1/magnetometerFrequency * 1e6).toInt())
+            sensorsHandler.addSensor(SensorType.TYPE_MAGNETIC_FIELD, (1.0/magnetometerFrequency * 1e6).toInt())
             //sensorsHandler.addSensor(Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED, "MAG_UNCAL", 1000 * 1000)
         }
         if(WatchActivityHandler.getImuStatus()){
             // TODO make specific status for barometer
-            sensorsHandler.addSensor(SensorType.TYPE_PRESSURE, (1/barometerFrequency * 1e6).toInt())
+            sensorsHandler.addSensor(SensorType.TYPE_PRESSURE, (1.0/barometerFrequency * 1e6).toInt())
         }
 
         // GNSS Sensor
@@ -131,7 +136,8 @@ class LoggingActivity : Activity() {
         }
 
         // Heart
-        sensorsHandler.addSensor(SensorType.TYPE_HEART_RATE)
+        sensorsHandler.addSensor(SensorType.TYPE_HEART_RATE, SensorManager.SENSOR_DELAY_FASTEST)
+        //sensorsHandler.addSensor(SensorType.TYPE_SPECIFIC_ECG, (1.0/barometerFrequency * 1e6).toInt())
 
         sensorsHandler.startLogging()
     }

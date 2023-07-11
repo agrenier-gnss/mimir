@@ -23,6 +23,11 @@ enum class SensorType(val value: Int){
     TYPE_GNSS_MESSAGES(102),
 
     // BLE
-    TYPE_BLUETOOTH(200)
+    TYPE_BLUETOOTH(200),
+
+    // Specific, to target a specific model sensor
+    TYPE_SPECIFIC_ECG(300),
+    TYPE_SPECIFIC_PPG(301),
+    TYPE_SPECIFIC_GAL(302)
 
 }

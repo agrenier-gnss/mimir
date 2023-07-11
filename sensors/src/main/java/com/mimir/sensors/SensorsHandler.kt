@@ -6,7 +6,10 @@ import android.os.HandlerThread
 import android.util.Log
 import java.util.Collections.synchronizedList
 
-
+// For Pixel Watch
+var ECG_SENSOR_NAME = "AFE4950 ECG Sensor"
+var PPG_SENSOR_NAME = "AFE4950 PPG Sensor"
+var GAL_SENSOR_NAME = "AFE4950 Galvanic Skin Response"
 
 class SensorsHandler(val context: Context) {
 
@@ -58,6 +61,9 @@ class SensorsHandler(val context: Context) {
 
             SensorType.TYPE_HEART_RATE ->
                 mSensors.add(HeartRateSensor(this.context, fileHandler, _type, "ECG", _samplingFrequency, mSensorsResults))
+
+            SensorType.TYPE_SPECIFIC_ECG ->
+                mSensors.add(SpecificSensor(this.context, fileHandler, ECG_SENSOR_NAME, SensorType.TYPE_SPECIFIC_ECG, "ECG", _samplingFrequency, mSensorsResults))
 
             else -> {Log.w("SensorsHandler", "Sensor type $_type not supported.")}
         }
