@@ -32,7 +32,7 @@ class FileHandler (context: Context, looper: Looper): Handler(looper) {
 
         // Defining Download directory
         val contentValues = ContentValues().apply {
-            put(MediaStore.Downloads.DISPLAY_NAME, "mimir_log_$formatted")
+            put(MediaStore.Downloads.DISPLAY_NAME, "log_mimir_$formatted.txt")
             put(MediaStore.Downloads.MIME_TYPE, "text/txt")
             put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
         }

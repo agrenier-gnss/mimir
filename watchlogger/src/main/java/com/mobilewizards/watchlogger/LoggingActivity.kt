@@ -49,7 +49,7 @@ class LoggingActivity : Activity() {
         binding = ActivityLoggingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         this.checkPermissions()
 
@@ -136,8 +136,12 @@ class LoggingActivity : Activity() {
         }
 
         // Heart
-        sensorsHandler.addSensor(SensorType.TYPE_HEART_RATE, SensorManager.SENSOR_DELAY_FASTEST)
-        //sensorsHandler.addSensor(SensorType.TYPE_SPECIFIC_ECG, (1.0/barometerFrequency * 1e6).toInt())
+        if(WatchActivityHandler.getEcgStatus()) {
+            //sensorsHandler.addSensor(SensorType.TYPE_HEART_RATE, (1.0/healthSensorFrequency * 1e6).toInt())
+            sensorsHandler.addSensor(SensorType.TYPE_SPECIFIC_ECG, (1.0/healthSensorFrequency * 1e6).toInt())
+            sensorsHandler.addSensor(SensorType.TYPE_SPECIFIC_PPG, (1.0/healthSensorFrequency * 1e6).toInt())
+            sensorsHandler.addSensor(SensorType.TYPE_SPECIFIC_GAL, (1.0/healthSensorFrequency * 1e6).toInt())
+        }
 
         sensorsHandler.startLogging()
     }

@@ -64,6 +64,10 @@ class SensorsHandler(val context: Context) {
 
             SensorType.TYPE_SPECIFIC_ECG ->
                 mSensors.add(SpecificSensor(this.context, fileHandler, ECG_SENSOR_NAME, SensorType.TYPE_SPECIFIC_ECG, "ECG", _samplingFrequency, mSensorsResults))
+            SensorType.TYPE_SPECIFIC_PPG ->
+                mSensors.add(SpecificSensor(this.context, fileHandler, PPG_SENSOR_NAME, SensorType.TYPE_SPECIFIC_PPG, "PPG", _samplingFrequency, mSensorsResults))
+            SensorType.TYPE_SPECIFIC_GAL ->
+                mSensors.add(SpecificSensor(this.context, fileHandler, GAL_SENSOR_NAME, SensorType.TYPE_SPECIFIC_GAL, "GAL", _samplingFrequency, mSensorsResults))
 
             else -> {Log.w("SensorsHandler", "Sensor type $_type not supported.")}
         }

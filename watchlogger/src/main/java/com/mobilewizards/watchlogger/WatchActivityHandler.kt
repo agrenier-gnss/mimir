@@ -10,8 +10,8 @@ object WatchActivityHandler {
     private val TAG = "watchLogger"
     var fileSendOk : Boolean = false
     var collectGnss : Boolean = true
-    var collectImu : Boolean = true
-    var collectEcg : Boolean = true
+    var collectImu : Boolean = false
+    var collectEcg : Boolean = false
     var selectedFrequency : Int = 5
 
     // ---------------------------------------------------------------------------------------------

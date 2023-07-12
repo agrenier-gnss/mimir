@@ -943,14 +943,10 @@ class SpecificSensor(
         var str : String =  super.getHeader()
 
         str += String.format("# ${typeTag},utcTimeMillis,elapsedRealtime_nanosecond,")
-        when(type){
-            SensorType.TYPE_SPECIFIC_ECG
-            -> str += String.format(
+        str += String.format(
                 "%s,%s",
                 "accuracy",
                 "values")
-            else -> Log.e("Sensors", "Invalid value $type")
-        }
         str += "\n#"
 
         return str
