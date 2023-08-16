@@ -10,6 +10,7 @@ import android.os.Handler
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -186,6 +187,9 @@ class MauveActivity : AppCompatActivity() {
                 else -> false
             }
         }
+
+        // Keep screen awake to avoid going into battery saving mode
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     // ---------------------------------------------------------------------------------------------

@@ -115,13 +115,13 @@ class LoggingActivity : Activity() {
         if(WatchActivityHandler.getImuStatus()) {
             sensorsHandler.addSensor(SensorType.TYPE_ACCELEROMETER, (1.0/IMUFrequency * 1e6).toInt())
             sensorsHandler.addSensor(SensorType.TYPE_GYROSCOPE, (1.0/IMUFrequency * 1e6).toInt())
-            //sensorsHandler.addSensor(Sensor.TYPE_ACCELEROMETER_UNCALIBRATED, "ACC_UNCAL",(1/IMUFrequency * 1e6).toInt())
-            //sensorsHandler.addSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED, "GYRO_UNCAL", (1/IMUFrequency * 1e6).toInt())
+            sensorsHandler.addSensor(SensorType.TYPE_ACCELEROMETER_UNCALIBRATED,(1.0/IMUFrequency * 1e6).toInt())
+            sensorsHandler.addSensor(SensorType.TYPE_GYROSCOPE_UNCALIBRATED, (1.0/IMUFrequency * 1e6).toInt())
         }
         if(WatchActivityHandler.getImuStatus()) {
             // TODO make specific status for magnetometer
             sensorsHandler.addSensor(SensorType.TYPE_MAGNETIC_FIELD, (1.0/magnetometerFrequency * 1e6).toInt())
-            //sensorsHandler.addSensor(Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED, "MAG_UNCAL", 1000 * 1000)
+            sensorsHandler.addSensor(SensorType.TYPE_MAGNETIC_FIELD_UNCALIBRATED, (1.0/magnetometerFrequency * 1e6).toInt())
         }
         if(WatchActivityHandler.getImuStatus()){
             // TODO make specific status for barometer

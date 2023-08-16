@@ -532,7 +532,7 @@ class GnssMeasurementSensor(
     private fun getLogLine(gnssClock: GnssClock, measurement : GnssMeasurement): String {
         return String.format(
             Locale.US,
-            "$typeTag,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
+            "$typeTag,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
             System.currentTimeMillis(),
             gnssClock.timeNanos,
             if (gnssClock.hasLeapSecond()) gnssClock.leapSecond else "",
@@ -562,12 +562,13 @@ class GnssMeasurementSensor(
             if (measurement.hasSnrInDb()) measurement.snrInDb else "",
             measurement.constellationType,
             if (measurement.hasAutomaticGainControlLevelDb()) measurement.automaticGainControlLevelDb else "",
+            if (measurement.hasBasebandCn0DbHz()) measurement.basebandCn0DbHz else "",
             if (measurement.hasFullInterSignalBiasNanos()) measurement.fullInterSignalBiasNanos else "",
             if (measurement.hasFullInterSignalBiasUncertaintyNanos()) measurement.fullInterSignalBiasUncertaintyNanos else "",
             if (measurement.hasSatelliteInterSignalBiasNanos()) measurement.satelliteInterSignalBiasNanos else "",
             if (measurement.hasSatelliteInterSignalBiasUncertaintyNanos()) measurement.satelliteInterSignalBiasUncertaintyNanos else "",
             if (measurement.hasCodeType()) measurement.codeType else "",
-            gnssClock.elapsedRealtimeNanos
+            if (gnssClock.hasElapsedRealtimeNanos()) gnssClock.elapsedRealtimeNanos else ""
         )
     }
 
@@ -577,7 +578,7 @@ class GnssMeasurementSensor(
         var str : String =  super.getHeader()
 
         str += String.format(
-            "# $typeTag,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
+            "# $typeTag,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
             "utcTimeMillis",
             "TimeNanos",
             "LeapSecond",

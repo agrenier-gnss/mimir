@@ -17,7 +17,7 @@ object ActivityHandler{
 
     private var isLogging: Boolean = false
 
-    private var IMUFrequency: Int = 1
+    private var IMUFrequency: Int = 10
     private var barometerFrequency: Int = 1
     private var magnetometerFrequency: Int = 1
 
@@ -98,17 +98,17 @@ object ActivityHandler{
 
         // Motion sensors
         if(getToggle("IMU")) {
-            sensorsHandler.addSensor(SensorType.TYPE_ACCELEROMETER, (1/IMUFrequency * 1e6).toInt())
-            sensorsHandler.addSensor(SensorType.TYPE_GYROSCOPE, (1/IMUFrequency * 1e6).toInt())
-            //sensorsHandler.addSensor(Sensor.TYPE_ACCELEROMETER_UNCALIBRATED, "ACC_UNCAL",(1/IMUFrequency * 1e6).toInt())
-            //sensorsHandler.addSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED, "GYRO_UNCAL", (1/IMUFrequency * 1e6).toInt())
+            sensorsHandler.addSensor(SensorType.TYPE_ACCELEROMETER, (1.0/IMUFrequency * 1e6).toInt())
+            sensorsHandler.addSensor(SensorType.TYPE_GYROSCOPE, (1.0/IMUFrequency * 1e6).toInt())
+            sensorsHandler.addSensor(SensorType.TYPE_ACCELEROMETER_UNCALIBRATED,(1.0/IMUFrequency * 1e6).toInt())
+            sensorsHandler.addSensor(SensorType.TYPE_GYROSCOPE_UNCALIBRATED, (1.0/IMUFrequency * 1e6).toInt())
         }
         if(getToggle("Magnetometer")) {
-            sensorsHandler.addSensor(SensorType.TYPE_MAGNETIC_FIELD, (1/magnetometerFrequency * 1e6).toInt())
-            //sensorsHandler.addSensor(Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED, "MAG_UNCAL", 1000 * 1000)
+            sensorsHandler.addSensor(SensorType.TYPE_MAGNETIC_FIELD, (1.0/magnetometerFrequency * 1e6).toInt())
+            sensorsHandler.addSensor(SensorType.TYPE_MAGNETIC_FIELD_UNCALIBRATED, (1.0/magnetometerFrequency * 1e6).toInt())
         }
         if(getToggle("Barometer")){
-            sensorsHandler.addSensor(SensorType.TYPE_PRESSURE, (1/barometerFrequency * 1e6).toInt())
+            sensorsHandler.addSensor(SensorType.TYPE_PRESSURE, (1.0/barometerFrequency * 1e6).toInt())
         }
 
         // GNSS Sensor
