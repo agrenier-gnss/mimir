@@ -69,6 +69,11 @@ class SensorsHandler(val context: Context) {
             SensorType.TYPE_SPECIFIC_GAL ->
                 mSensors.add(SpecificSensor(this.context, fileHandler, GAL_SENSOR_NAME, SensorType.TYPE_SPECIFIC_GAL, "GAL", _samplingFrequency, mSensorsResults))
 
+            SensorType.TYPE_STEP_COUNTER ->
+                mSensors.add(StepSensor(this.context, fileHandler, _type, "STEP_C", _samplingFrequency, mSensorsResults))
+            SensorType.TYPE_STEP_DETECTOR ->
+                mSensors.add(StepSensor(this.context, fileHandler, _type, "STEP_D", _samplingFrequency, mSensorsResults))
+
             else -> {Log.w("SensorsHandler", "Sensor type $_type not supported.")}
         }
     }

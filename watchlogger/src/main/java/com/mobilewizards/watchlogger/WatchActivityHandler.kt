@@ -12,6 +12,7 @@ object WatchActivityHandler {
     var collectGnss : Boolean = true
     var collectImu : Boolean = false
     var collectEcg : Boolean = false
+    var collectSteps : Boolean = false
     var selectedFrequency : Int = 5
 
     // ---------------------------------------------------------------------------------------------

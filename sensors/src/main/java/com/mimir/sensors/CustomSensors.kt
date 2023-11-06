@@ -418,7 +418,7 @@ class GnssLocationSensor(
         return String.format(
             Locale.US,
             "$typeTag,%s,%.8f,%.8f,%.3f,%.3f,%.3f,%f,%d,%f,%f,%d,%f,%f",
-            location.provider,
+            location.provider.toString().uppercase(),
             location.latitude,
             location.longitude,
             location.altitude,
@@ -562,6 +562,7 @@ class GnssMeasurementSensor(
             if (measurement.hasSnrInDb()) measurement.snrInDb else "",
             measurement.constellationType,
             if (measurement.hasAutomaticGainControlLevelDb()) measurement.automaticGainControlLevelDb else "",
+            if (measurement.hasBasebandCn0DbHz()) measurement.basebandCn0DbHz else "",
             if (measurement.hasFullInterSignalBiasNanos()) measurement.fullInterSignalBiasNanos else "",
             if (measurement.hasFullInterSignalBiasUncertaintyNanos()) measurement.fullInterSignalBiasUncertaintyNanos else "",
             if (measurement.hasSatelliteInterSignalBiasNanos()) measurement.satelliteInterSignalBiasNanos else "",
@@ -947,6 +948,69 @@ class SpecificSensor(
                 "%s,%s",
                 "accuracy",
                 "values")
+        str += "\n#"
+
+        return str
+    }
+}
+
+// =================================================================================================
+
+class StepSensor(
+    context: Context,
+    _fileHandler: FileHandler,
+    _type: SensorType,
+    _typeTag: String,
+    _samplingFrequency: Int,
+    _mvalues: MutableList<Any>)
+    : CustomSensor(context, _fileHandler, _type, _typeTag, _samplingFrequency, _mvalues) {
+
+    // ---------------------------------------------------------------------------------------------
+
+    override fun logSensor(event: SensorEvent) {
+        super.logSensor(event)
+
+        // Log the values
+        mvalues.add(event)
+        //Log.d(typeTag, event.toString())
+
+        fileHandler.obtainMessage().also { msg ->
+            msg.obj = getLogLine(event)
+            fileHandler.sendMessage(msg)
+        }
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    fun getLogLine(event : SensorEvent): String {
+        return String.format(
+            Locale.US,
+            "$typeTag,%s,%s,%s,%s",
+            System.currentTimeMillis(),
+            event.timestamp,
+            event.values[0],
+            event.accuracy)
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    override fun getHeader(): String {
+        var str : String =  super.getHeader()
+
+        str += String.format("# ${typeTag},utcTimeMillis,elapsedRealtime_nanosecond,")
+        when(type){
+            SensorType.TYPE_STEP_COUNTER
+            -> str += String.format(
+                "%s,%s",
+                "steps_count",
+                "accuracy")
+            SensorType.TYPE_STEP_DETECTOR
+            -> str += String.format(
+                "%s,%s",
+                "step_detected",
+                "accuracy")
+            else -> Log.e("Sensors", "Invalid value $type")
+        }
         str += "\n#"
 
         return str

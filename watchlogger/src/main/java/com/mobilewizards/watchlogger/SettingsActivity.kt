@@ -11,7 +11,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.mobilewizards.watchlogger.WatchActivityHandler
 import com.mobilewizards.logging_app.databinding.ActivitySettingsBinding
 
-
 class SettingsActivity : Activity() {
     private lateinit var binding: ActivitySettingsBinding
 

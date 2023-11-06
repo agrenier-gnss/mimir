@@ -2,6 +2,7 @@ package com.mobilewizards.logging_app
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.hardware.SensorManager
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -22,10 +23,11 @@ class MainActivity : AppCompatActivity() {
         val sensorList = arrayOf(
             // 1st value: name. 2nd value: is there a slider. 3rd and 4th are min and max values for slider
             arrayOf("GNSS", false),
-            arrayOf("IMU", true, 1, 100),
-            arrayOf("Barometer", true, 1, 100),
-            arrayOf("Magnetometer", true, 1, 100),
-            arrayOf("Bluetooth", false)
+            arrayOf("IMU", true, arrayOf(1, 5, 10, 50, 100, 200, "fastest")),
+            arrayOf("Barometer", true, arrayOf(1, 10, "fastest")),
+            arrayOf("Magnetometer", true, arrayOf(1, 5, 10, 50, 100, 200, "fastest")),
+            arrayOf("Steps counter", true, arrayOf(1, 10, 50, 100, 200, "fastest")),
+            //arrayOf("Bluetooth", false),
         )
 
         val parentView = findViewById<ViewGroup>(R.id.square_layout)

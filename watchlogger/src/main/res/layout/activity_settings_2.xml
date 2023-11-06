@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:padding="@dimen/box_inset_layout_padding"
+    tools:context=".SettingsActivity"
+    tools:deviceIds="wear">
+
+
+
+
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/activity_settings_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="50dp">
+
+            <TextView
+                android:id="@+id/MimirText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="center"
+                android:text="Mimir"
+                android:textColor="@color/fontLogo" />
+
+            <View
+                android:id="@+id/divider8"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:id="@+id/motionText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center"
+                android:text="Motion data"
+                android:textColor="@color/selectedBtnColor"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <Switch
+                android:id="@+id/switch_gnss"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="GNSS" />
+
+            <TextView
+                android:id="@+id/settings_tv_gnss"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1 Hz only" />
+
+            <View
+                android:id="@+id/divider9"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="?android:attr/listDivider" />
+
+            <Switch
+                android:id="@+id/switch_imu"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="IMU" />
+
+            <TextView
+                android:id="@+id/settings_tv_imu"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="10 Hz"
+                android:textAlignment="center" />
+
+            <SeekBar
+                android:id="@+id/settings_sb_imu"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="10"
+                android:progress="3" />
+
+            <View
+                android:id="@+id/divider5"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="?android:attr/listDivider" />
+
+            <Switch
+                android:id="@+id/switch_psr"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="Pressure" />
+
+            <TextView
+                android:id="@+id/settings_tv_psr"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="10 Hz"
+                android:textAlignment="center" />
+
+            <SeekBar
+                android:id="@+id/settings_sb_psr"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="5"
+                android:progress="0" />
+
+            <View
+                android:id="@+id/divider10"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="?android:attr/listDivider" />
+
+            <Switch
+                android:id="@+id/switch_step"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="Steps" />
+
+            <TextView
+                android:id="@+id/settings_tv_step"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="10 Hz"
+                android:textAlignment="center" />
+
+            <SeekBar
+                android:id="@+id/settings_sb_step"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="10"
+                android:progress="3" />
+
+            <View
+                android:id="@+id/divider3"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:id="@+id/healthText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center"
+                android:text="Health data"
+                android:textColor="@color/selectedBtnColor"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <Switch
+                android:id="@+id/switch_ecg"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:text="ECG" />
+
+            <TextView
+                android:id="@+id/settings_tv_ecg"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="10 Hz"
+                android:textAlignment="center" />
+
+            <SeekBar
+                android:id="@+id/settings_sb_ecg"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="10"
+                android:progress="3" />
+
+            <View
+                android:id="@+id/divider6"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="?android:attr/listDivider" />
+
+            <Switch
+                android:id="@+id/switch_ppg"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:text="PPG" />
+
+            <TextView
+                android:id="@+id/settings_tv_ppg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="10 Hz"
+                android:textAlignment="center" />
+
+            <SeekBar
+                android:id="@+id/settings_sb_ppg"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="10"
+                android:progress="3" />
+
+            <View
+                android:id="@+id/divider7"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="?android:attr/listDivider" />
+
+            <Switch
+                android:id="@+id/switch_gal"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:text="Galvanic" />
+
+            <TextView
+                android:id="@+id/settings_tv_gal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="10 Hz"
+                android:textAlignment="center" />
+
+            <SeekBar
+                android:id="@+id/settings_sb_gal"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="10"
+                android:progress="3" />
+
+            <View
+                android:id="@+id/divider4"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="?android:attr/listDivider" />
+
+
+        </LinearLayout>
+        </ScrollView>
+
+
+</androidx.wear.widget.BoxInsetLayout>

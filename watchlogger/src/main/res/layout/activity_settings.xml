@@ -36,7 +36,7 @@
                     android:text="Mimir" />
 
                 <TextView
-                    android:id="@+id/dataText"
+                    android:id="@+id/motionText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -47,11 +47,11 @@
                     android:id="@+id/GnssBtn"
                     android:layout_width="150dp"
                     android:layout_height="50dp"
-                    android:background="@drawable/button_background"
                     android:layout_marginBottom="15dp"
+                    android:background="@drawable/button_background"
                     android:fontFamily="@font/montserrat_bold"
-                    android:textColor="@color/fontBlack"
-                    android:text="GNSS" />
+                    android:text="GNSS"
+                    android:textColor="@color/fontBlack" />
 
                 <Button
                     android:id="@+id/ImuBtn"
