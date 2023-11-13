@@ -25,10 +25,12 @@ class SettingsActivity : Activity() {
         val gnssBtn = findViewById<Button>(R.id.GnssBtn)
         val imuBtn = findViewById<Button>(R.id.ImuBtn)
         val ecgBtn = findViewById<Button>(R.id.EcgBtn)
+        val galBtn = findViewById<Button>(R.id.GalBtn)
 
         gnssBtn.isSelected = WatchActivityHandler.getGnssStatus()
         imuBtn.isSelected = WatchActivityHandler.getImuStatus()
         ecgBtn.isSelected = WatchActivityHandler.getEcgStatus()
+        galBtn.isSelected = WatchActivityHandler.getGalStatus()
 
         val fiveSecBtn = findViewById<Button>(R.id.FiveSecondsBtn)
         val fifteenSecBtn = findViewById<Button>(R.id.FifteenSecondsBtn)
@@ -43,8 +45,21 @@ class SettingsActivity : Activity() {
         imuBtn.setOnClickListener{
             imuBtn.isSelected = !imuBtn.isSelected
         }
+
         ecgBtn.setOnClickListener{
             ecgBtn.isSelected = !ecgBtn.isSelected
+
+            if(ecgBtn.isSelected){
+                galBtn.isSelected = false
+            }
+        }
+
+        galBtn.setOnClickListener {
+            galBtn.isSelected = !galBtn.isSelected
+
+            if(galBtn.isSelected){
+                ecgBtn.isSelected = false
+            }
         }
 
         fiveSecBtn.setOnClickListener{
@@ -92,6 +107,7 @@ class SettingsActivity : Activity() {
             WatchActivityHandler.changeImuStatus(imuBtn.isSelected)
             WatchActivityHandler.changeGnssStatus(gnssBtn.isSelected)
             WatchActivityHandler.changeEcgStatus(ecgBtn.isSelected)
+            WatchActivityHandler.changeGalStatus(galBtn.isSelected)
 
             // TODO: Change frequency to correct
             if (fiveSecBtn.isSelected){

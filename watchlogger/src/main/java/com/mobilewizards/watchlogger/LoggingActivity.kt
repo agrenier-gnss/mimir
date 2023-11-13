@@ -5,8 +5,10 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
@@ -30,7 +32,7 @@ class LoggingActivity : Activity() {
     var IMUFrequency: Int = 10
     var magnetometerFrequency: Int = 1
     var barometerFrequency: Int = 1
-    var healthSensorFrequency: Int = 1
+    var healthSensorFrequency: Int = 200
 
     lateinit var sensorsHandler : SensorsHandler
     private var isLogging: Boolean = false
@@ -85,6 +87,16 @@ class LoggingActivity : Activity() {
             val openLoading = Intent(applicationContext, LoggedEvent::class.java)
             startActivity(openLoading)
         }
+
+        // Initialize the variable sensorManager
+        val sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
+
+        // getSensorList(Sensor.TYPE_ALL) lists all the sensors present in the device
+        val deviceSensors: List<Sensor> = sensorManager.getSensorList(Sensor.TYPE_ALL)
+
+        for (sensors in deviceSensors) {
+            Log.d("sensors", sensors.toString() + "\n")
+        }
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -111,12 +123,12 @@ class LoggingActivity : Activity() {
         // Register sensors
         sensorsHandler = SensorsHandler(context)
 
-        // Motion sensors
+//        // Motion sensors
         if(WatchActivityHandler.getImuStatus()) {
-            sensorsHandler.addSensor(SensorType.TYPE_ACCELEROMETER, (1.0/IMUFrequency * 1e6).toInt())
-            sensorsHandler.addSensor(SensorType.TYPE_GYROSCOPE, (1.0/IMUFrequency * 1e6).toInt())
-            //sensorsHandler.addSensor(Sensor.TYPE_ACCELEROMETER_UNCALIBRATED, "ACC_UNCAL",(1/IMUFrequency * 1e6).toInt())
-            //sensorsHandler.addSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED, "GYRO_UNCAL", (1/IMUFrequency * 1e6).toInt())
+            //sensorsHandler.addSensor(SensorType.TYPE_ACCELEROMETER, (1.0/IMUFrequency * 1e6).toInt())
+            //sensorsHandler.addSensor(SensorType.TYPE_GYROSCOPE, (1.0/IMUFrequency * 1e6).toInt())
+            sensorsHandler.addSensor(SensorType.TYPE_ACCELEROMETER_UNCALIBRATED,(1/IMUFrequency * 1e6).toInt())
+            sensorsHandler.addSensor(SensorType.TYPE_GYROSCOPE_UNCALIBRATED, (1/IMUFrequency * 1e6).toInt())
         }
         if(WatchActivityHandler.getImuStatus()) {
             // TODO make specific status for magnetometer
@@ -140,8 +152,12 @@ class LoggingActivity : Activity() {
             //sensorsHandler.addSensor(SensorType.TYPE_HEART_RATE, (1.0/healthSensorFrequency * 1e6).toInt())
             sensorsHandler.addSensor(SensorType.TYPE_SPECIFIC_ECG, (1.0/healthSensorFrequency * 1e6).toInt())
             sensorsHandler.addSensor(SensorType.TYPE_SPECIFIC_PPG, (1.0/healthSensorFrequency * 1e6).toInt())
+        }
+        else if(WatchActivityHandler.getGalStatus()){
+            sensorsHandler.addSensor(SensorType.TYPE_SPECIFIC_PPG, (1.0/healthSensorFrequency * 1e6).toInt())
             sensorsHandler.addSensor(SensorType.TYPE_SPECIFIC_GAL, (1.0/healthSensorFrequency * 1e6).toInt())
         }
+
 
         sensorsHandler.startLogging()
     }

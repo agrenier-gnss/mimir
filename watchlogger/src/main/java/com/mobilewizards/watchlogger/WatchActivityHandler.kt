@@ -12,6 +12,7 @@ object WatchActivityHandler {
     var collectGnss : Boolean = true
     var collectImu : Boolean = false
     var collectEcg : Boolean = false
+    var collectGal : Boolean = false
     var selectedFrequency : Int = 5
 
     // ---------------------------------------------------------------------------------------------
@@ -80,6 +81,18 @@ object WatchActivityHandler {
 
     fun getEcgStatus() : Boolean {
         return collectEcg
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    fun changeGalStatus(status: Boolean) {
+        collectGal = status
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    fun getGalStatus() : Boolean {
+        return collectGal
     }
 
     // ---------------------------------------------------------------------------------------------
