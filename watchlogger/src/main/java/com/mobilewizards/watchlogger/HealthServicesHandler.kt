@@ -38,7 +38,7 @@ class HealthServicesHandler: SensorEventListener{
 
     fun getHeartRate() {
         mSensorManager = context.getSystemService(Activity.SENSOR_SERVICE) as SensorManager
-        mHeartRateSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE)
+        mHeartRateSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE)!!
 
         if (mHeartRateSensor == null) {
             Log.d("ECG", "heart rate is null")

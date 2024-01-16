@@ -23,6 +23,6 @@ class LoadingScreenActivity : Activity() {
             val intent = Intent(this, SelectionActivity::class.java)
             startActivity(intent)
             finish()
-        }, 4000)
+        }, 2000)
     }
 }

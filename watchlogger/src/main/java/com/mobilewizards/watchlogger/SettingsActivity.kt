@@ -7,6 +7,7 @@ import android.app.Activity
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.Button
+import android.widget.Switch
 import com.google.android.material.snackbar.Snackbar
 import com.mobilewizards.watchlogger.WatchActivityHandler
 import com.mobilewizards.logging_app.databinding.ActivitySettingsBinding
@@ -21,83 +22,21 @@ class SettingsActivity : Activity() {
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val gnssBtn = findViewById<Button>(R.id.GnssBtn)
-        val imuBtn = findViewById<Button>(R.id.ImuBtn)
-        val ecgBtn = findViewById<Button>(R.id.EcgBtn)
-        val galBtn = findViewById<Button>(R.id.GalBtn)
+        val sensorsSwitches = mapOf<Switch>(
+            findViewById<Switch>(R.id.switch_gnss),
+            findViewById<Switch>(R.id.switch_imu),
+            findViewById<Switch>(R.id.switch_baro),
+            findViewById<Switch>(R.id.switch_steps),
+            findViewById<Switch>(R.id.switch_ecg),
+            findViewById<Switch>(R.id.switch_ppg),
+            findViewById<Switch>(R.id.switch_gsr),
+        )
 
-        gnssBtn.isSelected = WatchActivityHandler.getGnssStatus()
-        imuBtn.isSelected = WatchActivityHandler.getImuStatus()
-        ecgBtn.isSelected = WatchActivityHandler.getEcgStatus()
-        galBtn.isSelected = WatchActivityHandler.getGalStatus()
+        val btnSave = findViewById<Button>(R.id.button_save)
 
-        val fiveSecBtn = findViewById<Button>(R.id.FiveSecondsBtn)
-        val fifteenSecBtn = findViewById<Button>(R.id.FifteenSecondsBtn)
-        val thirtySecBtn = findViewById<Button>(R.id.ThirtySecondsBtn)
-        val minuteBtn = findViewById<Button>(R.id.OneMinuteBtn)
-        val saveSettingsBtn = findViewById<Button>(R.id.saveSettingsBtn)
+        btnSave.setOnClickListener{
+            for(element in sensorsSwitches){
 
-        gnssBtn.setOnClickListener{
-            gnssBtn.isSelected = !gnssBtn.isSelected
-        }
-
-        imuBtn.setOnClickListener{
-            imuBtn.isSelected = !imuBtn.isSelected
-        }
-
-        ecgBtn.setOnClickListener{
-            ecgBtn.isSelected = !ecgBtn.isSelected
-
-            if(ecgBtn.isSelected){
-                galBtn.isSelected = false
-            }
-        }
-
-        galBtn.setOnClickListener {
-            galBtn.isSelected = !galBtn.isSelected
-
-            if(galBtn.isSelected){
-                ecgBtn.isSelected = false
-            }
-        }
-
-        fiveSecBtn.setOnClickListener{
-            fiveSecBtn.isSelected = !fiveSecBtn.isSelected
-            // TODO: Change frequency to correct
-            if (fiveSecBtn.isSelected){
-                fifteenSecBtn.isSelected = false
-                thirtySecBtn.isSelected = false
-                minuteBtn.isSelected = false
-            }
-        }
-
-        fifteenSecBtn.setOnClickListener{
-            fifteenSecBtn.isSelected = !fifteenSecBtn.isSelected
-            // TODO: Change frequency to correct
-            if (fifteenSecBtn.isSelected){
-                fiveSecBtn.isSelected = false
-                thirtySecBtn.isSelected = false
-                minuteBtn.isSelected = false
-            }
-        }
-
-        thirtySecBtn.setOnClickListener{
-            thirtySecBtn.isSelected = !thirtySecBtn.isSelected
-            // TODO: Change frequency to correct
-            if (thirtySecBtn.isSelected){
-                fiveSecBtn.isSelected = false
-                fifteenSecBtn.isSelected = false
-                minuteBtn.isSelected = false
-            }
-        }
-
-        minuteBtn.setOnClickListener{
-            minuteBtn.isSelected = !minuteBtn.isSelected
-            // TODO: Change frequency to correct
-            if (minuteBtn.isSelected){
-                fiveSecBtn.isSelected = false
-                fifteenSecBtn.isSelected = false
-                thirtySecBtn.isSelected = false
             }
         }
 

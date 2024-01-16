@@ -30,10 +30,10 @@ class SelectionActivity : Activity() {
             startActivity(openStartSurvey)
         }
 
-        prevSurveysBtn.setOnClickListener{
-            val openPreviousSurv = Intent(applicationContext, PreviousSurveysActivity::class.java)
-            startActivity(openPreviousSurv)
-        }
+//        prevSurveysBtn.setOnClickListener{
+//            val openPreviousSurv = Intent(applicationContext, PreviousSurveysActivity::class.java)
+//            startActivity(openPreviousSurv)
+//        }
 
         settingsBtn.setOnClickListener{
             val openSettings = Intent(applicationContext, SettingsActivity::class.java)

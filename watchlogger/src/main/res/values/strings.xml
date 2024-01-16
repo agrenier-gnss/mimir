@@ -11,10 +11,24 @@
     <string name="title_activity_prev_surveys">PrevSurveysActivity</string>
     <string name="title_activity_logged_event">LoggedEvent</string>
     <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_settings_old">SettingsActivityOld</string>
     <string name="title_activity_previous_surveys">PreviousSurveysActivity</string>
     <string name="title_activity_send_surveys">SendSurveysActivity</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_file_send">FileSendActivity</string>
     <string name="title_activity_selections">SelectionsActivity</string>
+    <string name="title_motion">Motion Data</string>
+    <string name="str_gnss">GNSS</string>
+    <string name="str_gnss_rate"> 1 Hz only</string>
+    <string name="str_nan">NaN</string>
+    <string name="title_health">Health Data</string>
+    <string name="str_ecg">ECG</string>
+    <string name="str_ppg">PPG</string>
+    <string name="str_gsr">GSR</string>
+    <string name="str_steps">Steps</string>
+    <string name="str_baro">Barometer</string>
+    <string name="str_imu">IMU</string>
+    <string name="str_save">Save</string>
+    <string name="str_default">Default</string>
 </resources>

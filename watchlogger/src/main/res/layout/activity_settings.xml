@@ -10,142 +10,277 @@
     tools:context=".SettingsActivity"
     tools:deviceIds="wear">
 
-
-
-
     <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <LinearLayout
+        <LinearLayout
+            android:id="@+id/activity_settings_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="50dp">
+
+            <TextView
+                android:id="@+id/MimirText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:fontFamily="@font/montserrat_bold"
                 android:gravity="center"
-                android:orientation="vertical"
-                android:id="@+id/activity_settings_layout">
+                android:text="@string/app_name"
+                android:textColor="@color/fontLogo" />
 
-                <TextView
-                    android:id="@+id/MimirText"
-                    android:layout_width="match_parent"
+            <View
+                android:id="@+id/divider8"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:id="@+id/motionText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center"
+                android:text="@string/title_motion"
+                android:textColor="@color/selectedBtnColor"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <Switch
+                android:id="@+id/switch_gnss"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/str_gnss" />
+
+            <TextView
+                android:id="@+id/settings_tv_gnss"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/str_gnss_rate" />
+
+            <View
+                android:id="@+id/divider9"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="?android:attr/listDivider" />
+
+            <Switch
+                android:id="@+id/switch_imu"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="@string/str_imu" />
+
+            <TextView
+                android:id="@+id/settings_tv_imu"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/str_nan"
+                android:textAlignment="center" />
+
+            <SeekBar
+                android:id="@+id/settings_sb_imu"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="10"
+                android:progress="3" />
+
+            <View
+                android:id="@+id/divider5"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="?android:attr/listDivider" />
+
+            <Switch
+                android:id="@+id/switch_baro"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="@string/str_baro" />
+
+            <TextView
+                android:id="@+id/settings_tv_psr"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/str_nan"
+                android:textAlignment="center" />
+
+            <SeekBar
+                android:id="@+id/settings_sb_psr"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="5"
+                android:progress="0" />
+
+            <View
+                android:id="@+id/divider10"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="?android:attr/listDivider" />
+
+            <Switch
+                android:id="@+id/switch_steps"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="@string/str_steps" />
+
+            <TextView
+                android:id="@+id/settings_tv_step"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/str_nan"
+                android:textAlignment="center" />
+
+            <SeekBar
+                android:id="@+id/settings_sb_step"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="10"
+                android:progress="3" />
+
+            <View
+                android:id="@+id/divider3"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:id="@+id/healthText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center"
+                android:text="@string/title_health"
+                android:textColor="@color/selectedBtnColor"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <Switch
+                android:id="@+id/switch_ecg"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="@string/str_ecg" />
+
+            <TextView
+                android:id="@+id/settings_tv_ecg"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/str_nan"
+                android:textAlignment="center" />
+
+            <SeekBar
+                android:id="@+id/settings_sb_ecg"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="10"
+                android:progress="3" />
+
+            <View
+                android:id="@+id/divider6"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="?android:attr/listDivider" />
+
+            <Switch
+                android:id="@+id/switch_ppg"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="@string/str_ppg" />
+
+            <TextView
+                android:id="@+id/settings_tv_ppg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/str_nan"
+                android:textAlignment="center" />
+
+            <SeekBar
+                android:id="@+id/settings_sb_ppg"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="10"
+                android:progress="3" />
+
+            <View
+                android:id="@+id/divider7"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="?android:attr/listDivider" />
+
+            <Switch
+                android:id="@+id/switch_gsr"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="@string/str_gsr" />
+
+            <TextView
+                android:id="@+id/settings_tv_gal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/str_nan"
+                android:textAlignment="center" />
+
+            <SeekBar
+                android:id="@+id/settings_sb_gal"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="10"
+                android:progress="3" />
+
+            <View
+                android:id="@+id/divider4"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="?android:attr/listDivider" />
+
+            <LinearLayout
+                android:layout_width="160dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/button_save"
+                    style="@style/Widget.AppCompat.Button"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginBottom="15dp"
-                    android:fontFamily="@font/montserrat_bold"
-                    android:textColor="@color/fontLogo"
-                    android:text="Mimir" />
+                    android:text="@string/str_save" />
 
-                <TextView
-                    android:id="@+id/motionText"
-                    android:layout_width="match_parent"
+                <Button
+                    android:id="@+id/button_default"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:layout_marginBottom="15dp"
-                    android:text="Collected data" />
-
-                <Button
-                    android:id="@+id/GnssBtn"
-                    android:layout_width="150dp"
-                    android:layout_height="50dp"
-                    android:layout_marginBottom="15dp"
-                    android:background="@drawable/button_background"
-                    android:fontFamily="@font/montserrat_bold"
-                    android:text="GNSS"
-                    android:textColor="@color/fontBlack" />
-
-                <Button
-                    android:id="@+id/ImuBtn"
-                    android:layout_width="150dp"
-                    android:layout_height="50dp"
-                    android:background="@drawable/button_background"
-                    android:layout_marginBottom="15dp"
-                    android:fontFamily="@font/montserrat_bold"
-                    android:textColor="@color/fontBlack"
-                    android:text="IMU" />
-
-                <Button
-                    android:id="@+id/EcgBtn"
-                    android:layout_width="150dp"
-                    android:layout_height="50dp"
-                    android:background="@drawable/button_background"
-                    android:layout_marginBottom="15dp"
-                    android:fontFamily="@font/montserrat_bold"
-                    android:textColor="@color/fontBlack"
-                    android:text="ECG" />
-
-
-                <Button
-                    android:id="@+id/GalBtn"
-                    android:layout_width="150dp"
-                    android:layout_height="50dp"
-                    android:layout_marginBottom="15dp"
-                    android:background="@drawable/button_background"
-                    android:fontFamily="@font/montserrat_bold"
-                    android:text="GAL"
-                    android:textColor="@color/fontBlack" />
-
-                <TextView
-                    android:id="@+id/FreqText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:layout_marginBottom="15dp"
-                    android:text="Frequency" />
-
-                <Button
-                    android:id="@+id/FiveSecondsBtn"
-                    android:layout_width="150dp"
-                    android:layout_height="50dp"
-                    android:background="@drawable/button_background"
-                    android:layout_marginBottom="15dp"
-                    android:fontFamily="@font/montserrat_bold"
-                    android:textAllCaps="false"
-                    android:textColor="@color/fontBlack"
-                    android:text="5 sec" />
-                <Button
-                    android:id="@+id/FifteenSecondsBtn"
-                    android:layout_width="150dp"
-                    android:layout_height="50dp"
-                    android:background="@drawable/button_background"
-                    android:layout_marginBottom="15dp"
-                    android:fontFamily="@font/montserrat_bold"
-                    android:textAllCaps="false"
-                    android:textColor="@color/fontBlack"
-                    android:text="15 sec" />
-                <Button
-                    android:id="@+id/ThirtySecondsBtn"
-                    android:layout_width="150dp"
-                    android:layout_height="50dp"
-                    android:background="@drawable/button_background"
-                    android:layout_marginBottom="15dp"
-                    android:fontFamily="@font/montserrat_bold"
-                    android:textAllCaps="false"
-                    android:textColor="@color/fontBlack"
-                    android:text="30 sec" />
-
-                <Button
-                    android:id="@+id/OneMinuteBtn"
-                    android:layout_width="150dp"
-                    android:layout_height="50dp"
-                    android:background="@drawable/button_background"
-                    android:layout_marginBottom="25dp"
-                    android:fontFamily="@font/montserrat_bold"
-                    android:textAllCaps="false"
-                    android:textColor="@color/fontBlack"
-                    android:text="1 min" />
-
-                <Button
-                    android:id="@+id/saveSettingsBtn"
-                    android:layout_width="170dp"
-                    android:layout_height="50dp"
-                    android:background="@drawable/button_background"
-                    android:layout_marginBottom="50dp"
-                    android:fontFamily="@font/montserrat_bold"
-                    android:textAllCaps="false"
-                    android:textColor="@color/fontBlack"
-                    android:text="Save settings" />
-
+                    android:layout_weight="1"
+                    android:text="@string/str_default" />
             </LinearLayout>
+
+
+        </LinearLayout>
         </ScrollView>
 
 

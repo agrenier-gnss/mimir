@@ -48,9 +48,9 @@
             android:exported="true"
             android:label="@string/title_activity_previous_surveys" />
         <activity
-            android:name=".SettingsActivity"
+            android:name=".SettingsActivityOld"
             android:exported="true"
-            android:label="@string/title_activity_settings" />
+            android:label="@string/title_activity_settings_old" />
         <activity
             android:name=".LoggedEvent"
             android:exported="true"
