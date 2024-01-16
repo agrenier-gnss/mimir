@@ -74,6 +74,16 @@
                     android:text="ECG" />
 
 
+                <Button
+                    android:id="@+id/GalBtn"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@drawable/button_background"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:text="GAL"
+                    android:textColor="@color/fontBlack" />
+
                 <TextView
                     android:id="@+id/FreqText"
                     android:layout_width="match_parent"

@@ -32,7 +32,7 @@ class LoggingActivity : Activity() {
     var IMUFrequency: Int = 10
     var magnetometerFrequency: Int = 1
     var barometerFrequency: Int = 1
-    var healthSensorFrequency: Int = 1
+    var healthSensorFrequency: Int = 200
 
     lateinit var sensorsHandler : SensorsHandler
     private var isLogging: Boolean = false
@@ -150,15 +150,36 @@ class LoggingActivity : Activity() {
         // Heart
         if(WatchActivityHandler.getEcgStatus()) {
             //sensorsHandler.addSensor(SensorType.TYPE_HEART_RATE, (1.0/healthSensorFrequency * 1e6).toInt())
-            sensorsHandler.addSensor(SensorType.TYPE_SPECIFIC_ECG, SensorManager.SENSOR_DELAY_FASTEST)
-            sensorsHandler.addSensor(SensorType.TYPE_SPECIFIC_PPG, SensorManager.SENSOR_DELAY_FASTEST)
-            //sensorsHandler.addSensor(SensorType.TYPE_SPECIFIC_GAL, (1.0/healthSensorFrequency * 1e6).toInt())
+            sensorsHandler.addSensor(
+                SensorType.TYPE_SPECIFIC_ECG,
+                (1.0 / healthSensorFrequency * 1e6).toInt()
+            )
+            sensorsHandler.addSensor(
+                SensorType.TYPE_SPECIFIC_PPG,
+                (1.0 / healthSensorFrequency * 1e6).toInt()
+            )
+        }
+        else if(WatchActivityHandler.getGalStatus()) {
+            sensorsHandler.addSensor(
+                SensorType.TYPE_SPECIFIC_PPG,
+                (1.0 / healthSensorFrequency * 1e6).toInt()
+            )
+            sensorsHandler.addSensor(
+                SensorType.TYPE_SPECIFIC_GAL,
+                (1.0 / healthSensorFrequency * 1e6).toInt()
+            )
         }
 
         // Steps
-        if(WatchActivityHandler.collectSteps){
-            sensorsHandler.addSensor(SensorType.TYPE_STEP_DETECTOR, SensorManager.SENSOR_DELAY_FASTEST)
-            sensorsHandler.addSensor(SensorType.TYPE_STEP_COUNTER, SensorManager.SENSOR_DELAY_FASTEST)
+        if(WatchActivityHandler.collectSteps) {
+            sensorsHandler.addSensor(
+                SensorType.TYPE_STEP_DETECTOR,
+                SensorManager.SENSOR_DELAY_FASTEST
+            )
+            sensorsHandler.addSensor(
+                SensorType.TYPE_STEP_COUNTER,
+                SensorManager.SENSOR_DELAY_FASTEST
+            )
         }
 
         sensorsHandler.startLogging()

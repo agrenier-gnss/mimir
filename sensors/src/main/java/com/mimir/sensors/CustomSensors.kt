@@ -892,6 +892,7 @@ class SpecificSensor(
             if (it.name == name) {
                 sensor = it
                 sensorManager.registerListener(this, sensor, sampling)
+                //sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST
                 this.isRegistered = true
             }
         }

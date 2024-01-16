@@ -176,6 +176,7 @@ class WatchGNSSHandler {
                 }
             }
 
+            @Deprecated("Deprecated in Java")
             override fun onStatusChanged(status: Int) {}
         }
 
