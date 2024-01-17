@@ -19,17 +19,21 @@ enum class SensorType(val value: Int){
     TYPE_STEP_DETECTOR(18),
     TYPE_STEP_COUNTER(19),
 
-    // GNSS
-    TYPE_GNSS_LOCATION(100),
-    TYPE_GNSS_MEASUREMENTS(101),
-    TYPE_GNSS_MESSAGES(102),
+    // GLOBAL TYPE (for settings only)
+    TYPE_GNSS(100),
+    TYPE_IMU(200),
+    TYPE_HEALTH(300),
+    TYPE_STEPS(400),
+    TYPE_BLUETOOTH(500),
 
-    // BLE
-    TYPE_BLUETOOTH(200),
+    // GNSS
+    TYPE_GNSS_LOCATION(101),
+    TYPE_GNSS_MEASUREMENTS(102),
+    TYPE_GNSS_MESSAGES(103),
 
     // Specific, to target a specific model sensor
-    TYPE_SPECIFIC_ECG(300),
-    TYPE_SPECIFIC_PPG(301),
-    TYPE_SPECIFIC_GAL(302)
+    TYPE_SPECIFIC_ECG(301),
+    TYPE_SPECIFIC_PPG(302),
+    TYPE_SPECIFIC_GSR(303)
 
 }

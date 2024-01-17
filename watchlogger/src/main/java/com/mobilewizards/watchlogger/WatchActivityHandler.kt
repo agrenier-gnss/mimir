@@ -2,6 +2,7 @@ package com.mobilewizards.watchlogger
 
 import android.util.Log
 import java.io.File
+import com.mimir.sensors.SensorType
 
 object WatchActivityHandler {
 
@@ -15,6 +16,9 @@ object WatchActivityHandler {
     var collectSteps : Boolean = false
     var collectGal : Boolean = false
     var selectedFrequency : Int = 5
+
+    var sensorsSelected = mutableMapOf<SensorType, Boolean>()
+    var sensorsFrequency = mutableMapOf<SensorType, Int>()
 
     // ---------------------------------------------------------------------------------------------
 

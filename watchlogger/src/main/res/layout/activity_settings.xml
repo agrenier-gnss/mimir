@@ -91,7 +91,7 @@
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:max="10"
+                android:max="6"
                 android:progress="3" />
 
             <View
@@ -108,7 +108,7 @@
                 android:text="@string/str_baro" />
 
             <TextView
-                android:id="@+id/settings_tv_psr"
+                android:id="@+id/settings_tv_baro"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -116,7 +116,7 @@
                 android:textAlignment="center" />
 
             <SeekBar
-                android:id="@+id/settings_sb_psr"
+                android:id="@+id/settings_sb_baro"
                 style="@style/Widget.AppCompat.SeekBar.Discrete"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
@@ -151,7 +151,7 @@
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:max="10"
+                android:max="6"
                 android:progress="3" />
 
             <View
@@ -192,7 +192,7 @@
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:max="10"
+                android:max="6"
                 android:progress="3" />
 
             <View
@@ -221,7 +221,7 @@
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:max="10"
+                android:max="6"
                 android:progress="3" />
 
             <View
@@ -237,7 +237,7 @@
                 android:text="@string/str_gsr" />
 
             <TextView
-                android:id="@+id/settings_tv_gal"
+                android:id="@+id/settings_tv_gsr"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -245,12 +245,12 @@
                 android:textAlignment="center" />
 
             <SeekBar
-                android:id="@+id/settings_sb_gal"
+                android:id="@+id/settings_sb_gsr"
                 style="@style/Widget.AppCompat.SeekBar.Discrete"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:max="10"
+                android:max="6"
                 android:progress="3" />
 
             <View
