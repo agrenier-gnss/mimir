@@ -9,10 +9,15 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BODY_SENSORS" />
     <uses-permission android:name="android.permission.HIGH_SAMPLING_RATE_SENSORS" />
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -38,41 +43,55 @@
         <activity
             android:name=".FileSendActivity"
             android:exported="true"
-            android:label="@string/title_activity_file_send"></activity>
+            android:label="@string/title_activity_file_send"
+            android:taskAffinity="">
+        </activity>
         <activity
             android:name=".SendSurveysActivity"
             android:exported="true"
-            android:label="@string/title_activity_send_surveys" />
+            android:label="@string/title_activity_send_surveys"
+            android:taskAffinity="" />
         <activity
             android:name=".PreviousSurveysActivity"
             android:exported="true"
-            android:label="@string/title_activity_previous_surveys" />
+            android:label="@string/title_activity_previous_surveys"
+            android:taskAffinity="" />
         <activity
-            android:name=".SettingsActivityOld"
+            android:name=".SettingsActivity"
             android:exported="true"
-            android:label="@string/title_activity_settings_old" />
+            android:label="@string/title_activity_settings"
+            android:taskAffinity="" />
         <activity
             android:name=".LoggedEvent"
             android:exported="true"
-            android:label="@string/title_activity_logged_event" />
+            android:label="@string/title_activity_logged_event"
+            android:taskAffinity="" />
         <activity
             android:name=".LoggingActivity"
             android:exported="true"
-            android:label="logging_app" />
+            android:label="logging_app"
+            android:taskAffinity="" />
         <activity
             android:name=".SelectionActivity"
             android:exported="true"
-            android:label="@string/title_activity_selection" />
+            android:label="@string/title_activity_selection"
+            android:taskAffinity="" />
         <activity
             android:name=".LoadingScreenActivity"
             android:exported="true"
-            android:label="logging_app">
+            android:label="logging_app"
+            android:taskAffinity="">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service
+            android:name=".LoggingService"
+            android:exported="false"
+            android:label="LoggingService"
+            android:foregroundServiceType="location">
+        </service>
     </application>
 
 </manifest>

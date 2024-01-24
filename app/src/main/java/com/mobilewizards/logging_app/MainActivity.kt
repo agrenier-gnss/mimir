@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             // Create the layout for each sensor
-            if(sensorList[i][1] == false) {
+            if(!(sensorList[i][1] as Boolean)) {
                 // Goes here if frequency is can not be changed
                 description.text = "${sensorList[i][0]} is always sampled at 1 Hz" // Change the description text
                 tableLayout.removeViewAt(2) // Remove the row with the slider.

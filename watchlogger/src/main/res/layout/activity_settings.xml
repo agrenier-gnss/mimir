@@ -53,7 +53,7 @@
 
             <Switch
                 android:id="@+id/switch_gnss"
-                android:layout_width="120dp"
+                android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:checked="true"
                 android:text="@string/str_gnss" />
@@ -72,10 +72,10 @@
 
             <Switch
                 android:id="@+id/switch_imu"
-                android:layout_width="120dp"
+                android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:checked="false"
-                android:text="@string/str_imu" />
+                android:text="@string/str_imu"/>
 
             <TextView
                 android:id="@+id/settings_tv_imu"
@@ -102,7 +102,7 @@
 
             <Switch
                 android:id="@+id/switch_baro"
-                android:layout_width="120dp"
+                android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:checked="false"
                 android:text="@string/str_baro" />
@@ -121,7 +121,7 @@
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:max="5"
+                android:max="6"
                 android:progress="0" />
 
             <View
@@ -132,7 +132,7 @@
 
             <Switch
                 android:id="@+id/switch_steps"
-                android:layout_width="120dp"
+                android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:checked="false"
                 android:text="@string/str_steps" />
@@ -174,7 +174,7 @@
 
             <Switch
                 android:id="@+id/switch_ecg"
-                android:layout_width="120dp"
+                android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:text="@string/str_ecg" />
 
@@ -203,7 +203,7 @@
 
             <Switch
                 android:id="@+id/switch_ppg"
-                android:layout_width="120dp"
+                android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:text="@string/str_ppg" />
 
@@ -232,7 +232,7 @@
 
             <Switch
                 android:id="@+id/switch_gsr"
-                android:layout_width="120dp"
+                android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:text="@string/str_gsr" />
 

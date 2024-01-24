@@ -27,16 +27,6 @@
             android:text="Mimir"
             android:textColor="@color/fontLogo" />
 
-        <Button
-            android:id="@+id/startLogBtn"
-            android:layout_width="150dp"
-            android:layout_height="50dp"
-            android:background="@drawable/button_background"
-            android:fontFamily="@font/montserrat_bold"
-            android:text="Start"
-            android:textAllCaps="false"
-            android:textColor="@color/fontBlack" />
-
         <TextView
             android:id="@+id/logInfoText"
             android:layout_width="match_parent"
@@ -49,6 +39,20 @@
             android:layout_height="wrap_content"
             android:gravity="center" />
 
+        <android.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+        <Button
+            android:id="@+id/startLogBtn"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:background="@drawable/button_background"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="Start"
+            android:textAllCaps="false"
+            android:textColor="@color/fontBlack" />
+
         <Button
             android:id="@+id/stopLogBtn"
             android:layout_width="150dp"
@@ -60,16 +64,6 @@
             android:textAllCaps="false"
             android:textColor="@color/fontBlack" />
 
-        <Button
-            android:id="@+id/reviewBtn"
-            android:layout_width="150dp"
-            android:layout_height="50dp"
-            android:layout_marginBottom="15dp"
-            android:background="@drawable/button_background"
-            android:fontFamily="@font/montserrat_bold"
-            android:text="Review survey"
-            android:textAllCaps="false"
-            android:textColor="@color/fontBlack" />
     </LinearLayout>
 
 </androidx.wear.widget.BoxInsetLayout>

@@ -39,6 +39,7 @@ abstract class CustomSensor(
     lateinit var sensor : Sensor
     lateinit var sensorManager : SensorManager
     lateinit var sensorSummary : String
+    private var sensorSampling : String = "1"
 
     protected val fileHandler = _fileHandler
 
@@ -72,8 +73,9 @@ abstract class CustomSensor(
         sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
         if (sensorManager.getDefaultSensor(type.value) != null) {
-            sensor = sensorManager.getDefaultSensor(type.value)
+            sensor = sensorManager.getDefaultSensor(type.value)!!
             sensorManager.registerListener(this, sensor, sampling)
+            sensorSampling = sampling.toString()
             sensorSummary = sensor.toString()
             this.isRegistered = true
             Log.i("Sensor", "$typeTag sensor registered")
@@ -110,7 +112,7 @@ abstract class CustomSensor(
         if(!isRegistered){
             str = "# Sensor $typeTag disabled"
         } else{
-            str = "# Sensor $typeTag enabled, $sensorSummary\n"
+            str = "# Sensor $typeTag enabled, Sampling Period: $sensorSampling, $sensorSummary\n"
         }
 
         return str
@@ -973,7 +975,7 @@ class StepSensor(
 
         // Log the values
         mvalues.add(event)
-        //Log.d(typeTag, event.toString())
+        Log.d(typeTag, event.toString())
 
         fileHandler.obtainMessage().also { msg ->
             msg.obj = getLogLine(event)

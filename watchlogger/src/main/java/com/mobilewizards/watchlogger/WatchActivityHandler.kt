@@ -17,8 +17,7 @@ object WatchActivityHandler {
     var collectGal : Boolean = false
     var selectedFrequency : Int = 5
 
-    var sensorsSelected = mutableMapOf<SensorType, Boolean>()
-    var sensorsFrequency = mutableMapOf<SensorType, Int>()
+    var sensorsSelected = mutableMapOf<SensorType, Pair<Boolean, Int>>()
 
     // ---------------------------------------------------------------------------------------------
 

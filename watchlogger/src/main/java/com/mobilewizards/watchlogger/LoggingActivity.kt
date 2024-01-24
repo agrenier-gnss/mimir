@@ -5,41 +5,35 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.hardware.Sensor
-import android.hardware.SensorManager
 import android.os.Bundle
-import android.util.Log
+import android.os.Handler
+import android.os.Looper
+import android.os.SystemClock
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import androidx.core.app.ActivityCompat
-import com.mimir.sensors.SensorType
+import androidx.core.content.ContextCompat
 import com.mobilewizards.logging_app.databinding.ActivityLoggingBinding
-import com.mobilewizards.watchlogger.*
-import java.time.LocalDateTime
 
-import com.mimir.sensors.SensorsHandler
-import org.w3c.dom.Text
 
-var startTime: Long? = null
+var startTime: Long = 0
 
 // =================================================================================================
 
 class LoggingActivity : Activity() {
 
     private lateinit var binding: ActivityLoggingBinding
-    var IMUFrequency: Int = 10
-    var magnetometerFrequency: Int = 1
-    var barometerFrequency: Int = 1
-    var healthSensorFrequency: Int = 200
 
-    lateinit var sensorsHandler : SensorsHandler
-    private var isLogging: Boolean = false
+    private val durationHandler = Handler()
 
+    // Logging service
+    lateinit var loggingIntent : Intent
+
+    // Components
     private lateinit var startLogBtn : Button
     private lateinit var stopLogBtn  : Button
-    private lateinit var reviewBtn   : Button
     private lateinit var logText     : TextView
     private lateinit var logTimeText : TextView
 
@@ -55,22 +49,18 @@ class LoggingActivity : Activity() {
 
         this.checkPermissions()
 
-//        val ble =  WatchBLEHandler(this)
-//        val imu = WatchMotionSensorsHandler(this)
-//        val gnss = WatchGNSSHandler(this)
-//        val ecg = HealthServicesHandler(this)
-
         // Set views
         startLogBtn = findViewById(R.id.startLogBtn)
         stopLogBtn  = findViewById(R.id.stopLogBtn)
-        reviewBtn   = findViewById(R.id.reviewBtn)
         logText     = findViewById(R.id.logInfoText)
         logTimeText = findViewById(R.id.logTimeText)
         startLogBtn.visibility = View.VISIBLE
         stopLogBtn.visibility = View.GONE
-        reviewBtn.visibility = View.GONE
         logText.visibility = View.GONE
         logTimeText.visibility = View.GONE
+
+        // Set service
+        loggingIntent = Intent(this, LoggingService::class.java)
 
         // starts logging
         startLogBtn.setOnClickListener{
@@ -79,123 +69,54 @@ class LoggingActivity : Activity() {
 
         // stops logging
         stopLogBtn.setOnClickListener{
-            stopLogging(this)
+            stopLogging()
         }
 
-        // Opens LoggedEvent.kt for deciding what to do with the logged events
-        reviewBtn.setOnClickListener{
-            val openLoading = Intent(applicationContext, LoggedEvent::class.java)
-            startActivity(openLoading)
-        }
-
-        // Initialize the variable sensorManager
-        val sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
-
-        // getSensorList(Sensor.TYPE_ALL) lists all the sensors present in the device
-        val deviceSensors: List<Sensor> = sensorManager.getSensorList(Sensor.TYPE_ALL)
-
-        for (sensors in deviceSensors) {
-            Log.d("sensors", sensors.toString() + "\n")
-        }
+//        // Initialize the variable sensorManager
+//        val sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
+//        // getSensorList(Sensor.TYPE_ALL) lists all the sensors present in the device
+//        val deviceSensors: List<Sensor> = sensorManager.getSensorList(Sensor.TYPE_ALL)
+//
+//        for (sensors in deviceSensors) {
+//            Log.d("sensors", sensors.toString() + "\n")
+//        }
     }
 
     // ---------------------------------------------------------------------------------------------
 
     fun startLogging(context: Context){
 
-        isLogging = true
+        // Set duration timer
+        startTime = SystemClock.elapsedRealtime()
+        updateDurationText()
+        durationHandler.postDelayed(updateRunnableDuration, 1000)
 
-        // Set interface
-        startTime = System.currentTimeMillis()
-        val currentTime = LocalDateTime.now()
-
+        // Set buttons
         startLogBtn.visibility = View.GONE
         stopLogBtn.visibility = View.VISIBLE
         logText.visibility = View.VISIBLE
         logText.text = "Surveying..."
         logTimeText.visibility = View.VISIBLE
-        logTimeText.text = currentTime.toString()
 
-        startTime = System.currentTimeMillis()
-
-        WatchActivityHandler.clearFilfPaths()
-
-        // Register sensors
-        sensorsHandler = SensorsHandler(context)
-
-        // Motion sensors
-        if(WatchActivityHandler.getImuStatus()) {
-            //sensorsHandler.addSensor(SensorType.TYPE_ACCELEROMETER, (1.0/IMUFrequency * 1e6).toInt())
-            //sensorsHandler.addSensor(SensorType.TYPE_GYROSCOPE, (1.0/IMUFrequency * 1e6).toInt())
-            sensorsHandler.addSensor(SensorType.TYPE_ACCELEROMETER_UNCALIBRATED,(1/IMUFrequency * 1e6).toInt())
-            sensorsHandler.addSensor(SensorType.TYPE_GYROSCOPE_UNCALIBRATED, (1/IMUFrequency * 1e6).toInt())
-        }
-        if(WatchActivityHandler.getImuStatus()) {
-            // TODO make specific status for magnetometer
-            //sensorsHandler.addSensor(SensorType.TYPE_MAGNETIC_FIELD, (1.0/magnetometerFrequency * 1e6).toInt())
-            sensorsHandler.addSensor(SensorType.TYPE_MAGNETIC_FIELD_UNCALIBRATED, (1/IMUFrequency * 1e6).toInt())
-        }
-        if(WatchActivityHandler.getImuStatus()){
-            // TODO make specific status for barometer
-            sensorsHandler.addSensor(SensorType.TYPE_PRESSURE, (1.0/barometerFrequency * 1e6).toInt())
-        }
-
-        // GNSS Sensor
-        if(WatchActivityHandler.getGnssStatus()){
-            sensorsHandler.addSensor(SensorType.TYPE_GNSS_LOCATION)
-            sensorsHandler.addSensor(SensorType.TYPE_GNSS_MEASUREMENTS)
-            sensorsHandler.addSensor(SensorType.TYPE_GNSS_MESSAGES)
-        }
-
-        // Heart
-        if(WatchActivityHandler.getEcgStatus()) {
-            //sensorsHandler.addSensor(SensorType.TYPE_HEART_RATE, (1.0/healthSensorFrequency * 1e6).toInt())
-            sensorsHandler.addSensor(
-                SensorType.TYPE_SPECIFIC_ECG,
-                (1.0 / healthSensorFrequency * 1e6).toInt()
-            )
-            sensorsHandler.addSensor(
-                SensorType.TYPE_SPECIFIC_PPG,
-                (1.0 / healthSensorFrequency * 1e6).toInt()
-            )
-        }
-        else if(WatchActivityHandler.getGalStatus()) {
-            sensorsHandler.addSensor(
-                SensorType.TYPE_SPECIFIC_PPG,
-                (1.0 / healthSensorFrequency * 1e6).toInt()
-            )
-            sensorsHandler.addSensor(
-                SensorType.TYPE_SPECIFIC_GAL,
-                (1.0 / healthSensorFrequency * 1e6).toInt()
-            )
-        }
-
-        // Steps
-        if(WatchActivityHandler.collectSteps) {
-            sensorsHandler.addSensor(
-                SensorType.TYPE_STEP_DETECTOR,
-                SensorManager.SENSOR_DELAY_FASTEST
-            )
-            sensorsHandler.addSensor(
-                SensorType.TYPE_STEP_COUNTER,
-                SensorManager.SENSOR_DELAY_FASTEST
-            )
-        }
-
-        sensorsHandler.startLogging()
+        // Start service
+        ContextCompat.startForegroundService(this, loggingIntent)
     }
 
     // ---------------------------------------------------------------------------------------------
 
-    fun stopLogging(context: Context){
+    fun stopLogging(){
 
-        reviewBtn.visibility = View.VISIBLE
         stopLogBtn.visibility = View.GONE
         logTimeText.visibility = View.GONE
         logText.text = "Survey ended"
 
-        isLogging = false
-        sensorsHandler.stopLogging()
+        // Stop logging service
+        stopService(loggingIntent)
+
+        // Wait 2 seconds an go back to main screen
+        Handler(Looper.getMainLooper()).postDelayed({
+            finish()
+        }, 2000)
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -207,7 +128,14 @@ class LoggingActivity : Activity() {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.MANAGE_EXTERNAL_STORAGE,
+            Manifest.permission.BLUETOOTH,
+            Manifest.permission.BLUETOOTH_ADMIN,
+            Manifest.permission.BLUETOOTH_SCAN,
             Manifest.permission.BODY_SENSORS,
+            Manifest.permission.HIGH_SAMPLING_RATE_SENSORS,
+            Manifest.permission.ACTIVITY_RECOGNITION,
+            Manifest.permission.FOREGROUND_SERVICE,
+            Manifest.permission.FOREGROUND_SERVICE_LOCATION
         )
 
         var allPermissionsGranted = true
@@ -225,4 +153,34 @@ class LoggingActivity : Activity() {
 
     // ---------------------------------------------------------------------------------------------
 
+    private val updateRunnableDuration = object : Runnable {
+        override fun run() {
+            // Update the duration text every second
+            updateDurationText()
+
+            // Schedule the next update
+            durationHandler.postDelayed(this, 1000)
+        }
+    }
+
+    private fun updateDurationText() {
+        // Calculate the elapsed time since the button was clicked
+        val currentTime = SystemClock.elapsedRealtime()
+        val elapsedTime = currentTime - startTime
+
+        // Format the duration as HH:MM:SS
+        val hours = (elapsedTime / 3600000).toInt()
+        val minutes = ((elapsedTime % 3600000) / 60000).toInt()
+        val seconds = ((elapsedTime % 60000) / 1000).toInt()
+
+        // Display the formatted duration in the TextView
+        val durationText = String.format("%02d:%02d:%02d", hours, minutes, seconds)
+        logTimeText.text = "$durationText"
+    }
+
+    override fun onDestroy() {
+        // Remove the updateRunnable when the activity is destroyed to prevent memory leaks
+        durationHandler.removeCallbacks(updateRunnableDuration)
+        super.onDestroy()
+    }
 }

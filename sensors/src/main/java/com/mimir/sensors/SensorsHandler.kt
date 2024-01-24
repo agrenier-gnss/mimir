@@ -12,7 +12,7 @@ var PPG_SENSOR_NAME = "AFE4950 PPG Sensor"
 var GAL_SENSOR_NAME = "AFE4950 Galvanic Skin Response"
 
 // For Samsung Galaxy Watch 6
-var ECG_SENSOR_NAME_GALAXY = "AFE4500S ECG"
+//var ECG_SENSOR_NAME_GALAXY = "AFE4500S ECG"
 
 class SensorsHandler(val context: Context) {
 
@@ -66,12 +66,11 @@ class SensorsHandler(val context: Context) {
                 mSensors.add(HeartRateSensor(this.context, fileHandler, _type, "ECG", _samplingFrequency, mSensorsResults))
 
             SensorType.TYPE_SPECIFIC_ECG ->
-                //mSensors.add(SpecificSensor(this.context, fileHandler, ECG_SENSOR_NAME, SensorType.TYPE_SPECIFIC_ECG, "ECG", _samplingFrequency, mSensorsResults))
-                mSensors.add(SpecificSensor(this.context, fileHandler, ECG_SENSOR_NAME_GALAXY, SensorType.TYPE_SPECIFIC_ECG, "ECG", _samplingFrequency, mSensorsResults))
+                mSensors.add(SpecificSensor(this.context, fileHandler, ECG_SENSOR_NAME, SensorType.TYPE_SPECIFIC_ECG, "ECG", _samplingFrequency, mSensorsResults))
             SensorType.TYPE_SPECIFIC_PPG ->
                 mSensors.add(SpecificSensor(this.context, fileHandler, PPG_SENSOR_NAME, SensorType.TYPE_SPECIFIC_PPG, "PPG", _samplingFrequency, mSensorsResults))
-            SensorType.TYPE_SPECIFIC_GAL ->
-                mSensors.add(SpecificSensor(this.context, fileHandler, GAL_SENSOR_NAME, SensorType.TYPE_SPECIFIC_GAL, "GAL", _samplingFrequency, mSensorsResults))
+            SensorType.TYPE_SPECIFIC_GSR ->
+                mSensors.add(SpecificSensor(this.context, fileHandler, GAL_SENSOR_NAME, SensorType.TYPE_SPECIFIC_GSR, "GAL", _samplingFrequency, mSensorsResults))
 
             SensorType.TYPE_STEP_COUNTER ->
                 mSensors.add(StepSensor(this.context, fileHandler, _type, "STEP_C", _samplingFrequency, mSensorsResults))
