@@ -15,7 +15,10 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.mimir.sensors.LoggingService
 import com.mobilewizards.logging_app.databinding.ActivityLoggingBinding
+import com.mobilewizards.watchlogger.WatchActivityHandler
+import java.io.Serializable
 
 
 var startTime: Long = 0
@@ -97,6 +100,9 @@ class LoggingActivity : Activity() {
         logText.visibility = View.VISIBLE
         logText.text = "Surveying..."
         logTimeText.visibility = View.VISIBLE
+
+        // Set the data to be sent to service
+        loggingIntent.putExtra("settings", WatchActivityHandler.sensorsSelected as Serializable)
 
         // Start service
         ContextCompat.startForegroundService(this, loggingIntent)

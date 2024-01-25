@@ -54,10 +54,9 @@
                         android:layout_marginBottom="40dp"
                         android:background="@drawable/button_background"
                         android:fontFamily="@font/montserrat_bold"
-                        android:textColor="@color/fontBlack"
                         android:text="Settings"
                         android:textAllCaps="false"
-                        />
+                        android:textColor="@color/fontBlack" />
 
                 </LinearLayout>
             </ScrollView>

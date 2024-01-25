@@ -56,16 +56,26 @@
                 android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="@string/str_gnss"
-                android:textColor="@color/fontWhite" />
+                android:text="@string/str_gnss" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/sensorSwitch"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1.3"
+                android:scaleX="1"
+                android:scaleY="1.3"
+                android:thumb="@drawable/custom_thumb"
+                app:layout_constraintRight_toRightOf="parent"
+                app:switchMinWidth="40dp"
+                app:track="@drawable/custom_track" />
 
             <TextView
                 android:id="@+id/settings_tv_gnss"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/str_gnss_rate" />
-
-
 
             <View
                 android:id="@+id/divider9"
@@ -78,8 +88,7 @@
                 android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:checked="false"
-                android:text="@string/str_imu"
-                android:textColor="@color/fontWhite" />
+                android:text="@string/str_imu"/>
 
             <TextView
                 android:id="@+id/settings_tv_imu"
@@ -109,8 +118,7 @@
                 android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:checked="false"
-                android:text="@string/str_baro"
-                android:textColor="@color/fontWhite" />
+                android:text="@string/str_baro" />
 
             <TextView
                 android:id="@+id/settings_tv_baro"
@@ -140,8 +148,7 @@
                 android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:checked="false"
-                android:text="@string/str_steps"
-                android:textColor="@color/fontWhite" />
+                android:text="@string/str_steps" />
 
             <TextView
                 android:id="@+id/settings_tv_step"
@@ -182,8 +189,7 @@
                 android:id="@+id/switch_ecg"
                 android:layout_width="130dp"
                 android:layout_height="wrap_content"
-                android:text="@string/str_ecg"
-                android:textColor="@color/fontWhite" />
+                android:text="@string/str_ecg" />
 
             <TextView
                 android:id="@+id/settings_tv_ecg"
@@ -212,8 +218,7 @@
                 android:id="@+id/switch_ppg"
                 android:layout_width="130dp"
                 android:layout_height="wrap_content"
-                android:text="@string/str_ppg"
-                android:textColor="@color/fontWhite" />
+                android:text="@string/str_ppg" />
 
             <TextView
                 android:id="@+id/settings_tv_ppg"
@@ -242,8 +247,7 @@
                 android:id="@+id/switch_gsr"
                 android:layout_width="130dp"
                 android:layout_height="wrap_content"
-                android:text="@string/str_gsr"
-                android:textColor="@color/fontWhite"/>
+                android:text="@string/str_gsr" />
 
             <TextView
                 android:id="@+id/settings_tv_gsr"
@@ -276,20 +280,19 @@
                 <Button
                     android:id="@+id/button_save"
                     style="@style/Widget.AppCompat.Button"
-                    android:layout_width="70dp"
-                    android:layout_height="60dp"
-                    android:text="@string/str_save"
-                    android:textSize="12sp" />
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/str_save" />
 
                 <Button
                     android:id="@+id/button_default"
-                    android:layout_width="0dp"
-                    android:layout_height="60dp"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/str_default"
-                    android:textAlignment="center"
-                    android:textSize="12sp" />
+                    android:text="@string/str_default" />
             </LinearLayout>
+
+
         </LinearLayout>
         </ScrollView>
 
