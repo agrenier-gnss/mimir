@@ -1,162 +1,370 @@
 package com.mobilewizards.logging_app
 
-import android.annotation.SuppressLint
+import android.Manifest
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
-import android.hardware.SensorManager
-import android.os.Bundle
-import android.util.Log
-import android.view.*
-import android.widget.*
+import android.content.IntentFilter
+import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SwitchCompat
+import android.os.Bundle
+import android.os.Handler
+import android.os.SystemClock
+import android.util.Log
+import android.view.View
+import android.widget.Button
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
+import com.google.android.gms.wearable.ChannelClient
+import com.google.android.gms.wearable.Wearable
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.mimir.sensors.LoggingService
+import com.mimir.sensors.SensorType
+import java.io.Serializable
+import java.lang.reflect.Type
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
+// =================================================================================================
 
 class MainActivity : AppCompatActivity() {
 
-    @SuppressLint("SuspiciousIndentation", "ClickableViewAccessibility")
+    private val durationHandler = Handler()
+    private var startTime = SystemClock.elapsedRealtime()
+    private lateinit var timeText : TextView
+
+    private lateinit var loggingButton: Button
+    private lateinit var settingsBtn: Button
+    private lateinit var dataButton: Button
+    private lateinit var loggingText: TextView
+
+    lateinit var loggingIntent : Intent
+
+    private lateinit var sharedPreferences: SharedPreferences
+
+    private var sensorTextViewList = mutableMapOf<SensorType, TextView>()
+
+    // ---------------------------------------------------------------------------------------------
+
+    private val sensorCheckReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == "SENSOR_CHECK_UPDATE") {
+
+                sensorTextViewList.forEach{ entry ->
+                    if(!intent.hasExtra("${entry.key}")){
+                        return@forEach
+                    }
+                    val sensorCheck = intent.getBooleanExtra("${entry.key}", false)
+                    if(sensorCheck){
+                        val colorID = ContextCompat.getColor(applicationContext,
+                            android.R.color.holo_green_light)
+                        entry.value.text = "\u2714"
+                        entry.value.setTextColor(colorID)
+                    }else{
+                        val colorID = ContextCompat.getColor(applicationContext,
+                            android.R.color.holo_red_light)
+                        entry.value.text = "\u2716"
+                        entry.value.setTextColor(colorID)
+                    }
+                }
+            }
+        }
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    override fun onResume() {
+        super.onResume()
+
+        timeText = findViewById(R.id.logging_time_text_view)
+
+        // Prevent logging button from going to unintended locations
+        if(ActivityHandler.isLogging()) {
+
+            dataButton.visibility = View.GONE
+            loggingButton.text = "Stop logging"
+
+            loggingButton.translationY = 250f
+
+            Handler().postDelayed({
+                loggingText.text = "Surveying..."
+                timeText.text = "Started ${ActivityHandler.getSurveyStartTime()}"
+            }, 300)
+        } else {
+
+            val layoutParams = ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                ConstraintLayout.LayoutParams.WRAP_CONTENT
+            )
+
+            layoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+            layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
+            layoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+            layoutParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+
+            loggingButton.layoutParams = layoutParams
+        }
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("phoneLogger", "onCreate called")
         setContentView(R.layout.activity_main)
         supportActionBar?.hide()
 
+        // Create communication with the watch
+        val channelClient = Wearable.getChannelClient(applicationContext)
+        channelClient.registerChannelCallback(object : ChannelClient.ChannelCallback() {
+            override fun onChannelOpened(channel: ChannelClient.Channel) {
 
-        val sensorList = arrayOf(
-            // 1st value: name. 2nd value: is there a slider. 3rd and 4th are min and max values for slider
-            arrayOf("GNSS", false),
-            arrayOf("IMU", true, arrayOf(1, 5, 10, 50, 100, 200, "fastest")),
-            arrayOf("Barometer", true, arrayOf(1, 10, "fastest")),
-            arrayOf("Magnetometer", true, arrayOf(1, 5, 10, 50, 100, 200, "fastest")),
-            arrayOf("Steps counter", true, arrayOf(1, 10, 50, 100, 200, "fastest")),
-            //arrayOf("Bluetooth", false),
+                val receiveTask = channelClient.receiveFile(channel, ("file:///storage/emulated/0/Download/log_watch_received_${
+                    LocalDateTime.now().format(
+                        DateTimeFormatter.ofPattern("yyyyMMdd_HHmmssSSS"))}.csv").toUri(), false)
+                receiveTask.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d("channel", "File successfully stored")
+                    } else {
+                        Log.e("channel", "File receival/saving failed: ${task.exception}")
+                    }
+                }
+            }
+        })
+        this.checkPermissions()
+
+        loggingButton = findViewById(R.id.logging_button)
+        settingsBtn   = findViewById(R.id.settings_button)
+        dataButton    = findViewById(R.id.download_data_button)
+        loggingText   = findViewById(R.id.logging_text_view)
+
+        sensorTextViewList = mutableMapOf(
+            SensorType.TYPE_GNSS_MEASUREMENTS           to findViewById(R.id.tv_gnss_raw_check),
+            SensorType.TYPE_GNSS_LOCATION               to findViewById(R.id.tv_gnss_pos_check),
+            SensorType.TYPE_GNSS_MESSAGES               to findViewById(R.id.tv_gnss_nav_check),
+            SensorType.TYPE_ACCELEROMETER               to findViewById(R.id.tv_imu_acc_check),
+            SensorType.TYPE_ACCELEROMETER_UNCALIBRATED  to findViewById(R.id.tv_imu_acc_check),
+            SensorType.TYPE_GYROSCOPE                   to findViewById(R.id.tv_imu_gyr_check),
+            SensorType.TYPE_GYROSCOPE_UNCALIBRATED      to findViewById(R.id.tv_imu_gyr_check),
+            SensorType.TYPE_MAGNETIC_FIELD              to findViewById(R.id.tv_imu_mag_check),
+            SensorType.TYPE_MAGNETIC_FIELD_UNCALIBRATED to findViewById(R.id.tv_imu_mag_check),
+            SensorType.TYPE_PRESSURE                    to findViewById(R.id.tv_baro_check),
+            SensorType.TYPE_STEP_DETECTOR               to findViewById(R.id.tv_steps_detect_check),
+            SensorType.TYPE_STEP_COUNTER                to findViewById(R.id.tv_steps_counter_check)
         )
 
-        val parentView = findViewById<ViewGroup>(R.id.square_layout)
+        var isInitialLoad = true
 
-        //create a layout for each sensor in sensorList
-        for(i in sensorList.indices) {
+        // Set service
+        loggingIntent = Intent(this, LoggingService::class.java)
 
-            // Inflate the layout file that contains the TableLayout
-            val tableLayout = layoutInflater.inflate(R.layout.layout_presets, parentView, false).findViewById<TableLayout>(R.id.sensorSquarePreset)
+        //if logging button is toggled in other activities, it is also toggled in here.
+        loggingButton.setOnClickListener {
+            ActivityHandler.toggleButton(this)
+        }
 
-            val row = tableLayout.getChildAt(0) as TableRow
-            val sensorTitleTextView = row.findViewById<TextView>(R.id.sensorTitle)
-            sensorTitleTextView.text = sensorList[i][0].toString()
+        dataButton.setOnClickListener {
+            val intent = Intent(this, SurveyHistoryActivity::class.java)
+            startActivity(intent)
+        }
 
-            var sensorSwitch = row.findViewById<SwitchCompat>(R.id.sensorSwitch)
-            sensorSwitch.isChecked = ActivityHandler.getToggle(sensorList[i][0].toString())
-            sensorSwitch.isEnabled = !ActivityHandler.isLogging() // Disable toggling sensor if logging is ongoing
+        ActivityHandler.getButtonState().observe(this) { isPressed ->
+            loggingButton.isSelected = isPressed
 
-            var sensorStateTextView = row.findViewById<TextView>(R.id.sensorState)
-            setStateTextview(sensorSwitch.isChecked, sensorStateTextView)
-
-            val row2 = tableLayout.getChildAt(1) as TableRow
-            val description = row2.findViewById<TextView>(R.id.description)
-
-            sensorSwitch.setOnCheckedChangeListener { _, isChecked ->
-                setStateTextview(sensorSwitch.isChecked, sensorStateTextView)
-                ActivityHandler.setToggle(sensorList[i][0].toString()) //toggle the status in singleton
+            // Check if app has just started and skip toggled off code
+            if (isInitialLoad) {
+                isInitialLoad = false
+                return@observe
             }
 
-            // Create the layout for each sensor
-            if(!(sensorList[i][1] as Boolean)) {
-                // Goes here if frequency is can not be changed
-                description.text = "${sensorList[i][0]} is always sampled at 1 Hz" // Change the description text
-                tableLayout.removeViewAt(2) // Remove the row with the slider.
+            if(isPressed) {
+                startLogging(this)
             } else {
-                // Goes here if frequency can be changed
-                description.text = "Sampling frequency"
-                val row3 = tableLayout.getChildAt(2) as TableRow
-                val slider = row3.findViewById<SeekBar>(R.id.sensorSlider)
-                slider.min = sensorList[i][2].toString().toInt()
-                slider.max = sensorList[i][3].toString().toInt()
-                slider.progress = ActivityHandler.getFrequency(sensorList[i][0].toString()) //set slider value to slider
-                slider.isEnabled = !ActivityHandler.isLogging() // Disable changing slider if logging is ongoing
-
-                val sliderValue = row3.findViewById<TextView>(R.id.sliderValue)
-                sliderValue.text = ActivityHandler.getFrequency(sensorList[i][0] as String).toString() //set slider value to a text view
-
-                slider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                    override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                        sliderValue.text = progress.toString()
-                        ActivityHandler.setFrequency(sensorList[i][0].toString(), progress)
-                    }
-
-                    override fun onStartTrackingTouch(seekBar: SeekBar) {
-                        // Not used
-                    }
-
-                    override fun onStopTrackingTouch(seekBar: SeekBar) {
-                        // Not used
-                    }
-                })
+                stopLogging()
             }
-
-            // Remove the tableLayout's parent, if it has one
-            (tableLayout.parent as? ViewGroup)?.removeView(tableLayout)
-
-            // Add the TableLayout to the parent view
-            parentView.addView(tableLayout)
-
-
         }
 
-        // Switch views by swiping
-        var x1 = 0f
-        var y1 = 0f
-        var x2 = 0f
-        var y2 = 0f
-        findViewById<View>(R.id.scroll_id).setOnTouchListener { _, touchEvent ->
-            when (touchEvent.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    x1 = touchEvent.x
-                    y1 = touchEvent.y
-                    true
+        // Set settings button
+        settingsBtn.setOnClickListener{
+            val openSettings = Intent(applicationContext, SettingsActivity::class.java)
+            startActivity(openSettings)
+        }
+
+        ActivityHandler.sensorsSelected = mutableMapOf()
+        sharedPreferences = getSharedPreferences("DefaultSettings", Context.MODE_PRIVATE)
+        if (sharedPreferences.contains("GNSS")) {
+            var mparam = loadMutableList("GNSS")
+            ActivityHandler.sensorsSelected[SensorType.TYPE_GNSS] = Pair(
+                mparam[0] as Boolean, (mparam[1] as Double).toInt())
+            mparam = loadMutableList("IMU")
+            ActivityHandler.sensorsSelected[SensorType.TYPE_IMU] = Pair(
+                mparam[0] as Boolean, (mparam[1] as Double).toInt())
+            mparam = loadMutableList("PSR")
+            ActivityHandler.sensorsSelected[SensorType.TYPE_PRESSURE] = Pair(
+                mparam[0] as Boolean, (mparam[1] as Double).toInt())
+            mparam = loadMutableList("STEPS")
+            ActivityHandler.sensorsSelected[SensorType.TYPE_STEPS] = Pair(
+                mparam[0] as Boolean, (mparam[1] as Double).toInt())
+        }
+
+        // Register broadcoaster
+        registerReceiver(sensorCheckReceiver, IntentFilter("SENSOR_CHECK_UPDATE"), RECEIVER_NOT_EXPORTED)
+    }
+
+    private fun loadMutableList(key:String): MutableList<String> {
+        val jsonString = sharedPreferences.getString(key, "")
+        val type: Type = object : TypeToken<MutableList<Any>>() {}.type
+
+        return Gson().fromJson(jsonString, type) ?: mutableListOf()
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    fun startLogging(context: Context){
+
+        startTime = SystemClock.elapsedRealtime()
+        findViewById<Button>(R.id.logging_button).text = "Stop logging"
+        dataButton.visibility = View.GONE
+        settingsBtn.visibility = View.GONE
+        loggingButton.animate()
+            .translationYBy(250f)
+            .setDuration(500)
+            .start()
+
+        loggingText.text = "Surveying..."
+
+        // Set duration timer
+        startTime = SystemClock.elapsedRealtime()
+        updateDurationText()
+        durationHandler.postDelayed(updateRunnableDuration, 1000)
+
+        // Set the data to be sent to service
+        loggingIntent.putExtra("settings", ActivityHandler.sensorsSelected as Serializable)
+
+        // Start service
+        ContextCompat.startForegroundService(this, loggingIntent)
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    fun stopLogging(){
+
+        // Stop logging
+        settingsBtn.visibility = View.VISIBLE
+        findViewById<Button>(R.id.logging_button).text = "Start logging"
+        loggingText.text = ""
+        timeText.text = ""
+        durationHandler.removeCallbacks(updateRunnableDuration)
+        loggingButton.animate()
+            .translationYBy(-250f)
+            .setDuration(200)
+            .start()
+
+        Handler().postDelayed({ dataButton.visibility = View.VISIBLE }, 100)
+
+        // Stop logging service
+        stopService(loggingIntent)
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    private fun checkPermissions() {
+        val permissions = arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.MANAGE_EXTERNAL_STORAGE,
+            Manifest.permission.BODY_SENSORS,
+            Manifest.permission.HIGH_SAMPLING_RATE_SENSORS,
+            Manifest.permission.ACTIVITY_RECOGNITION,
+            Manifest.permission.FOREGROUND_SERVICE,
+            Manifest.permission.FOREGROUND_SERVICE_LOCATION
+        )
+
+        var allPermissionsGranted = true
+        for (permission in permissions) {
+            if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                allPermissionsGranted = false
+                break
+            }
+        }
+
+        if (!allPermissionsGranted) {
+            ActivityCompat.requestPermissions(this, permissions, 225)
+        }
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode) {
+
+            //location permission
+            225 -> {
+                if ((grantResults.isNotEmpty() &&
+                            grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    // Permission is granted. Continue the action or workflow
+                    // in your app.
+                } else {
+                    // Explain to the user that the feature is unavailable
+                    AlertDialog.Builder(this)
+                        .setTitle("Location permission denied")
+                        .setMessage("Permission is denied.")
+                        .setPositiveButton("OK",null)
+                        .setNegativeButton("Cancel", null)
+                        .show()
                 }
-                MotionEvent.ACTION_UP -> {
-                    x2 = touchEvent.x
-                    y2 = touchEvent.y
-                    val deltaX = x2 - x1
-                    val deltaY = y2 - y1
-                    if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                        // swipe horizontal
-                        if (Math.abs(deltaX) > 100) {
-                            if (deltaX < 0) {
-                                // left swipe
-                                val intent = Intent(this, MauveActivity::class.java)
-                                startActivity(intent)
-                                true
-                            }
-                        }
-                    }
-                    false
-                }
-                else -> false
+                return
+            }
+            else -> {
+                // Ignore all other requests.
             }
         }
-
     }
 
-    // Creates main_menu.xml
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.toolbar_menu, menu)
-        return true
-    }
+    // ---------------------------------------------------------------------------------------------
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.changeParameters -> {
-                val setupIntent = Intent(applicationContext, SetupActivity::class.java)
-                startActivity(setupIntent)
-            }
+    private val updateRunnableDuration = object : Runnable {
+        override fun run() {
+            // Update the duration text every second
+            updateDurationText()
+
+            // Schedule the next update
+            durationHandler.postDelayed(this, 1000)
         }
-        return true
     }
 
-    fun setStateTextview(enabled: Boolean,textview: TextView) {
-        if (enabled) {
-            textview.text = "Enabled"
-        } else {
-            textview.text = "Disabled"
-        }
+    private fun updateDurationText() {
+        // Calculate the elapsed time since the button was clicked
+        val currentTime = SystemClock.elapsedRealtime()
+        val elapsedTime = currentTime - startTime
+
+        // Format the duration as HH:MM:SS
+        val hours = (elapsedTime / 3600000).toInt()
+        val minutes = ((elapsedTime % 3600000) / 60000).toInt()
+        val seconds = ((elapsedTime % 60000) / 1000).toInt()
+
+        // Display the formatted duration in the TextView
+        val durationText = String.format("%02d:%02d:%02d", hours, minutes, seconds)
+        timeText.text = "$durationText"
+    }
+
+    override fun onDestroy() {
+        // Remove the updateRunnable when the activity is destroyed to prevent memory leaks
+        unregisterReceiver(sensorCheckReceiver)
+        durationHandler.removeCallbacks(updateRunnableDuration)
+        super.onDestroy()
     }
 }
+
+// =================================================================================================

@@ -4,6 +4,7 @@ import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.hardware.SensorManager.SENSOR_DELAY_NORMAL
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mimir.sensors.SensorType
@@ -11,9 +12,12 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 import com.mimir.sensors.SensorsHandler
+import java.io.Serializable
 
 //this class handles logging data and log events all from one class
 object ActivityHandler{
+
+    var sensorsSelected = mutableMapOf<SensorType, Pair<Boolean, Int>>()
 
     private var isLogging: Boolean = false
 
@@ -59,12 +63,12 @@ object ActivityHandler{
     fun toggleButton(context: Context) {
         buttonState.value = !(buttonState.value ?: false)
 
-        if(buttonState.value==true){
-            startLogging(context)
-        }
-        else{
-            stopLogging(context)
-        }
+//        if(buttonState.value==true){
+//            startLogging(context)
+//        }
+//        else{
+//            stopLogging(context)
+//        }
     }
 
     // ---------------------------------------------------------------------------------------------

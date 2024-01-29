@@ -4,6 +4,8 @@ package com.mimir.sensors
 import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Handler
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 
@@ -13,6 +15,15 @@ class LoggingService : Service() {
     private val notificationId = 1
     private lateinit var sensorsHandler : SensorsHandler
     private lateinit var settingsMap : Map<SensorType, Pair<Boolean, Int>>
+
+    private val sensorCheckHandler = Handler()
+    private val checkSensorsRunnable = object : Runnable {
+        override fun run() {
+            // Perform the check of the sensor list every second
+            checkSensorList()
+            sensorCheckHandler.postDelayed(this, 1000)
+        }
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -100,17 +111,20 @@ class LoggingService : Service() {
             // Try to register uncalibrated sensors first, otherwise skip to standard version
             // Accelerometer
             sensorsHandler.addSensor(SensorType.TYPE_ACCELEROMETER_UNCALIBRATED, frequency)
-            if(!sensorsHandler.mSensors.last().isRegistered){
+            if(!sensorsHandler.mSensors.last().isAvailable){
+                sensorsHandler.mSensors.removeLast()
                 sensorsHandler.addSensor(SensorType.TYPE_ACCELEROMETER, frequency)
             }
             // Gyroscope
             sensorsHandler.addSensor(SensorType.TYPE_GYROSCOPE_UNCALIBRATED, frequency)
-            if(!sensorsHandler.mSensors.last().isRegistered){
+            if(!sensorsHandler.mSensors.last().isAvailable){
+                sensorsHandler.mSensors.removeLast()
                 sensorsHandler.addSensor(SensorType.TYPE_GYROSCOPE, frequency)
             }
             // Magnetometer
             sensorsHandler.addSensor(SensorType.TYPE_MAGNETIC_FIELD_UNCALIBRATED, frequency)
-            if(!sensorsHandler.mSensors.last().isRegistered){
+            if(!sensorsHandler.mSensors.last().isAvailable){
+                sensorsHandler.mSensors.removeLast()
                 sensorsHandler.addSensor(SensorType.TYPE_MAGNETIC_FIELD, frequency)
             }
         }
@@ -127,30 +141,47 @@ class LoggingService : Service() {
         }
 
         // Health sensors
-        if(settingsMap[SensorType.TYPE_SPECIFIC_ECG]?.first as Boolean){
-            val frequency = (1.0 / (settingsMap[SensorType.TYPE_SPECIFIC_ECG]?.second as Int) * 1e6).toInt()
-            sensorsHandler.addSensor(SensorType.TYPE_SPECIFIC_ECG, frequency)
-        }
+        if(context.packageManager.hasSystemFeature(PackageManager.FEATURE_WATCH)) {
+            if (settingsMap[SensorType.TYPE_SPECIFIC_ECG]?.first as Boolean) {
+                val frequency =
+                    (1.0 / (settingsMap[SensorType.TYPE_SPECIFIC_ECG]?.second as Int) * 1e6).toInt()
+                sensorsHandler.addSensor(SensorType.TYPE_SPECIFIC_ECG, frequency)
+            }
 
-        if(settingsMap[SensorType.TYPE_SPECIFIC_PPG]?.first as Boolean){
-            val frequency = (1.0 / (settingsMap[SensorType.TYPE_SPECIFIC_PPG]?.second as Int) * 1e6).toInt()
-            sensorsHandler.addSensor(SensorType.TYPE_SPECIFIC_PPG, frequency)
-        }
+            if (settingsMap[SensorType.TYPE_SPECIFIC_PPG]?.first as Boolean) {
+                val frequency =
+                    (1.0 / (settingsMap[SensorType.TYPE_SPECIFIC_PPG]?.second as Int) * 1e6).toInt()
+                sensorsHandler.addSensor(SensorType.TYPE_SPECIFIC_PPG, frequency)
+            }
 
-        if(settingsMap[SensorType.TYPE_SPECIFIC_GSR]?.first as Boolean){
-            val frequency = (1.0 / (settingsMap[SensorType.TYPE_SPECIFIC_GSR]?.second as Int) * 1e6).toInt()
-            sensorsHandler.addSensor(SensorType.TYPE_SPECIFIC_GSR, frequency)
+            if (settingsMap[SensorType.TYPE_SPECIFIC_GSR]?.first as Boolean) {
+                val frequency =
+                    (1.0 / (settingsMap[SensorType.TYPE_SPECIFIC_GSR]?.second as Int) * 1e6).toInt()
+                sensorsHandler.addSensor(SensorType.TYPE_SPECIFIC_GSR, frequency)
+            }
         }
 
         sensorsHandler.startLogging()
+
+        // For checking sensor status and showing on display
+        sensorCheckHandler.postDelayed(checkSensorsRunnable, 1000)
     }
 
     // ---------------------------------------------------------------------------------------------
 
     fun stopLogging(context: Context){
         sensorsHandler.stopLogging()
+        sensorCheckHandler.removeCallbacks(checkSensorsRunnable)
         stopForeground(STOP_FOREGROUND_DETACH)
     }
 
     // ---------------------------------------------------------------------------------------------
+
+    private fun checkSensorList() {
+        val intent = Intent("SENSOR_CHECK_UPDATE")
+        sensorsHandler.mSensors.forEach {
+            intent.putExtra("${it.type}", it.isReceived)
+        }
+        sendBroadcast(intent)
+    }
 }

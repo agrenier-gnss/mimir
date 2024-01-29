@@ -1,7 +1,8 @@
 package com.mimir.sensors
 
 import android.content.Context
-import android.hardware.Sensor
+import android.content.Intent
+import android.os.Handler
 import android.os.HandlerThread
 import android.util.Log
 import java.util.Collections.synchronizedList
@@ -19,22 +20,22 @@ class SensorsHandler(val context: Context) {
     var mSensors = mutableListOf<CustomSensor>()
     val mSensorsResults = synchronizedList(mutableListOf<Any>())
 
-    // ---------------------------------------------------------------------------------------------
-
     private var fileHandler: FileHandler
-    private var handlerThread: HandlerThread
-
-    init {
-        // Setup file
-        handlerThread = HandlerThread("").apply {
-            start()
-            fileHandler = FileHandler(context, looper)
-        }
+    private var handlerThread: HandlerThread = HandlerThread("").apply {
+        start()
+        fileHandler = FileHandler(context, looper)
     }
 
     // ---------------------------------------------------------------------------------------------
 
-    fun addSensor(_type : SensorType, _samplingFrequency : Int = 1000){
+    init {
+
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    fun addSensor(_type : SensorType, _samplingFrequency : Int = 1000) : Boolean {
+        var success = true
         when(_type){
             SensorType.TYPE_ACCELEROMETER ->
                 mSensors.add(MotionSensor(this.context, fileHandler, _type, "ACC", _samplingFrequency, mSensorsResults))
@@ -77,8 +78,13 @@ class SensorsHandler(val context: Context) {
             SensorType.TYPE_STEP_DETECTOR ->
                 mSensors.add(StepSensor(this.context, fileHandler, _type, "STEP_D", _samplingFrequency, mSensorsResults))
 
-            else -> {Log.w("SensorsHandler", "Sensor type $_type not supported.")}
+            else -> {
+                Log.w("SensorsHandler", "Sensor type $_type not supported.")
+                success = false
+            }
         }
+
+        return success
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -86,8 +92,8 @@ class SensorsHandler(val context: Context) {
     fun startLogging(){
 
         // Enable logging in sensors
-        for (_sensor in mSensors){
-            _sensor.registerSensor()
+        for (sensor in mSensors){
+            sensor.registerSensor()
         }
 
         Log.i("SensorsHandler", "Logging started")
@@ -107,5 +113,7 @@ class SensorsHandler(val context: Context) {
 
         Log.i("SensorsHandler", "Logging stopped")
     }
+
+
 
 }

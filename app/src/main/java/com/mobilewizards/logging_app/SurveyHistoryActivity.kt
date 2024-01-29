@@ -52,7 +52,7 @@ class SurveyHistoryActivity : AppCompatActivity() {
                         if (Math.abs(deltaX) > 100) {
                             if (deltaX > 0) {
                                 // left swipe
-                                val intent = Intent(this, MauveActivity::class.java)
+                                val intent = Intent(this, MainActivity::class.java)
                                 startActivity(intent)
                                 true
                             }

@@ -269,5 +269,6 @@ class SettingsActivity : Activity() {
         }
         editor.apply()
         Log.d("SettingsActivity", "Default settings saved.")
+        Toast.makeText(applicationContext, "Default settings saved.", Toast.LENGTH_SHORT).show()
     }
 }
