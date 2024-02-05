@@ -194,6 +194,7 @@ class GnssHandler{
                 }
             }
 
+            @Deprecated("Deprecated in Java")
             override fun onStatusChanged(status: Int) {}
         }
 

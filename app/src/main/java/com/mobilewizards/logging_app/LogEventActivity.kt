@@ -115,7 +115,7 @@ class LogEventActivity : AppCompatActivity() {
                         if (Math.abs(deltaX) > 100) {
                             if (deltaX > 0) {
                                 // right swipe
-                                val intent = Intent(this, MauveActivity::class.java)
+                                val intent = Intent(this, MainActivity::class.java)
                                 startActivity(intent)
                                 true
                             }

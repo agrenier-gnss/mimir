@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import androidx.core.app.ActivityCompat
 import com.mobilewizards.logging_app.databinding.ActivitySelectionBinding
@@ -12,6 +13,8 @@ import com.mobilewizards.logging_app.databinding.ActivitySelectionBinding
 class SelectionActivity : Activity() {
 
     private lateinit var binding: ActivitySelectionBinding
+
+    private val SETTINGS_REQUEST_CODE = 1 // This is to wait for settings to be done before starting
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,17 +25,10 @@ class SelectionActivity : Activity() {
         this.checkPermissions()
 
         val startSurveyBtn = findViewById<Button>(R.id.startSurveyBtn)
-        val prevSurveysBtn = findViewById<Button>(R.id.previousSurvBtn)
         val settingsBtn = findViewById<Button>(R.id.settingsBtn)
 
         startSurveyBtn.setOnClickListener{
-            val openStartSurvey = Intent(applicationContext, LoggingActivity::class.java)
-            startActivity(openStartSurvey)
-        }
-
-        prevSurveysBtn.setOnClickListener{
-            val openPreviousSurv = Intent(applicationContext, PreviousSurveysActivity::class.java)
-            startActivity(openPreviousSurv)
+            launchSettingsActivity()
         }
 
         settingsBtn.setOnClickListener{
@@ -40,6 +36,40 @@ class SelectionActivity : Activity() {
             startActivity(openSettings)
         }
     }
+
+    // =============================================================================================
+
+    private fun launchSettingsActivity() {
+        val settingsIntent = Intent(this, SettingsActivity::class.java)
+        startActivityForResult(settingsIntent, SETTINGS_REQUEST_CODE)
+    }
+
+    // =============================================================================================
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == SETTINGS_REQUEST_CODE) {
+            // Handle the result from the SettingsActivity
+            if (resultCode == RESULT_OK) {
+                // The user successfully changed settings
+                launchLoggingActivity()
+            } else {
+                // The user canceled or there was an issue with settings
+                // Handle accordingly or take appropriate action
+            }
+        }
+    }
+
+    // =============================================================================================
+
+    private fun launchLoggingActivity() {
+        // Start another activity or perform any other action
+        val loggingIntent = Intent(this, LoggingActivity::class.java)
+        startActivity(loggingIntent)
+    }
+
+    // =============================================================================================
 
     fun checkPermissions() {
         val permissions = arrayOf(

@@ -14,6 +14,7 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.location.*
 import android.os.SystemClock
+import android.text.BoringLayout
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import java.util.*
@@ -30,19 +31,43 @@ abstract class CustomSensor(
     _mvalues: MutableList<Any>)
     : SensorEventListener {
 
-    var isRegistered : Boolean = false
+    var isAvailable : Boolean = false  // Check if sensor available on platform
+    var isRegistered : Boolean = false // Check if sensor correctly registered
+    var isReceived : Boolean = false   // Check if sensor have sent any event yet
     protected val context  : Context    = _context.applicationContext
-    protected val type     : SensorType = _type
+    val type     : SensorType = _type
     protected val typeTag  : String     = _typeTag
     protected val sampling : Int        = _sampling
 
     lateinit var sensor : Sensor
-    lateinit var sensorManager : SensorManager
     lateinit var sensorSummary : String
+    private var sensorSampling : String = "1"
+
+    val sensorManager: SensorManager by lazy {
+        context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+    }
 
     protected val fileHandler = _fileHandler
 
     var mvalues = _mvalues
+
+    // ---------------------------------------------------------------------------------------------
+
+    init {
+        checkSensorAvailable()
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    private fun checkSensorAvailable(){
+        val sensorList: List<Sensor> = sensorManager.getSensorList(type.value)
+
+        if (sensorList.isNotEmpty()) {
+            isAvailable = true
+        } else {
+            isAvailable = false
+        }
+    }
 
     // ---------------------------------------------------------------------------------------------
     // Override methods
@@ -61,6 +86,7 @@ abstract class CustomSensor(
     // Methods
 
     open fun logSensor(event : SensorEvent){
+        isReceived = true
         // Log.d("%s".format(sensor.stringType), event.toString())
         // To be override
     }
@@ -69,17 +95,17 @@ abstract class CustomSensor(
 
     open fun registerSensor(){
 
-        sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-
         if (sensorManager.getDefaultSensor(type.value) != null) {
-            sensor = sensorManager.getDefaultSensor(type.value)
+            sensor = sensorManager.getDefaultSensor(type.value)!!
             sensorManager.registerListener(this, sensor, sampling)
+            sensorSampling = sampling.toString()
             sensorSummary = sensor.toString()
-            this.isRegistered = true
+            isRegistered = true
             Log.i("Sensor", "$typeTag sensor registered")
         }
         else {
             Log.i("Sensor", "Does not have sensor for %s".format(typeTag))
+            isRegistered = false
         }
 
         // Create file header
@@ -93,7 +119,7 @@ abstract class CustomSensor(
 
     open fun unregisterSensor(){
         sensorManager.unregisterListener(this)
-        this.isRegistered = false
+        isRegistered = false
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -110,7 +136,7 @@ abstract class CustomSensor(
         if(!isRegistered){
             str = "# Sensor $typeTag disabled"
         } else{
-            str = "# Sensor $typeTag enabled, $sensorSummary\n"
+            str = "# Sensor $typeTag enabled, Sampling Period: $sensorSampling, $sensorSummary\n"
         }
 
         return str
@@ -376,7 +402,7 @@ class GnssLocationSensor(
                 null
             );
             sensorSummary = "{Receiver: ${mLocationManager.gnssHardwareModelName}}"
-            this.isRegistered = true
+            isRegistered = true
             Log.i("Sensor", "GNSS Location sensor registered")
         } catch (e: SecurityException) {
             e.printStackTrace()
@@ -399,6 +425,8 @@ class GnssLocationSensor(
 
     fun logSensor(location: Location) {
 
+        isReceived = true
+
         // Log the values
         mvalues.add(location)
         //Log.d(typeTag, event.toString())
@@ -418,7 +446,7 @@ class GnssLocationSensor(
         return String.format(
             Locale.US,
             "$typeTag,%s,%.8f,%.8f,%.3f,%.3f,%.3f,%f,%d,%f,%f,%d,%f,%f",
-            location.provider,
+            location.provider.toString().uppercase(),
             location.latitude,
             location.longitude,
             location.altitude,
@@ -491,7 +519,7 @@ class GnssMeasurementSensor(
                 mLocationManager.registerGnssMeasurementsCallback(context.mainExecutor, it)
             }
             sensorSummary = "{Receiver: ${mLocationManager.gnssHardwareModelName}}"
-            this.isRegistered = true
+            isRegistered = true
             Log.i("Sensor", "GNSS Measurement sensor registered")
         }
         catch (e: SecurityException) {
@@ -514,6 +542,8 @@ class GnssMeasurementSensor(
     // ---------------------------------------------------------------------------------------------
 
     fun logSensor(event: GnssMeasurementsEvent) {
+
+        isReceived = true
 
         // Log the values
         mvalues.add(event)
@@ -653,7 +683,7 @@ class GnssNavigationMessageSensor(
                 mLocationManager.registerGnssNavigationMessageCallback(context.mainExecutor, it)
             }
             sensorSummary = "{Receiver: ${mLocationManager.gnssHardwareModelName}}"
-            this.isRegistered = true
+            isRegistered = true
             Log.i("Sensor", "GNSS Navigation Message sensor registered")
         }
         catch (e: SecurityException) {
@@ -676,6 +706,8 @@ class GnssNavigationMessageSensor(
     // ---------------------------------------------------------------------------------------------
 
     fun logSensor(event : GnssNavigationMessage){
+
+        isReceived = true
 
         // Log the values
         mvalues.add(event)
@@ -882,8 +914,6 @@ class SpecificSensor(
     // ---------------------------------------------------------------------------------------------
 
     override fun registerSensor() {
-
-        sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         val deviceSensors: List<Sensor> = sensorManager.getSensorList(Sensor.TYPE_ALL)
 
         // Loop through the devices sensors to find the right one
@@ -892,11 +922,12 @@ class SpecificSensor(
             if (it.name == name) {
                 sensor = it
                 sensorManager.registerListener(this, sensor, sampling)
-                this.isRegistered = true
+                //sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST
+                isRegistered = true
             }
         }
 
-        if(this.isRegistered){
+        if(isRegistered){
             sensorSummary = sensor.toString()
             Log.i("Sensor", "$typeTag sensor registered")
 
@@ -954,7 +985,70 @@ class SpecificSensor(
     }
 }
 
+// =================================================================================================
 
+class StepSensor(
+    context: Context,
+    _fileHandler: FileHandler,
+    _type: SensorType,
+    _typeTag: String,
+    _samplingFrequency: Int,
+    _mvalues: MutableList<Any>)
+    : CustomSensor(context, _fileHandler, _type, _typeTag, _samplingFrequency, _mvalues) {
+
+    // ---------------------------------------------------------------------------------------------
+
+    override fun logSensor(event: SensorEvent) {
+        super.logSensor(event)
+
+        // Log the values
+        mvalues.add(event)
+        Log.d(typeTag, event.toString())
+
+        fileHandler.obtainMessage().also { msg ->
+            msg.obj = getLogLine(event)
+            fileHandler.sendMessage(msg)
+        }
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    fun getLogLine(event : SensorEvent): String {
+        return String.format(
+            Locale.US,
+            "$typeTag,%s,%s,%s,%s",
+            System.currentTimeMillis(),
+            event.timestamp,
+            event.values[0],
+            event.accuracy)
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    override fun getHeader(): String {
+        var str : String =  super.getHeader()
+
+        str += String.format("# ${typeTag},utcTimeMillis,elapsedRealtime_nanosecond,")
+        when(type){
+            SensorType.TYPE_STEP_COUNTER
+            -> str += String.format(
+                "%s,%s",
+                "steps_count",
+                "accuracy")
+            SensorType.TYPE_STEP_DETECTOR
+            -> str += String.format(
+                "%s,%s",
+                "step_detected",
+                "accuracy")
+            else -> Log.e("Sensors", "Invalid value $type")
+        }
+        str += "\n#"
+
+        return str
+    }
+}
+
+// =================================================================================================
 
 
 

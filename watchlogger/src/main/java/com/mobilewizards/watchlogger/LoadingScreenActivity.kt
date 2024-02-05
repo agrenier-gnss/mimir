@@ -7,7 +7,6 @@ import android.os.Handler
 import android.os.Looper
 import com.mobilewizards.logging_app.databinding.ActivityLoadingScreenBinding
 
-@Suppress("DEPRECATION")
 class LoadingScreenActivity : Activity() {
 
     private lateinit var binding: ActivityLoadingScreenBinding
@@ -18,11 +17,11 @@ class LoadingScreenActivity : Activity() {
         binding = ActivityLoadingScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //Shows the loading screen for 4 seconds before opening the app
+        //Shows the loading screen for 2 seconds before opening the app
         Handler(Looper.getMainLooper()).postDelayed({
             val intent = Intent(this, SelectionActivity::class.java)
             startActivity(intent)
             finish()
-        }, 4000)
+        }, 2000)
     }
 }

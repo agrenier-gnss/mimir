@@ -1,98 +1,314 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:background="@color/light_gray"
-    android:id="@+id/activity_main_layout">
+    android:background="@color/dark_gray"
+    android:id="@+id/activity_mauve_layout">
 
-    <ScrollView
-        android:id="@+id/scroll_id"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+    <TextView
+        android:id="@+id/title_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:ems="10"
+        android:gravity="center"
+        android:text="Mimir"
+        android:textColor="@color/mauve"
+        android:textSize="46sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="NotSibling">
+        app:shapeAppearance="@style/TextAppearance" />
+    <TextView
+        android:id="@+id/secondary_title"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="5"
+        android:gravity="center"
+        android:text="Sensor logging"
+        android:textColor="@color/white"
+        android:textSize="26sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_name"
+        app:shapeAppearance="@style/TextAppearance" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/logging_button"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/mauve"
+        android:checked="false"
+        android:text="Start logging"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.286"
+        app:shapeAppearance="@style/ButtonShapeAppearance" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/settings_button"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="@color/mauve"
+        android:checked="false"
+        android:text="Settings"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logging_button"
+        app:shapeAppearance="@style/ButtonShapeAppearance" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/download_data_button"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="32dp"
+        android:drawableLeft="@drawable/ic_mauve_download"
+        android:text="View finished surveys"
+        android:textAllCaps="false"
+        android:textColor="@color/mauve"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settings_button"
+        app:shapeAppearance="@style/ButtonShapeAppearance"
+        app:strokeColor="@color/mauve" />
+
+    <TextView
+        android:id="@+id/logging_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.321" />
+
+    <TextView
+        android:id="@+id/logging_time_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logging_text_view" />
+
+    <TableLayout
+        android:layout_width="162dp"
+        android:layout_height="181dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.065"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.975">
+
+        <TableRow
+            android:layout_width="150dp"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_gnss_raw"
+                android:layout_width="75dp"
+                android:layout_height="wrap_content"
+                android:text="GNSS Raw"
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/tv_gnss_raw_check"
+                android:layout_width="75dp"
+                android:layout_height="wrap_content"
+                android:text="\u2716"
+                android:textAlignment="center"
+                android:textColor="#ffff4444" />
+        </TableRow>
+
+        <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/logo"
-                tools:layout_editor_absoluteX="1dp"
-                tools:layout_editor_absoluteY="30dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginLeft="15dp"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="40dp"
-                android:src="@drawable/ic_png_mimir"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
-
             <TextView
-                android:id="@+id/sensor_logging"
-                android:layout_width="220dp"
-                android:layout_height="50dp"
-                android:ems="10"
-                android:text="Sensor logging"
-                android:textSize="30sp"
-                android:textColor="@color/white"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/logo"
-                app:layout_constraintTop_toBottomOf="@+id/mimir_name"
-                app:shapeAppearance="@style/TextAppearance"/>
-
-            <TextView
-                android:id="@+id/mimir_name"
-                android:layout_width="100dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="60dp"
-                android:text="Mimir"
-                android:textSize="30sp"
-                android:textColor="@color/mauve"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/logo"
-                app:layout_constraintTop_toTopOf="parent"
-                app:shapeAppearance="@style/TextAppearance"/>
-
-            <TextView
-                android:id="@+id/settings"
-                android:layout_width="130dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="60dp"
-                android:layout_marginLeft="15dp"
-                android:text="Settings"
-                android:textSize="30sp"
-                android:textColor="@color/white"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/logo"
-                app:shapeAppearance="@style/TextAppearance" />
-
-            <LinearLayout
-                android:id="@+id/square_layout"
-                android:layout_width="match_parent"
+                android:id="@+id/tv_gnss_nav"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/settings">
+                android:text="GNSS Nav"
+                android:textColor="#FFFFFF" />
 
-            </LinearLayout>
+            <TextView
+                android:id="@+id/tv_gnss_nav_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="\u2716"
+                android:textAlignment="center"
+                android:textColor="#ffff4444" />
+        </TableRow>
 
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+            <TextView
+                android:id="@+id/tv_gnss_pos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GNSS Pos"
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/tv_gnss_pos_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="\u2716"
+                android:textAlignment="center"
+                android:textColor="#ffff4444" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_imu_acc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="IMU Acc"
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/tv_imu_acc_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="\u2716"
+                android:textAlignment="center"
+                android:textColor="#ffff4444" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_imu_gyr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="IMU Gyro"
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/tv_imu_gyr_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="\u2716"
+                android:textAlignment="center"
+                android:textColor="#ffff4444" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_mag_acc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="IMU Mag"
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/tv_imu_mag_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="\u2716"
+                android:textAlignment="center"
+                android:textColor="#ffff4444" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_baro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Barometer"
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/tv_baro_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="\u2716"
+                android:textAlignment="center"
+                android:textColor="#ffff4444" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_steps_detect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Step dectect"
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/tv_steps_detect_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="\u2716"
+                android:textAlignment="center"
+                android:textColor="#ffff4444" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_steps_counter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Step count"
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/tv_steps_counter_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="\u2716"
+                android:textAlignment="center"
+                android:textColor="#ffff4444" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </TableLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
