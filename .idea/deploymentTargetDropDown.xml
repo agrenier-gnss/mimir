@@ -6,20 +6,7 @@
         <State />
       </entry>
       <entry key="watchlogger">
-        <State>
-          <runningDeviceTargetSelectedWithDropDown>
-            <Target>
-              <type value="RUNNING_DEVICE_TARGET" />
-              <deviceKey>
-                <Key>
-                  <type value="SERIAL_NUMBER" />
-                  <value value="adb-27161JEEJW02UL-DLsjOh._adb-tls-connect._tcp" />
-                </Key>
-              </deviceKey>
-            </Target>
-          </runningDeviceTargetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-01-29T13:15:21.359757Z" />
-        </State>
+        <State />
       </entry>
     </value>
   </component>

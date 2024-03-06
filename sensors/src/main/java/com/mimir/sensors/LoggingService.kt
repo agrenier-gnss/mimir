@@ -5,6 +5,7 @@ import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.os.Handler
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
@@ -103,6 +104,7 @@ class LoggingService : Service() {
             sensorsHandler.addSensor(SensorType.TYPE_GNSS_LOCATION)
             sensorsHandler.addSensor(SensorType.TYPE_GNSS_MEASUREMENTS)
             sensorsHandler.addSensor(SensorType.TYPE_GNSS_MESSAGES)
+            sensorsHandler.addSensor(SensorType.TYPE_FUSED_LOCATION)
         }
 
         // Motion sensors

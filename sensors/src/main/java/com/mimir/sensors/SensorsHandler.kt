@@ -2,6 +2,7 @@ package com.mimir.sensors
 
 import android.content.Context
 import android.content.Intent
+import android.location.LocationManager
 import android.os.Handler
 import android.os.HandlerThread
 import android.util.Log
@@ -54,7 +55,9 @@ class SensorsHandler(val context: Context) {
                 mSensors.add(EnvironmentSensor(this.context, fileHandler, _type, "PSR", _samplingFrequency, mSensorsResults))
 
             SensorType.TYPE_GNSS_LOCATION ->
-                mSensors.add(GnssLocationSensor(this.context, fileHandler, mSensorsResults))
+                mSensors.add(GnssLocationSensor(this.context, fileHandler, mSensorsResults, LocationManager.GPS_PROVIDER))
+            SensorType.TYPE_FUSED_LOCATION ->
+                mSensors.add(GnssLocationSensor(this.context, fileHandler, mSensorsResults, LocationManager.FUSED_PROVIDER))
             SensorType.TYPE_GNSS_MEASUREMENTS ->
                 mSensors.add(GnssMeasurementSensor(this.context, fileHandler, mSensorsResults))
             SensorType.TYPE_GNSS_MESSAGES ->

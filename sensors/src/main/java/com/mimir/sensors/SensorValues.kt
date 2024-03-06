@@ -30,6 +30,7 @@ enum class SensorType(val value: Int){
     TYPE_GNSS_LOCATION(101),
     TYPE_GNSS_MEASUREMENTS(102),
     TYPE_GNSS_MESSAGES(103),
+    TYPE_FUSED_LOCATION(104),
 
     // Specific, to target a specific model sensor
     TYPE_SPECIFIC_ECG(301),

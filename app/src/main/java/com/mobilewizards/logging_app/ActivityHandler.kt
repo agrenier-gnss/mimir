@@ -120,6 +120,7 @@ object ActivityHandler{
             sensorsHandler.addSensor(SensorType.TYPE_GNSS_LOCATION)
             sensorsHandler.addSensor(SensorType.TYPE_GNSS_MEASUREMENTS)
             sensorsHandler.addSensor(SensorType.TYPE_GNSS_MESSAGES)
+            sensorsHandler.addSensor(SensorType.TYPE_FUSED_LOCATION)
         }
 
         // BLE Sensor

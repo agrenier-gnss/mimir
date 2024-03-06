@@ -371,11 +371,14 @@ class EnvironmentSensor(
 class GnssLocationSensor(
     context: Context,
     _fileHandler: FileHandler,
-    _mvalues: MutableList<Any>)
+    _mvalues: MutableList<Any>,
+    _provider: String)
     : CustomSensor(context, _fileHandler, SensorType.TYPE_GNSS_LOCATION, "Fix", 1000, _mvalues) {
 
     private var mLocationManager : LocationManager = context.getSystemService(Activity.LOCATION_SERVICE) as LocationManager
     private lateinit var mLocationListener : LocationListener
+
+    private val _provider = _provider
 
     init {
 
@@ -395,7 +398,7 @@ class GnssLocationSensor(
         }
         try {
             mLocationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER,
+                _provider,
                 1000,
                 0.0F,
                 mLocationListener,
@@ -487,6 +490,10 @@ class GnssLocationSensor(
         return str
     }
 }
+
+// =================================================================================================
+
+
 
 // =================================================================================================
 
